@@ -26,7 +26,8 @@ const Button = ({
       defaultClassName = defaultClassName + "bg-primary text-[#FFF] ";
       break;
     case "secondary":
-      defaultClassName = defaultClassName + "bg-greenGray1 text-primary ";
+      defaultClassName =
+        defaultClassName + "text-primary bg-transparent border border-primary";
       break;
     case "secondary2":
       defaultClassName = defaultClassName + "bg-greenGray1 text-primary ";

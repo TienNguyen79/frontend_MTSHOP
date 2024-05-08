@@ -4,10 +4,12 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        body: ["Open Sans", "sans-serif;"],
+        body: ["Roboto", "sans-serif;"],
       },
       colors: {
-        primary: "#D7CEC6",
+        primary: "#70c1b3",
+        textBold: "#000000",
+        text1: "#333",
         error: "rgb(247,0,0)",
         success: "rgb(50,199,1)",
       },
