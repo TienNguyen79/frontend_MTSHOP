@@ -11,6 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import useClickOutSide from "../../../utils/customHook/useClickOutSide";
 import Button from "../Button/Button";
+import { CircleUserRound, ShoppingCart } from "lucide-react";
 
 const Header = () => {
   const { control } = useForm();
@@ -25,12 +26,12 @@ const Header = () => {
   useClickOutSide(openerRef, ref, handleOutsideClick);
 
   return (
-    <div className="py-5 px-12 shadow-lg">
+    <div className="py-3 px-12 shadow-lg">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-x-4">
           <Image
-            url="/LogoP.png"
-            className=" w-[140px] h-[80px] rounded-lg overflow-hidden"
+            url="/logo3.png"
+            className=" w-[120px] h-[80px] rounded-lg overflow-hidden"
           ></Image>
           <NavMenu></NavMenu>
         </div>
@@ -53,7 +54,7 @@ const Header = () => {
               ref={ref}
               onClick={() => setOpenPopupAuth(!openPopupAuth)}
             >
-              <FontAwesomeIcon size="2xl" icon={faCircleUser} />
+              <CircleUserRound size="30px" />
             </span>
             {openPopupAuth && (
               <div
@@ -71,7 +72,7 @@ const Header = () => {
           </div>
 
           <span className="cursor-pointer relative ">
-            <FontAwesomeIcon size="2xl" icon={faCartShopping} />
+            <ShoppingCart size="30px" />
 
             <div className="absolute w-[25px] h-[25px] bottom-5 left-6 flex justify-center items-center rounded-full bg-primary text-[#FFF]">
               1
