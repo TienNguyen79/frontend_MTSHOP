@@ -4,6 +4,7 @@ export const Epath = {
 
   // Home Page
   homePage: "/",
+  register: "/register",
 
   // LoginPage
   loginPage: "/login",

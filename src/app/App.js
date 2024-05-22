@@ -12,6 +12,7 @@ import Layout2 from "./components/Layout/Layout2";
 import { Epath } from "./routes/routerConfig";
 import AuthRoute from "./routes/AuthRoute";
 import LoginPage from "./pages/AuthPage/LoginPage";
+import RegisterPage from "./pages/AuthPage/RegisterPage";
 
 const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
@@ -65,6 +66,10 @@ function App() {
       <Routes>
         <Route element={<Layout></Layout>}>
           <Route path={Epath.homePage} element={<HomePage></HomePage>}></Route>
+          <Route
+            path={Epath.register}
+            element={<RegisterPage></RegisterPage>}
+          ></Route>
           <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
         </Route>
 

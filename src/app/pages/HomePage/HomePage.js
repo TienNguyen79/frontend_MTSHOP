@@ -21,9 +21,9 @@ const HomePage = () => {
   // }, []);
   return (
     <div>
-      <Button className="py-3 px-4 rounded-md  " kind="secondary">
+      {/* <Button className="py-3 px-4 rounded-md  " kind="secondary">
         Mua hàng
-      </Button>
+      </Button> */}
 
       <Gap>
         <Button className="py-3 px-4 rounded-md   " kind="primary">

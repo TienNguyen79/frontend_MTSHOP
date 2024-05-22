@@ -7,7 +7,13 @@ import {
   faTShirt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ContactRound, Home, Newspaper, Shirt } from "lucide-react";
+import {
+  ChevronRight,
+  ContactRound,
+  Home,
+  Newspaper,
+  Shirt,
+} from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { axiosClient } from "../../../axios/axiosClient";
@@ -46,13 +52,11 @@ const navLink = [
 
 const NavMenu = () => {
   const [Categories, setCategories] = useState();
-  console.log("🚀 ~ HomePage ~ Categories:", Categories);
 
   useEffect(() => {
     try {
       const fetchData = async () => {
         const results = await axiosClient.get("/categories");
-        console.log("🚀 ~ fetchData ~ results:", results);
         setCategories(results.data.results);
       };
       fetchData();
@@ -80,24 +84,50 @@ const NavMenu = () => {
               )}
             </div>
           </Link>
-          <div className="absolute invisible transition-all opacity-0 translate-y-[160px] group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 ">
-            <div className="flex flex-col  ">
+          <div className="absolute after:bg-transparent  left-0-0 after:absolute after:contents-'' after:w-[130px] after:min-h-[40px] z-10"></div>
+
+          <div className=" top-[60px] absolute invisible transition-all opacity-0 translate-y-[160px] group-hover:visible group-hover:translate-y-0 group-hover:opacity-100  ">
+            <div className="flex flex-col  shadow-xl">
               {item.navSub &&
                 Categories?.length > 0 &&
-                Categories.map((item) => (
-                  <div className="relative group" key={item.id}>
-                    <div className=" min-w-[180px] bg-primary text-white border-b-2 border-dotted shadow-lg py-3 px-3">
-                      <Link>{item.name}</Link>
-                    </div>
+                Categories.map((item, index) => (
+                  <div className="relative containerNavBox1 " key={item.id}>
+                    <Link>
+                      <div
+                        className={`flex justify-between items-center min-w-[220px] hover:opacity-85 bg-primary text-white border-b-2 border-dotted shadow-lg py-3  ${
+                          index === 0 && "rounded-tl-md rounded-tr-md"
+                        }  ${
+                          index === Categories?.length - 1 &&
+                          "rounded-bl-md rounded-br-md"
+                        }  `}
+                      >
+                        <h1 className="px-3">{item.name}</h1>
 
-                    <div className="absolute  left-[calc(100%+5px)] invisible transition-all opacity-0 translate-y-4 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 ">
+                        {item?.children.length > 0 && (
+                          <span>
+                            <ChevronRight size={"20px"} />
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+
+                    <div className="absolute after:bg-transparent top-0 right-0 after:absolute after:contents-'' after:w-[10px] after:min-h-[60px] z-10"></div>
+
+                    <div className="containerNavBox2 absolute top-0  left-[calc(100%+5px)] opacity-0 invisible translate-y-[160px]   transition-all   ">
                       {item?.children.length > 0 &&
-                        item?.children?.map((child) => (
-                          <div className="" key={child.id}>
-                            <div className=" min-w-[180px] bg-primary text-white border-b-2 border-dotted shadow-lg py-3 px-3 ">
-                              <Link>{child.name}</Link>
+                        item?.children?.map((child, index) => (
+                          <Link key={child.id}>
+                            <div
+                              className={`min-w-[220px] bg-primary text-white border-b-2 border-dotted shadow-lg py-3 hover:opacity-85 ${
+                                index === 0 && "rounded-tl-md rounded-tr-md"
+                              }  ${
+                                index === item?.children?.length - 1 &&
+                                "rounded-bl-md rounded-br-md"
+                              } `}
+                            >
+                              <h1 className="px-3">{child.name}</h1>
                             </div>
-                          </div>
+                          </Link>
                         ))}
                     </div>
                   </div>

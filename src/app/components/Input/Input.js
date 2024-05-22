@@ -41,7 +41,7 @@ const Input = (props) => {
           type={type}
           id={name}
           className={`py-3 px-4 w-full border font-medium  rounded-md placeholder:text-text4  ${className}   ${
-            error ? "border-error " : "border-[#2E2E2E]  "
+            error ? "border-error " : "border-[#D0D1D3]  "
           } ${
             children && kind === "eye"
               ? "pr-16"
