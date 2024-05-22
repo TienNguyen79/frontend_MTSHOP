@@ -10,7 +10,8 @@ const Footer = () => {
         <div className=" md:col-span-2 lg:col-span-2 ">
           <Image url="/logo3.png" className="w-[150px] h-[85px]" alt="img" />
           <TextFooter className="!font-medium my-5">
-            If you need support, just contact us via the two methods below
+            Nếu bạn cần hỗ trợ, chỉ cần liên hệ với chúng tôi qua hai phương
+            pháp dưới đây
           </TextFooter>
           <div className="flex md:flex-col lg:flex-row md:gap-y-2 gap-x-4 text-sm mt-2">
             <div className="relative">

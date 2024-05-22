@@ -10,6 +10,7 @@ module.exports = {
         primary: "#70c1b3",
         textBold: "#000000",
         text1: "#333",
+        text2: "#F3F4F6",
         error: "rgb(247,0,0)",
         success: "rgb(50,199,1)",
       },

@@ -13,6 +13,7 @@ import useClickOutSide from "../../../utils/customHook/useClickOutSide";
 import Button from "../Button/Button";
 import { CircleUserRound, ShoppingCart } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Epath } from "../../routes/routerConfig";
 
 const Header = () => {
   const { control } = useForm();
@@ -65,15 +66,18 @@ const Header = () => {
             {openPopupAuth && (
               <div
                 ref={openerRef}
-                className="absolute bg-white right-0 w-[250px] top-[60px] py-[20px]  px-[20px] border border-solid rounded-xl  shadow-lg flex flex-col gap-y-3"
+                className="absolute z-10 bg-white right-0 w-[250px] top-[60px] py-[20px]  px-[20px] border border-solid rounded-xl  shadow-lg flex flex-col gap-y-3"
               >
                 <Button
-                  href="/register"
+                  href={Epath.register}
                   className="w-full bg-primary text-white rounded-md"
                 >
                   Đăng kí
                 </Button>
-                <Button className="w-full border border-solid border-primary text-primary rounded-md ">
+                <Button
+                  href={Epath.loginPage}
+                  className="w-full border border-solid border-primary text-primary rounded-md "
+                >
                   Đăng nhập
                 </Button>
               </div>

@@ -36,7 +36,9 @@ const Button = ({
       defaultClassName = defaultClassName + "bg-gray5_1 text-gray3 ";
       break;
     case "ghost":
-      defaultClassName = defaultClassName + "bg-primary text-[#FFF] ";
+      defaultClassName =
+        defaultClassName +
+        " bg-transparent  text-[#FFF] border border-[#FFF]   ";
       break;
     case "cart":
       defaultClassName = defaultClassName + "bg-gray5_1 text-gray7  ";

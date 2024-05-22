@@ -66,7 +66,7 @@ const NavMenu = () => {
   }, []);
 
   return (
-    <div className="flex items-center gap-x-8">
+    <div className="flex items-center gap-x-8 z-10">
       {navLink.map((item) => (
         <div key={item.id} className="relative group">
           <Link to={item.url} className="flex items-center   ">
