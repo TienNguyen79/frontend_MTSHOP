@@ -3,9 +3,11 @@ import { useForm } from "react-hook-form";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import { Epath } from "../../routes/routerConfig";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
+import { handleLogin } from "../../../store/auth/handleAuth";
 
 const LoginSchema = yup.object().shape({
   email: yup
@@ -20,6 +22,9 @@ const LoginSchema = yup.object().shape({
 });
 
 const LoginPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loading } = useSelector((state) => state.auth);
   const {
     control,
     formState: { errors },
@@ -30,7 +35,9 @@ const LoginPage = () => {
   });
 
   const handleLoginForm = (data) => {
-    console.log("🚀 ~ handleLoginForm ~ data:", data);
+    dispatch(
+      handleLogin({ ...data, callback: () => navigate(Epath.homePage) })
+    );
   };
   return (
     <div className="py-[140px] px-[300px] ">
@@ -87,6 +94,7 @@ const LoginPage = () => {
                 kind="primary"
                 className="py-3 px-[45px] w-[180px] rounded-md transition-all hover:opacity-90 "
                 type="submit"
+                isLoading={loading}
               >
                 Đăng Nhập
               </Button>

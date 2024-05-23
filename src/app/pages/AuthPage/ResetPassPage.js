@@ -1,11 +1,14 @@
 import React, { Fragment, useEffect, useState } from "react";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Epath } from "../../routes/routerConfig";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
+import { handleResetPass } from "../../../store/auth/handleAuth";
+import Cookies from "js-cookie";
 
 const ResetPassSchema = yup.object().shape({
   password: yup
@@ -16,16 +19,21 @@ const ResetPassSchema = yup.object().shape({
 });
 
 const ResetPassPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     control,
     formState: { errors },
     handleSubmit,
+    setValue,
   } = useForm({
     resolver: yupResolver(ResetPassSchema),
     mode: "onChange",
   });
 
   const [seconds, setSeconds] = useState(30);
+  const [searchParams] = useSearchParams();
+  const { loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -41,14 +49,33 @@ const ResetPassPage = () => {
     };
   }, [seconds]);
 
-  const handleResetPass = (data) => {
-    console.log("🚀 ~ handleResetPassl ~ data:", data);
+  useEffect(() => {
+    setValue("email", searchParams.get("email"));
+  }, [searchParams, setValue]);
+
+  useEffect(() => {
+    const tokenForgotPass = searchParams.get("token");
+
+    const expiryDate = new Date(new Date().getTime() + 30 * 1000); // 30 seconds from now
+
+    if (tokenForgotPass) {
+      Cookies.set("tokenForgotPass", tokenForgotPass, {
+        expires: expiryDate, // Convert milliseconds to seconds
+        secure: true,
+      });
+    }
+  }, []);
+
+  const handleResetPassForm = (data) => {
+    dispatch(
+      handleResetPass({ ...data, callback: () => navigate(Epath.loginPage) })
+    );
   };
   return (
     <div className="py-[140px] px-[300px]">
       <div className="bg-white shadow-custom2 rounded-[14px] w-[500px] mx-auto">
         <form
-          onSubmit={handleSubmit(handleResetPass)}
+          onSubmit={handleSubmit(handleResetPassForm)}
           className="flex flex-col justify-center items-center gap-y-4 py-9 px-3"
         >
           <h1 className="text-center text-[28px] text-textBold font-semibold  ">
@@ -72,7 +99,8 @@ const ResetPassPage = () => {
             control={control}
             name="email"
             placeholder="Nhập địa chỉ email ..."
-            className="!min-w-[400px]"
+            className="!min-w-[400px] "
+            disabled
           ></Input>
 
           <Input
@@ -87,6 +115,7 @@ const ResetPassPage = () => {
             kind="primary"
             className="py-3 px-[45px] w-[400px] rounded-md transition-all hover:opacity-90"
             type="submit"
+            isLoading={loading}
           >
             Thay Đổi
           </Button>

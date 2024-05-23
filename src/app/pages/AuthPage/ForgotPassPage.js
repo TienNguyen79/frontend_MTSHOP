@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { Epath } from "../../routes/routerConfig";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useDispatch, useSelector } from "react-redux";
+import { handleSendMail } from "../../../store/auth/handleAuth";
 
 const ForgotSchema = yup.object().shape({
   email: yup
@@ -15,6 +17,9 @@ const ForgotSchema = yup.object().shape({
 });
 
 const ForgotPassPage = () => {
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
+
   const {
     control,
     formState: { errors },
@@ -25,7 +30,7 @@ const ForgotPassPage = () => {
   });
 
   const handleSendmail = (data) => {
-    console.log("🚀 ~ handleSendmail ~ data:", data);
+    dispatch(handleSendMail(data));
   };
   return (
     <div className="py-[140px] px-[300px]">
@@ -55,6 +60,7 @@ const ForgotPassPage = () => {
             kind="primary"
             className="py-3 px-[45px] w-[400px] rounded-md transition-all hover:opacity-90"
             type="submit"
+            isLoading={loading}
           >
             Gửi Mail !
           </Button>

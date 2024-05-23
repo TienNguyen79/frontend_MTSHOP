@@ -1,6 +1,12 @@
 import { createSlice, createAction } from "@reduxjs/toolkit";
 
-import { handleRegister } from "./handleAuth";
+import {
+  handleGetCurrentUser,
+  handleLogin,
+  handleRegister,
+  handleResetPass,
+  handleSendMail,
+} from "./handleAuth";
 import { toast } from "react-toastify";
 
 //Reducer Là các hàm xử lý các action và cập nhật trạng thái của ứng dụng.
@@ -9,6 +15,7 @@ export const setLoading = createAction("setLoading");
 // fullfiled | pending | rejected
 const initialState = {
   data: [],
+  dataCurrentUser: {},
   loading: false,
   errorMessage: "",
 };
@@ -23,7 +30,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      //case News
+      //register
       .addCase(handleRegister.fulfilled, (state, action) => {
         state.loading = false;
       })
@@ -32,6 +39,47 @@ const authSlice = createSlice({
       })
       .addCase(handleRegister.rejected, (state, action) => {
         state.loading = false;
+      })
+
+      //login
+      .addCase(handleLogin.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(handleLogin.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(handleLogin.rejected, (state, action) => {
+        state.loading = false;
+      })
+
+      //send Mail
+      .addCase(handleSendMail.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(handleSendMail.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(handleSendMail.rejected, (state, action) => {
+        state.loading = false;
+      })
+
+      //reset Mail
+      .addCase(handleResetPass.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(handleResetPass.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(handleResetPass.rejected, (state, action) => {
+        state.loading = false;
+      })
+
+      //curentUser
+      .addCase(handleGetCurrentUser.fulfilled, (state, action) => {
+        state.dataCurrentUser = action.payload;
+      })
+      .addCase(handleGetCurrentUser.rejected, (state, action) => {
+        state.dataCurrentUser = {};
       })
 
       .addCase(setLoading, (state, action) => {
