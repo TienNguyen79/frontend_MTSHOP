@@ -88,23 +88,18 @@ class Http {
 
   async handleError(error) {
     const { response, config } = error;
-    if (
-      config.url !== "/auth" &&
-      config.url !== "/auth/refresh-tokens" &&
-      response
-    ) {
+    console.log("🚀 ~ Http ~ handleError ~ config:", config);
+
+    if (config.url !== "/auth" && config.url !== "/refreshToken" && response) {
       if (response.status === StatusCode.Unauthorized && !config._retry) {
-        //   config._retry = true;
-        //   try {
-        //     const rs = await axios.post("/auth/refresh-tokens", {
-        //       refreshToken: getRefreshTokenFromLocalStorage(),
-        //     });
-        //     saveToken(rs.data.tokens.access.token);
-        //     saveRefreshToken(rs.data.tokens.refresh.token);
-        //     return this.http(config);
-        //   } catch (_error) {
-        //     return Promise.reject(_error);
-        //   }
+        config._retry = true;
+        try {
+          const rs = await axiosClient.post("/refreshToken");
+          saveToken(rs.data.accessToken);
+          return this.http(config);
+        } catch (_error) {
+          return Promise.reject(_error);
+        }
       }
     }
 

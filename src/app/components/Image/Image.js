@@ -1,9 +1,15 @@
 import React from "react";
+import { defaultImage } from "../../../utils/commom";
+import { checkImageExtension } from "../../../utils/functions";
 
-const Image = ({ url = "/imgDefault.jpg", className = "" }) => {
+const Image = ({ url = `${defaultImage}`, className = "" }) => {
   return (
     <div className={`${className}`}>
-      <img src={url} className="w-full h-full object-cover" alt="logo" />
+      <img
+        src={checkImageExtension(url) ? url : defaultImage}
+        className="w-full h-full object-cover"
+        alt="logo"
+      />
     </div>
   );
 };

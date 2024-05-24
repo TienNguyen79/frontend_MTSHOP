@@ -1,13 +1,14 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import requestRegister, {
-  requestGetCurrentUser,
   requestLogin,
+  requestRefreshToken,
   requestResetPass,
   requestSendMail,
+  requestlogout,
 } from "./requestAuth";
 import { OK } from "../../utils/httpStatus";
 import { toast } from "react-toastify";
-import { saveToken } from "../../utils/localStorage";
+import { removeToken, saveToken } from "../../utils/localStorage";
 
 export const handleRegister = createAsyncThunk(
   "auth/handleRegister",
@@ -33,9 +34,11 @@ export const handleLogin = createAsyncThunk(
       const response = await requestLogin(data);
 
       if (response.status === OK) {
+        toast.success("Đăng nhập thành công", { autoClose: 1000 });
+
         saveToken(response.data.token.accessToken);
         data.callback?.();
-        return response.data;
+        return response.data.results;
       }
     } catch (error) {
       toast.error(error.response.data.ms, { autoClose: 900 });
@@ -77,16 +80,35 @@ export const handleResetPass = createAsyncThunk(
   }
 );
 
-export const handleGetCurrentUser = createAsyncThunk(
-  "auth/handleGetCurrentUser",
+export const handleRefreshToken = createAsyncThunk(
+  "auth/handleRefreshToken",
   async (data, thunkAPI) => {
     try {
-      const response = await requestGetCurrentUser();
+      const response = await requestRefreshToken();
 
       if (response.status === OK) {
-        return response.data.results;
+        saveToken(response.data.accessToken);
+        return response.data;
       }
     } catch (error) {
+      toast.error(error.response.data.ms, { autoClose: 900 });
+    }
+  }
+);
+
+export const handleLogout = createAsyncThunk(
+  "auth/handleLogout",
+  async (data, thunkAPI) => {
+    try {
+      const response = await requestlogout();
+
+      if (response.status === OK) {
+        removeToken();
+        data.callback?.();
+        return response.data;
+      }
+    } catch (error) {
+      thunkAPI.rejectWithValue({});
       toast.error(error.response.data.ms, { autoClose: 900 });
     }
   }

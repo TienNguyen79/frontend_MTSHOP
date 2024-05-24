@@ -1,15 +1,18 @@
 import "../App.scss";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import SuspenseFallback from "./components/Commom/SuspenseFallback";
 import { Epath } from "./routes/routerConfig";
 import AuthRoute from "./routes/AuthRoute";
+import { useDispatch } from "react-redux";
+import { getTokenFromLocalStorage } from "../utils/localStorage";
+import { handleGetCurrentUser } from "../store/user/handleUser";
+import LayoutPrimary from "./components/Layout/LayoutPrimary";
 
 const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 const TestPage2 = lazy(() => import("./pages/TestPage2"));
 const TestPage = lazy(() => import("./pages/TestPage"));
-const Layout = lazy(() => import("./components/Layout/Layout"));
 const Layout2 = lazy(() => import("./components/Layout/Layout2"));
 const LoginPage = lazy(() => import("./pages/AuthPage/LoginPage"));
 const RegisterPage = lazy(() => import("./pages/AuthPage/RegisterPage"));
@@ -37,31 +40,17 @@ function App() {
 
   // const res = useSelector((state) => state.user.dataUser);
   // console.log("🚀 ~ App ~ res:", res);
+  // const dispatch = useDispatch();
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(handleGetCurrentUser());
+  }, [getTokenFromLocalStorage()]);
+
   return (
-    // <div className="App">
-    //   <h1
-    //     className="text-red-500"
-    //     ref={ref}
-    //     onClick={() => {
-    //       setOpenPopup(!openPopup);
-    //     }}
-    //   >
-    //     ok
-    //   </h1>
-    //   {openPopup && (
-    //     <h2 ref={openerRef} className="App_ok">
-    //       h2
-    //     </h2>
-    //   )}
-    // </div>
-
-    // <Suspense fallback={<SuspenseFallback />}>
-    //   <RenderRoutes routes={routes} isAuthenticated={true} />
-    // </Suspense>
-
     <Suspense fallback={<SuspenseFallback></SuspenseFallback>}>
       <Routes>
-        <Route element={<Layout></Layout>}>
+        <Route element={<LayoutPrimary></LayoutPrimary>}>
           <Route path={Epath.homePage} element={<HomePage></HomePage>}></Route>
           <Route
             path={Epath.register}

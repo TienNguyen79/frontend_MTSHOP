@@ -16,6 +16,10 @@ export function requestResetPass(data) {
   return axiosClient.post(`/forgotPass`, data);
 }
 
-export function requestGetCurrentUser() {
-  return axiosClient.get(`/currentUser`);
+export function requestRefreshToken() {
+  return axiosClient.post(`/refreshToken`);
+}
+
+export function requestlogout() {
+  return axiosClient.post(`/logout`);
 }

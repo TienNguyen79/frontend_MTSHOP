@@ -1,8 +1,8 @@
 import { createSlice, createAction } from "@reduxjs/toolkit";
 
 import {
-  handleGetCurrentUser,
   handleLogin,
+  handleLogout,
   handleRegister,
   handleResetPass,
   handleSendMail,
@@ -15,7 +15,6 @@ export const setLoading = createAction("setLoading");
 // fullfiled | pending | rejected
 const initialState = {
   data: [],
-  dataCurrentUser: {},
   loading: false,
   errorMessage: "",
 };
@@ -72,14 +71,6 @@ const authSlice = createSlice({
       })
       .addCase(handleResetPass.rejected, (state, action) => {
         state.loading = false;
-      })
-
-      //curentUser
-      .addCase(handleGetCurrentUser.fulfilled, (state, action) => {
-        state.dataCurrentUser = action.payload;
-      })
-      .addCase(handleGetCurrentUser.rejected, (state, action) => {
-        state.dataCurrentUser = {};
       })
 
       .addCase(setLoading, (state, action) => {

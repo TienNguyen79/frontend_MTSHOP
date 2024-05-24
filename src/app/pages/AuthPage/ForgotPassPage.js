@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Epath } from "../../routes/routerConfig";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,8 +18,8 @@ const ForgotSchema = yup.object().shape({
 
 const ForgotPassPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loading } = useSelector((state) => state.auth);
-
   const {
     control,
     formState: { errors },
@@ -30,7 +30,14 @@ const ForgotPassPage = () => {
   });
 
   const handleSendmail = (data) => {
-    dispatch(handleSendMail(data));
+    dispatch(
+      handleSendMail({
+        ...data,
+        callback: () => {
+          navigate(Epath.loginPage);
+        },
+      })
+    );
   };
   return (
     <div className="py-[140px] px-[300px]">
