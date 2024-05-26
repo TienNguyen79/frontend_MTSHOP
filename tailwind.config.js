@@ -11,6 +11,7 @@ module.exports = {
         textBold: "#000000",
         text1: "#333",
         text2: "#F3F4F6",
+        text3: "#C2BDBA",
         error: "rgb(247,0,0)",
         success: "rgb(50,199,1)",
       },

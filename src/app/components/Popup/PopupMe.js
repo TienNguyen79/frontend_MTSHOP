@@ -24,10 +24,10 @@ const PopupMe = () => {
           />
         </div>
         <div className="w-full ml-[10px] flex-[4]">
-          <h2 className="font-semibold  text-gray8 whitespace-nowrap overflow-hidden overflow-ellipsis max-w-[170px] capitalize">
+          <h2 className="font-semibold  text-gray8 limitText max-w-[170px] capitalize">
             {dataCurrentUser?.userName}
           </h2>
-          <span className="text-[#666] text-sm block whitespace-nowrap overflow-hidden overflow-ellipsis max-w-[170px]">
+          <span className="text-[#666] text-sm block limitText max-w-[170px]">
             {dataCurrentUser?.email}
           </span>
         </div>

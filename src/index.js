@@ -8,6 +8,8 @@ import { ToastContainer, toast } from "react-toastify";
 import { BrowserRouter } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import store from "./store/configureStore";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(

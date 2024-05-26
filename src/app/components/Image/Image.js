@@ -6,7 +6,8 @@ const Image = ({ url = `${defaultImage}`, className = "" }) => {
   return (
     <div className={`${className}`}>
       <img
-        src={checkImageExtension(url) ? url : defaultImage}
+        // src={checkImageExtension(url) ? url : defaultImage}
+        src={url || defaultImage}
         className="w-full h-full object-cover"
         alt="logo"
       />

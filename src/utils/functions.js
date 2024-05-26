@@ -1,3 +1,6 @@
+import IconStarGray from "../app/components/Icon/IconStarGray";
+import IconStarYellow from "../app/components/Icon/IconStarYellow";
+
 // check ảnh
 export function checkImageExtension(fileNameOrUrl) {
   // Tạo một mảng chứa các đuôi tệp ảnh được chấp nhận
@@ -66,4 +69,33 @@ export const convertDateNumeric = (data) => {
     "/" +
     date.toLocaleDateString("en-US", Year)
   );
+};
+
+// export const generateStars = (starCount) => {
+//   const stars = Array.from({ length: 5 }, (_, index) => (
+//     <IconStarYellow key={index}></IconStarYellow>
+//   ));
+//   // Đánh dấu các sao sau starCount bằng màu xám
+//   stars.fill(<IconStarGray></IconStarGray>, starCount);
+
+//   return stars;
+// };
+
+export const generateStars = (starCount) => {
+  const stars = Array.from({ length: 5 }, (_, index) => (
+    <IconStarYellow key={`yellow_${index}`}></IconStarYellow>
+  ));
+
+  // Đánh dấu các sao sau starCount bằng màu xám
+  for (let i = starCount; i < 5; i++) {
+    stars[i] = <IconStarGray key={`gray_${i}`}></IconStarGray>;
+  }
+
+  return stars;
+};
+
+// format định dạng giá
+export const formatPrice = (price) => {
+  if (!price) return "";
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
