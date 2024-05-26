@@ -8,12 +8,11 @@ import { generateStars } from "../../../utils/functions";
 import ProductItem from "../../modules/Product/ProductItem";
 import ProductDetails from "../../modules/Product/ProductDetails";
 import ProductModal from "../../modules/Product/ProductModal";
+import SliderBanner from "../../modules/HomePage/SliderBanner";
 const HomePage = () => {
-  const [openModal, setOpenModal] = useState(false);
   return (
     <div>
-      <ProductModal open={openModal} setOpen={setOpenModal}></ProductModal>
-
+      <SliderBanner></SliderBanner>
       <Gap>
         <Button className="py-3 px-4 rounded-md   " kind="primary">
           Mua hàng 2
@@ -35,17 +34,6 @@ const HomePage = () => {
         <div className="mt-10">
           <ProductDetails></ProductDetails>
         </div>
-      </Gap>
-
-      <Gap>
-        <Button
-          className="py-3 px-4 rounded-md "
-          type="primary"
-          onClick={() => setOpenModal(true)}
-          kind="primary"
-        >
-          Open Modal
-        </Button>
       </Gap>
 
       <Gap>
