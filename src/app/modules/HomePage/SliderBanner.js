@@ -100,7 +100,7 @@ const SliderBanner = () => {
     nextArrow: <FontAwesomeIcon icon={faChevronRight} />, // Component mũi tên next
   };
   return (
-    <div>
+    <div className="mt-[104px]">
       <div className="sliderBanner slider-container">
         <Slider {...settings}>
           {listImg.length > 0 &&
