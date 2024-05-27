@@ -99,3 +99,12 @@ export const formatPrice = (price) => {
   if (!price) return "";
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
+
+export const sortByQuantityProduct = (array, acs) => {
+  const arraySort = [...array].sort((a, b) =>
+    acs
+      ? b?.TotalproductCount - a?.TotalproductCount
+      : a?.TotalproductCount - b?.TotalproductCount
+  );
+  return arraySort;
+};

@@ -95,9 +95,9 @@ const SliderBanner = () => {
     speed: 1000,
     autoplaySpeed: 3000,
     cssEase: "ease-in",
-    arrows: true, // Bật mũi tên điều hướng
-    prevArrow: <FontAwesomeIcon icon={faChevronLeft} />, // Component mũi tên prev
-    nextArrow: <FontAwesomeIcon icon={faChevronRight} />, // Component mũi tên next
+    // arrows: true, // Bật mũi tên điều hướng
+    // prevArrow: <FontAwesomeIcon icon={faChevronLeft} />, // Component mũi tên prev
+    // nextArrow: <FontAwesomeIcon icon={faChevronRight} />, // Component mũi tên next
   };
   return (
     <div className="mt-[104px]">

@@ -13,6 +13,7 @@ import { ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Epath } from "../../routes/routerConfig";
 import ProductModal from "./ProductModal";
+import { defaultImage2 } from "../../../utils/commom";
 
 const ProductItem = ({ data }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -24,15 +25,14 @@ const ProductItem = ({ data }) => {
           <div className="flex flex-col gap-y-3 cursor-pointer relative ">
             <div className="overflow-hidden">
               <Image
-                url="https://topcomshop.com/uploads/.thumbs/images/a-athudong/9/11955385302-104616149.jpg"
+                url={data?.image[0]?.url || defaultImage2}
                 className=" h-[350px]  rounded-xl  overflow-hidden"
               ></Image>
             </div>
             <div className="p-2">
-              <div className="flex items-center">
+              <div className="flex items-center justify-between">
                 <TitleProduct className="multiline-ellipsis">
-                  Áo Thun Nam Tay Ngắn Coffee Lovers Trơn Form Fitted -
-                  10S24TSS009
+                  {data?.name}
                 </TitleProduct>
 
                 <span
@@ -48,14 +48,16 @@ const ProductItem = ({ data }) => {
               <div className="flex items-center gap-x-3 mb-[2px]">
                 <PriceProduct
                   className="text-[18px] font-semibold mt-1"
-                  price={55000000}
+                  price={data?.total}
                 ></PriceProduct>
-                <PriceRootProduct price={999000}></PriceRootProduct>
+                <PriceRootProduct price={data?.price}></PriceRootProduct>
               </div>
-              <StarProduct></StarProduct>
+              {data?.averageRating > 0 && (
+                <StarProduct pointRate={data?.averageRating}></StarProduct>
+              )}
             </div>
             <div className="absolute top-2 left-0">
-              <DiscountProduct discount={99}></DiscountProduct>
+              <DiscountProduct discount={data?.discount}></DiscountProduct>
             </div>
           </div>
         </div>

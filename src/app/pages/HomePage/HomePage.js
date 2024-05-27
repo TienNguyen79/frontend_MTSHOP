@@ -17,7 +17,23 @@ import ListCategory from "../../modules/HomePage/Categories/ListCategory";
 import ImgFeature from "../../modules/HomePage/ImgFeature/ImgFeature";
 import BrandFashion from "../../modules/HomePage/BrandFashion/BrandFashion";
 import FashionNews from "../../modules/FashionNews/FashionNews";
+import {
+  handleGetNewArrivals,
+  handleGetTopSoldProduct,
+} from "../../../store/product/handleProduct";
 const HomePage = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(handleGetTopSoldProduct());
+    dispatch(handleGetNewArrivals());
+  }, [dispatch]);
+
+  const dataTopSoldProduct = useSelector(
+    (state) => state.product.dataTopSoldProduct.results
+  );
+  const dataNewArrivalProduct = useSelector(
+    (state) => state.product.dataNewArrivals.results
+  );
   return (
     <div>
       <SliderBanner></SliderBanner>
@@ -42,12 +58,10 @@ const HomePage = () => {
             <LabelRedirect title="Xem thêm" />
           </FlexRow>
           <div className="grid grid-cols-4 gap-x-5 gap-y-10">
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
+            {dataTopSoldProduct?.length > 0 &&
+              dataTopSoldProduct.map((product) => (
+                <ProductItem key={product.id} data={product}></ProductItem>
+              ))}
           </div>
         </div>
 
@@ -56,14 +70,10 @@ const HomePage = () => {
             <Title title="Sản Phẩm Mới Ra"></Title>
           </FlexRow>
           <div className="grid grid-cols-4 gap-x-5 gap-y-10">
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
-            <ProductItem></ProductItem>
+            {dataNewArrivalProduct?.length > 0 &&
+              dataNewArrivalProduct.map((product) => (
+                <ProductItem key={product.id} data={product}></ProductItem>
+              ))}
           </div>
         </div>
 
