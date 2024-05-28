@@ -127,6 +127,21 @@ body {
     }
   }
 }
+
+//CartPreview
+
+.CartPreview {
+  .ant-drawer-header-title {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+}
+
+.ant-drawer {
+  border: none;
+  outline: none;
+}
+
 // ảnh thumnail
 .Imgthumb {
   img {
@@ -147,4 +162,39 @@ body {
     // image-rendering: crisp-edges;
     filter: contrast(100%) brightness(110%); //làm nét ảnh
   }
+}
+
+//cutome scrollbar
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #0000004d;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(148, 147, 147);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #70c1b3;
+  cursor: pointer;
+}
+
+//chỉ ẩn scroll mà mình muốn nhưng vẫn hoạt động scroll được
+.scroll-hidden {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scroll-hidden::-webkit-scrollbar {
+  display: none;
 }

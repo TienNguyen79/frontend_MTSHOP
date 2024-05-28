@@ -1,11 +1,19 @@
 import { createSlice, createAction } from "@reduxjs/toolkit";
-import { handleGetNewArrivals, handleGetTopSoldProduct } from "./handleProduct";
+import {
+  handleGetDetailsProduct,
+  handleGetNewArrivals,
+  handleGetQuantityProduct,
+  handleGetTopSoldProduct,
+} from "./handleProduct";
 
 //Reducer Là các hàm xử lý các action và cập nhật trạng thái của ứng dụng.
 export const setLoading = createAction("setLoading");
 
 // fullfiled | pending | rejected
 const initialState = {
+  dataAllProduct: [],
+  dataDetailsProduct: {},
+  dataQuantityProduct: {},
   dataTopSoldProduct: [],
   dataNewArrivals: [],
   loading: false,
@@ -34,6 +42,22 @@ const productSlice = createSlice({
       })
       .addCase(handleGetNewArrivals.rejected, (state, action) => {
         state.dataNewArrivals = [];
+      })
+
+      //data Details Product
+      .addCase(handleGetDetailsProduct.fulfilled, (state, action) => {
+        state.dataDetailsProduct = action.payload;
+      })
+      .addCase(handleGetDetailsProduct.rejected, (state, action) => {
+        state.dataDetailsProduct = {};
+      })
+
+      //data quantity Product
+      .addCase(handleGetQuantityProduct.fulfilled, (state, action) => {
+        state.dataQuantityProduct = action.payload;
+      })
+      .addCase(handleGetQuantityProduct.rejected, (state, action) => {
+        state.dataQuantityProduct = {};
       });
   },
 });

@@ -12,3 +12,14 @@ export function requestGetNewArrivals(data) {
   const page = data?.page || 1;
   return axiosClient.get(`/product?limit=${limit}&page=${page}`);
 }
+
+export function requestGetDetailsProduct(id) {
+  return axiosClient.get(`/product/${id}`);
+}
+
+export function requestGetQuantityProduct(data) {
+  const { id, ...rest } = data;
+  console.log("🚀 ~ requestGetQuantityProduct ~ data:", data);
+
+  return axiosClient.post(`/product/getQuantity/${data.id}`, rest);
+}

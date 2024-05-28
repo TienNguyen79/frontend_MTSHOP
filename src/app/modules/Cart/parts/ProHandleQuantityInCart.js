@@ -2,13 +2,13 @@ import { Minus, Plus } from "lucide-react";
 import React from "react";
 import { useController, useForm } from "react-hook-form";
 
-const ProHandleQuantity = ({
+const ProHandleQuantityInCart = ({
   control,
   name,
   quantity = 1,
   id,
   allow = false,
-  className = "",
+  className = "p-1 max-w-[170px] ",
 }) => {
   const { field } = useController({
     control,
@@ -33,12 +33,9 @@ const ProHandleQuantity = ({
 
   return (
     <div
-      className={`inline-flex items-center gap-x-2  p-2 border-[2px] w-[150px] rounded-lg ${className}`}
+      className={`inline-flex items-center gap-x-2  border-[2px] max-w-[170px] rounded-md ${className}`}
     >
-      <span
-        className="block bg-gray-200 rounded-full p-[10px] cursor-pointer"
-        onClick={handleDecrease}
-      >
+      <span className="block    cursor-pointer" onClick={handleDecrease}>
         <Minus size={"14px"}></Minus>
       </span>
       <input
@@ -47,14 +44,11 @@ const ProHandleQuantity = ({
         onChange={field.onChange}
         {...field}
       ></input>
-      <span
-        className="block bg-gray-200 rounded-full p-[10px] cursor-pointer"
-        onClick={handleIncrease}
-      >
+      <span className="block    cursor-pointer" onClick={handleIncrease}>
         <Plus size={"14px"}></Plus>
       </span>
     </div>
   );
 };
 
-export default ProHandleQuantity;
+export default ProHandleQuantityInCart;

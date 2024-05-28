@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { Epath } from "../../routes/routerConfig";
 import ProductModal from "./ProductModal";
 import { defaultImage2 } from "../../../utils/commom";
+import { saveVariablesLC } from "../../../utils/localStorage";
 
 const ProductItem = ({ data }) => {
   const [openModal, setOpenModal] = useState(false);
@@ -37,8 +38,8 @@ const ProductItem = ({ data }) => {
 
                 <span
                   onClick={(e) => {
-                    e.preventDefault();
-                    console.log("okok");
+                    e.preventDefault(); // để ngăn chặn link nhảy sang trang khác
+                    saveVariablesLC("idProductModal", data?.id);
                     setOpenModal(true);
                   }}
                 >
@@ -52,8 +53,10 @@ const ProductItem = ({ data }) => {
                 ></PriceProduct>
                 <PriceRootProduct price={data?.price}></PriceRootProduct>
               </div>
-              {data?.averageRating > 0 && (
-                <StarProduct pointRate={data?.averageRating}></StarProduct>
+              {data?.averageRating > 0 ? (
+                <StarProduct averageRating={data?.averageRating}></StarProduct>
+              ) : (
+                <StarProduct averageRating={5}></StarProduct>
               )}
             </div>
             <div className="absolute top-2 left-0">

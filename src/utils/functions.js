@@ -97,7 +97,11 @@ export const generateStars = (starCount) => {
 // format định dạng giá
 export const formatPrice = (price) => {
   if (!price) return "";
-  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  // Làm tròn số đến hàng nghìn gần nhất
+  const roundedPrice = Math.round(price / 1000) * 1000;
+
+  // Định dạng lại số đã được làm tròn
+  return roundedPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
 
 export const sortByQuantityProduct = (array, acs) => {

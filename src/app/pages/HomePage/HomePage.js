@@ -23,6 +23,7 @@ import {
 } from "../../../store/product/handleProduct";
 const HomePage = () => {
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(handleGetTopSoldProduct());
     dispatch(handleGetNewArrivals());
@@ -89,8 +90,8 @@ const HomePage = () => {
         <div className="mt-10">
           <ProductDetails></ProductDetails>
         </div>
-      </Gap>
-
+      </Gap> */}
+      {/* 
       <Gap>
         <Button className="py-3 px-4 rounded-md   " kind="primary">
           Mua hàng 2

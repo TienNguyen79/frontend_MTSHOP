@@ -2,7 +2,7 @@ import { Modal } from "antd";
 import React, { useState } from "react";
 import ProductDetails from "./ProductDetails";
 
-const ProductModal = ({ open, setOpen }) => {
+const ProductModal = ({ open, setOpen, idProductModal }) => {
   //   const [open, setOpen] = useState(false);
   return (
     <>

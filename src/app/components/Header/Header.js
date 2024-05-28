@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleGetCurrentUser } from "../../../store/user/handleUser";
 import { getTokenFromLocalStorage } from "../../../utils/localStorage";
 import PopupMe from "../Popup/PopupMe";
+import CartPreview from "../../modules/Cart/CartPreview";
 
 const Header = () => {
   const { control } = useForm();
@@ -44,6 +45,11 @@ const Header = () => {
   useEffect(() => {
     setOpenPopupAuth(false); // Close popup on route change
   }, [location]);
+
+  const [openCartPreview, setOpenCartPreview] = useState(false);
+  const showCartPreview = () => {
+    setOpenCartPreview(true);
+  };
 
   const { dataCurrentUser } = useSelector((state) => state.user);
   return (
@@ -116,13 +122,19 @@ const Header = () => {
             )}
           </div>
 
-          <span className="cursor-pointer relative ">
+          <span className="cursor-pointer relative " onClick={showCartPreview}>
             <ShoppingCart size="30px" />
 
             <div className="absolute w-[25px] h-[25px] bottom-5 left-6 flex justify-center items-center rounded-full bg-primary text-[#FFF]">
               1
             </div>
           </span>
+          <>
+            <CartPreview
+              openCartPreview={openCartPreview}
+              setOpenCartPreview={setOpenCartPreview}
+            ></CartPreview>
+          </>
         </div>
       </div>
     </div>
