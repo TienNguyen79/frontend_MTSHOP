@@ -190,7 +190,7 @@ import { getVariablesLC } from "../../../utils/localStorage";
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
-  const { control } = useForm();
+  const { control, handleSubmit } = useForm();
   const getIdProductModalfromLC = getVariablesLC("idProductModal");
   const [imgSelected, setImgSelected] = useState(0);
   const [colorSelected, setColorSelected] = useState();
@@ -230,9 +230,14 @@ const ProductDetails = () => {
     (state) => state.product.dataQuantityProduct
   );
 
-  console.log("🚀 ~ ProductDetails ~ quantityProduct:", quantityProduct);
+  const handleAddToCart = (data) => {
+    console.log("🚀 ~ handleAddToCart ~ data:", {
+      quantity: data.quantity,
+      productDetailsId: getIdProductModalfromLC, //nhầm rồi cần productDetails cơ
+    });
+  };
   return (
-    <div>
+    <form onSubmit={handleSubmit(handleAddToCart)}>
       <div className="grid grid-cols-2 gap-x-10">
         <div className="flex flex-col gap-y-5">
           <Image
@@ -372,7 +377,11 @@ const ProductDetails = () => {
           </div>
 
           <div className="flex items-center gap-x-4 py-5">
-            <Button kind="secondary" className="py-3 px-4 rounded-[4px]">
+            <Button
+              type="submit"
+              kind="secondary"
+              className="py-3 px-4 rounded-[4px]"
+            >
               Thêm vào Giỏ hàng
             </Button>
             <Button kind="primary" className="py-3 px-4  rounded-[4px]">
@@ -381,7 +390,7 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

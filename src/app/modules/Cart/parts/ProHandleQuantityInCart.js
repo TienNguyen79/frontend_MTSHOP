@@ -8,6 +8,7 @@ const ProHandleQuantityInCart = ({
   quantity = 1,
   id,
   allow = false,
+  onQuantityChange,
   className = "p-1 max-w-[170px] ",
 }) => {
   const { field } = useController({
@@ -21,6 +22,7 @@ const ProHandleQuantityInCart = ({
     const currentQuantity = field.value;
     const newQuantity = parseInt(currentQuantity, 10) + 1;
     field.onChange(newQuantity);
+    onQuantityChange(id, newQuantity);
   };
 
   const handleDecrease = () => {
@@ -28,6 +30,7 @@ const ProHandleQuantityInCart = ({
     if (currentQuantity > 1) {
       const newQuantity = parseInt(currentQuantity, 10) - 1;
       field.onChange(newQuantity);
+      onQuantityChange(id, newQuantity);
     }
   };
 

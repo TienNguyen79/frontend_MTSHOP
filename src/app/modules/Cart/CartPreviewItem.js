@@ -7,36 +7,57 @@ import PriceProduct from "../Product/parts/PriceProduct";
 import { useForm } from "react-hook-form";
 import { Trash2, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { formatPrice } from "../../../utils/functions";
 
-const CartPreviewItem = () => {
+const CartPreviewItem = ({ data }) => {
   const { control } = useForm();
+
+  const handleQuantityChange = (id, newQuantity) => {
+    console.log(`ProductDetails ID: ${id}, New Quantity: ${newQuantity}`);
+    // Thực hiện các xử lý khác ở đây, ví dụ: cập nhật trạng thái giỏ hàng
+  };
   return (
-    <div>
+    <div className=" border-b-2 border-text2 py-2">
       <div className="flex gap-x-3 items-start">
         <div className="flex items-center gap-x-3 flex-[6]">
           <Link>
-            <Image className="w-[90px] max-h-[120px] rounded-lg overflow-hidden"></Image>
+            <Image
+              url={data?.product?.image?.url}
+              className="w-[90px] h-[120px] rounded-lg overflow-hidden"
+            ></Image>
           </Link>
 
           <div className="flex flex-col gap-y-2">
             <Link>
               <TitleProduct className="font-medium text-[18px] limitText max-w-[190px] hover:text-primary transition-all">
-                Áo dài hot nhất 2024
+                {data?.product?.name}
               </TitleProduct>
             </Link>
             <div className="flex items-center gap-x-3">
-              <AttributeInCart>SIZE: XL</AttributeInCart>
-              <AttributeInCart>MÀU: XANH</AttributeInCart>
+              {data?.productDetails?.properties?.size && (
+                <AttributeInCart className="uppercase">
+                  SIZE: {data?.productDetails?.properties?.size?.description}{" "}
+                </AttributeInCart>
+              )}
+
+              {data?.productDetails?.properties?.color && (
+                <AttributeInCart className="uppercase">
+                  MÀU: {data?.productDetails?.properties?.color?.description}{" "}
+                </AttributeInCart>
+              )}
             </div>
 
             <ProHandleQuantityInCart
               control={control}
               name="quantity"
               className="w-[100px] p-[6px]"
+              quantity={data?.quantity}
+              id={data?.productDetails?.id}
+              onQuantityChange={handleQuantityChange}
             ></ProHandleQuantityInCart>
 
             <PriceProduct
-              price={600000}
+              price={data?.product?.total}
               className="text-[20px] font-semibold"
             ></PriceProduct>
           </div>
