@@ -35,6 +35,7 @@ const HomePage = () => {
   const dataNewArrivalProduct = useSelector(
     (state) => state.product.dataNewArrivals.results
   );
+  console.log("🚀 ~ HomePage ~ dataNewArrivalProduct:", dataNewArrivalProduct);
   return (
     <div>
       <SliderBanner></SliderBanner>

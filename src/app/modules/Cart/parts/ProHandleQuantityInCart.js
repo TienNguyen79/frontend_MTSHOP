@@ -1,6 +1,6 @@
 import { Minus, Plus } from "lucide-react";
-import React from "react";
-import { useController, useForm } from "react-hook-form";
+import React, { useEffect } from "react";
+import { useController, useForm, useFormContext } from "react-hook-form";
 
 const ProHandleQuantityInCart = ({
   control,
@@ -9,6 +9,7 @@ const ProHandleQuantityInCart = ({
   id,
   allow = false,
   onQuantityChange,
+  setValue = "",
   className = "p-1 max-w-[170px] ",
 }) => {
   const { field } = useController({
@@ -17,20 +18,24 @@ const ProHandleQuantityInCart = ({
     defaultValue: quantity,
   });
 
+  useEffect(() => {
+    setValue(name, quantity);
+  }, [quantity]);
+
   const handleIncrease = () => {
     // Lấy giá trị hiện tại của trường nhập liệu thông qua field
     const currentQuantity = field.value;
     const newQuantity = parseInt(currentQuantity, 10) + 1;
-    field.onChange(newQuantity);
-    onQuantityChange(id, newQuantity);
+    // field.onChange(newQuantity);
+    onQuantityChange(id, newQuantity, () => field.onChange(newQuantity)); // khi gọi api thành công mới tăng
   };
 
   const handleDecrease = () => {
     const currentQuantity = field.value;
     if (currentQuantity > 1) {
       const newQuantity = parseInt(currentQuantity, 10) - 1;
-      field.onChange(newQuantity);
-      onQuantityChange(id, newQuantity);
+      // field.onChange(newQuantity);
+      onQuantityChange(id, newQuantity, () => field.onChange(newQuantity)); // khi gọi api thành công mới giảm
     }
   };
 

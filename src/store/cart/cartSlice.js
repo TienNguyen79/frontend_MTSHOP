@@ -1,5 +1,9 @@
 import { createSlice, createAction } from "@reduxjs/toolkit";
-import { handleAddtoCart, handleGetAllCart } from "./handleCart";
+import {
+  handleAddtoCart,
+  handleGetAllCart,
+  handleUpdateCart,
+} from "./handleCart";
 
 //Reducer Là các hàm xử lý các action và cập nhật trạng thái của ứng dụng.
 export const setLoading = createAction("setLoading");

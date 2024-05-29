@@ -18,6 +18,8 @@ import {
   handleGetQuantityProduct,
 } from "../../../store/product/handleProduct";
 import { getVariablesLC } from "../../../utils/localStorage";
+import { toast } from "react-toastify";
+import { handleAddtoCart } from "../../../store/cart/handleCart";
 
 // const data = {
 //   id: 1,
@@ -190,13 +192,11 @@ import { getVariablesLC } from "../../../utils/localStorage";
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, setValue } = useForm();
   const getIdProductModalfromLC = getVariablesLC("idProductModal");
   const [imgSelected, setImgSelected] = useState(0);
   const [colorSelected, setColorSelected] = useState();
   const [sizeSelected, setSizeSelected] = useState();
-  console.log("🚀 ~ ProductDetails ~ sizeSelected:", sizeSelected);
-  console.log("🚀 ~ ProductDetails ~ colorSelected:", colorSelected);
 
   const settings = {
     className: "center ",
@@ -212,10 +212,6 @@ const ProductDetails = () => {
   // const { id } = useParams();
 
   useEffect(() => {
-    dispatch(handleGetDetailsProduct(getIdProductModalfromLC));
-  }, [dispatch, getIdProductModalfromLC]);
-
-  useEffect(() => {
     dispatch(
       handleGetQuantityProduct({
         id: getIdProductModalfromLC,
@@ -225,19 +221,46 @@ const ProductDetails = () => {
     );
   }, [colorSelected, dispatch, getIdProductModalfromLC, sizeSelected]);
 
+  useEffect(() => {
+    dispatch(handleGetDetailsProduct(getIdProductModalfromLC));
+  }, [dispatch, getIdProductModalfromLC]);
+
   const data = useSelector((state) => state.product.dataDetailsProduct);
+
   const quantityProduct = useSelector(
     (state) => state.product.dataQuantityProduct
   );
+  const { loading } = useSelector((state) => state.cart);
 
-  const handleAddToCart = (data) => {
-    console.log("🚀 ~ handleAddToCart ~ data:", {
-      quantity: data.quantity,
-      productDetailsId: getIdProductModalfromLC, //nhầm rồi cần productDetails cơ
-    });
+  const handleAddToCartForm = (results) => {
+    if (
+      data?.productVariantUnique?.ArrUniqueColor.length > 0 &&
+      !sizeSelected
+    ) {
+      return toast.error("Vui Lòng Chọn Size", { autoClose: 800 });
+    }
+
+    // if (
+    //   data?.productVariantUnique?.ArrUniqueColor.length > 0 &&
+    //   !colorSelected
+    // ) {
+    //   return toast.error("Vui Lòng Chọn Màu Sắc", { autoClose: 800 });
+    // }
+
+    dispatch(
+      handleAddtoCart({
+        quantity: results.quantity,
+        productDetailsId: quantityProduct?.id,
+        callBack: () => {
+          setValue("quantity", 1);
+          setColorSelected(null);
+          setSizeSelected(null);
+        },
+      })
+    );
   };
   return (
-    <form onSubmit={handleSubmit(handleAddToCart)}>
+    <form onSubmit={handleSubmit(handleAddToCartForm)}>
       <div className="grid grid-cols-2 gap-x-10">
         <div className="flex flex-col gap-y-5">
           <Image
@@ -380,7 +403,8 @@ const ProductDetails = () => {
             <Button
               type="submit"
               kind="secondary"
-              className="py-3 px-4 rounded-[4px]"
+              className="py-3 px-4 rounded-[4px] w-[192px]"
+              isLoading={loading}
             >
               Thêm vào Giỏ hàng
             </Button>
