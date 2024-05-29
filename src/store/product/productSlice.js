@@ -1,5 +1,6 @@
 import { createSlice, createAction } from "@reduxjs/toolkit";
 import {
+  handleGetAllProduct,
   handleGetDetailsProduct,
   handleGetNewArrivals,
   handleGetQuantityProduct,
@@ -17,6 +18,7 @@ const initialState = {
   dataTopSoldProduct: [],
   dataNewArrivals: [],
   loading: false,
+  loadingSearchProduct: false,
 };
 const productSlice = createSlice({
   name: "product",
@@ -29,6 +31,19 @@ const productSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      //get all product
+      .addCase(handleGetAllProduct.fulfilled, (state, action) => {
+        state.dataAllProduct = action.payload;
+        state.loadingSearchProduct = false;
+      })
+      .addCase(handleGetAllProduct.pending, (state, action) => {
+        state.loadingSearchProduct = true;
+      })
+      .addCase(handleGetAllProduct.rejected, (state, action) => {
+        state.dataAllProduct = [];
+        state.loadingSearchProduct = false;
+      })
+
       //Get TopSold Product
       .addCase(handleGetTopSoldProduct.fulfilled, (state, action) => {
         state.dataTopSoldProduct = action.payload;

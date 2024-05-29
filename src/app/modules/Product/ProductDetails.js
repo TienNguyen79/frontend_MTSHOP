@@ -209,7 +209,7 @@ const ProductDetails = () => {
     // prevArrow: <ChevronLeft color="red" size={"80px"} />, // Component mũi tên prev
   };
 
-  // const { id } = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
     dispatch(
@@ -222,8 +222,8 @@ const ProductDetails = () => {
   }, [colorSelected, dispatch, getIdProductModalfromLC, sizeSelected]);
 
   useEffect(() => {
-    dispatch(handleGetDetailsProduct(getIdProductModalfromLC));
-  }, [dispatch, getIdProductModalfromLC]);
+    dispatch(handleGetDetailsProduct(id || getIdProductModalfromLC));
+  }, [dispatch, getIdProductModalfromLC, id]);
 
   const data = useSelector((state) => state.product.dataDetailsProduct);
 
@@ -403,7 +403,7 @@ const ProductDetails = () => {
             <Button
               type="submit"
               kind="secondary"
-              className="py-3 px-4 rounded-[4px] w-[192px]"
+              className="py-3 px-4 rounded-[4px] min-w-[192px]"
               isLoading={loading}
             >
               Thêm vào Giỏ hàng

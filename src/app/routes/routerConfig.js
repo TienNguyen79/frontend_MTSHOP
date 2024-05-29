@@ -17,6 +17,9 @@ export const Epath = {
   // reset Pass
   resetPass: "/resetpass",
 
+  // product Details
+  productDetails: "/product/:id",
+
   testPage: "/test",
   testPage2: "/test2",
 };

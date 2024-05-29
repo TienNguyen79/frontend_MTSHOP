@@ -21,7 +21,10 @@ const ProductItem = ({ data }) => {
 
   return (
     <Fragment>
-      <Link className="hover:scale-110 max-w-[380px]  transition-all hover:border-primary hover:border hover:rounded-lg">
+      <Link
+        to={`product/${data.id}`}
+        className="hover:scale-110 max-w-[380px]  transition-all hover:border-primary hover:border hover:rounded-lg"
+      >
         <div className="max-w-[380px] h-[480px] shadow-custom2 py-1 px-2 rounded-lg">
           <div className="flex flex-col gap-y-3 cursor-pointer relative ">
             <div className="overflow-hidden">

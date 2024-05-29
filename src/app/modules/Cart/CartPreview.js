@@ -23,7 +23,6 @@ const CartPreview = ({ openCartPreview, setOpenCartPreview }) => {
   }, [dispatch]);
 
   const dataCartAll = useSelector((state) => state.cart.dataCartAll);
-  console.log("🚀 ~ CartPreview ~ dataCartAll:", dataCartAll);
 
   // let str = formatPrice(data?.product?.total);
   // let number = parseFloat(str.replace(".", ""));

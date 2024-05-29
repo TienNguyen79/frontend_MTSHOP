@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 import { getTokenFromLocalStorage } from "../utils/localStorage";
 import { handleGetCurrentUser } from "../store/user/handleUser";
 import LayoutPrimary from "./components/Layout/LayoutPrimary";
+import LayoutDetails from "./components/Layout/LayoutDetails";
+import ProductDetailsPage from "./pages/Product/ProductDetailsPage";
 
 const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
@@ -67,14 +69,25 @@ function App() {
           <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
         </Route>
 
-        {/* -------------------------------------------- */}
+        {/* -------------Không Layout------------------------------- */}
 
         <Route
           path={Epath.resetPass}
           element={<ResetPassPage></ResetPassPage>}
         ></Route>
 
-        {/* -------------------------------------------- */}
+        {/* ----------------Layout Details---------------------------- */}
+
+        <Route element={<LayoutDetails />}>
+          <Route
+            path={Epath.productDetails}
+            element={<ProductDetailsPage></ProductDetailsPage>}
+          ></Route>
+          {/* <Route element={<AuthRoute auth={true} isAuthenticated={true} />}>
+            <Route path={Epath.testPage2} element={<TestPage2 />} />
+          </Route> */}
+        </Route>
+
         <Route element={<Layout2 />}>
           <Route path={Epath.testPage} element={<TestPage></TestPage>}></Route>
 

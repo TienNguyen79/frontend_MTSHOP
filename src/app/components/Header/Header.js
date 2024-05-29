@@ -20,6 +20,8 @@ import { getTokenFromLocalStorage } from "../../../utils/localStorage";
 import PopupMe from "../Popup/PopupMe";
 import CartPreview from "../../modules/Cart/CartPreview";
 import { handleGetAllCart } from "../../../store/cart/handleCart";
+import PopUpSearch from "../Popup/PopUpSearch";
+import { handleGetAllProduct } from "../../../store/product/handleProduct";
 
 const Header = () => {
   const { control } = useForm();
@@ -28,10 +30,13 @@ const Header = () => {
   const location = useLocation();
   const [openPopupAuth, setOpenPopupAuth] = useState(false);
   const [openPopupMe, setOpenPopupMe] = useState(false);
+  const [openPopupInfoProduct, setOpenPopupInfoProduct] = useState(false);
   const ref = useRef(null);
   const ref2 = useRef(null);
+  const refSearchProduct = useRef(null);
   const openerRef = useRef(null);
   const openerRef2 = useRef(null);
+  const openRefSearchProduct = useRef(null);
   const handleOutsideClick = () => {
     setOpenPopupAuth(false);
   };
@@ -39,8 +44,17 @@ const Header = () => {
     setOpenPopupMe(false);
   };
 
+  const handleOutsideInputSearch = () => {
+    setOpenPopupInfoProduct(false);
+  };
+
   useClickOutSide(openerRef, ref, handleOutsideClick);
   useClickOutSide(openerRef2, ref2, handleOutsideClick2);
+  useClickOutSide(
+    openRefSearchProduct,
+    refSearchProduct,
+    handleOutsideInputSearch
+  );
 
   // Listen for route changes
   useEffect(() => {
@@ -60,6 +74,15 @@ const Header = () => {
 
   const { dataCurrentUser } = useSelector((state) => state.user);
 
+  const handleSearchProduct = (e) => {
+    dispatch(handleGetAllProduct({ name: e.target.value }));
+  };
+  const dataProduct = useSelector(
+    (state) => state.product.dataAllProduct.results
+  );
+
+  const { loadingSearchProduct } = useSelector((state) => state.product);
+
   return (
     <div className="py-3 px-12 shadow-lg fixed top-0 left-0 right-0 z-[99] bg-white">
       <div className="flex items-center justify-between">
@@ -70,17 +93,32 @@ const Header = () => {
           ></Image>
           <NavMenu></NavMenu>
         </div>
-        <div className="flex items-center gap-x-6">
+        <div className="relative flex items-center gap-x-6">
           <div className="mr-7">
-            <Input
-              control={control}
-              placeholder="Tìm kiếm sản phẩm..."
-              name="search"
-              className="!w-[350px]"
-              kind="search"
-            >
-              <FontAwesomeIcon icon={faMagnifyingGlass} />
-            </Input>
+            <div ref={refSearchProduct}>
+              <Input
+                control={control}
+                placeholder="Tìm kiếm sản phẩm..."
+                name="search"
+                className="!w-[500px]"
+                kind="search"
+                onChange={handleSearchProduct}
+                onClick={() => setOpenPopupInfoProduct(true)}
+              >
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+              </Input>
+            </div>
+
+            {openPopupInfoProduct && (
+              <div ref={openRefSearchProduct}>
+                {dataProduct && (
+                  <PopUpSearch
+                    data={dataProduct}
+                    loading={loadingSearchProduct}
+                  ></PopUpSearch>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="relative">
@@ -133,17 +171,19 @@ const Header = () => {
           <span className="cursor-pointer relative " onClick={showCartPreview}>
             <ShoppingCart size="30px" />
 
-            <div
-              className={`absolute ${
-                dataCartAll?.results?.length > 99
-                  ? " w-[30px] h-[30px]"
-                  : " w-[25px] h-[25px]"
-              } bottom-5 left-6 flex justify-center items-center rounded-full bg-primary text-[#FFF]`}
-            >
-              {dataCartAll?.results?.length > 99
-                ? "99+"
-                : dataCartAll?.results?.length}
-            </div>
+            {dataCartAll?.results?.length > 0 && (
+              <div
+                className={`absolute ${
+                  dataCartAll?.results?.length > 99
+                    ? " w-[30px] h-[30px]"
+                    : " w-[25px] h-[25px]"
+                } bottom-5 left-6 flex justify-center items-center rounded-full bg-primary text-[#FFF]`}
+              >
+                {dataCartAll?.results?.length > 99
+                  ? "99+"
+                  : dataCartAll?.results?.length}
+              </div>
+            )}
           </span>
           <>
             <CartPreview
