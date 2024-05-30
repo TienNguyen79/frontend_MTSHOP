@@ -49,14 +49,14 @@ const HomePage = () => {
       <Gap>
         <div className="mt-[60px]">
           <FlexRow>
-            <Title title="Danh Mục Hàng Đầu"></Title>
+            <Title title="Danh Mục Hàng Đầu" width="after:w-[220px]"></Title>
           </FlexRow>
           <ListCategory></ListCategory>
         </div>
 
         <div className="mt-[60px]">
           <FlexRow>
-            <Title title="Sản Phẩm Bán Chạy"></Title>
+            <Title title="Sản Phẩm Bán Chạy" width="after:w-[220px]"></Title>
             <LabelRedirect title="Xem thêm" />
           </FlexRow>
           <div className="grid grid-cols-4 gap-x-5 gap-y-10">
@@ -69,7 +69,7 @@ const HomePage = () => {
 
         <div className="mt-[60px]">
           <FlexRow>
-            <Title title="Sản Phẩm Mới Ra"></Title>
+            <Title title="Sản Phẩm Mới Ra" width="after:w-[190px]"></Title>
           </FlexRow>
           <div className="grid grid-cols-4 gap-x-5 gap-y-10">
             {dataNewArrivalProduct?.length > 0 &&
@@ -81,7 +81,7 @@ const HomePage = () => {
 
         <div className="mt-[60px]">
           <FlexRow>
-            <Title title="Tin Tức Thời Trang"></Title>
+            <Title title="Tin Tức Thời Trang" width="after:w-[200px]"></Title>
           </FlexRow>
           <FashionNews></FashionNews>
         </div>

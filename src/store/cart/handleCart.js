@@ -19,7 +19,7 @@ export const handleAddtoCart = createAsyncThunk(
       }
       return response.data;
     } catch (error) {
-      toast.error("Sản phẩm đã hết", { autoClose: 800 });
+      toast.error("Số lượng trong kho không đủ !", { autoClose: 800 });
 
       console.log("🚀 ~ error:", error);
     }

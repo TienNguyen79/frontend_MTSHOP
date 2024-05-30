@@ -22,13 +22,12 @@ const ProductDetailsPage = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    // dispatch(handleGetDetailsProduct(id));
     dispatch(handleSuggestProduct(id));
   }, [dispatch, id]);
 
-  // const data = useSelector((state) => state.product.dataDetailsProduct);
   const dataSuggest = useSelector((state) => state.product.dataAllProduct);
-  console.log("🚀 ~ ProductDetailsPage ~ dataSuggest:", dataSuggest);
+
+  const data = useSelector((state) => state.product.dataDetailsProduct);
 
   return (
     <div>
@@ -51,7 +50,7 @@ const ProductDetailsPage = () => {
 
       <Gap>
         <>
-          {/* {activeTabs === 1 && <div>{data?.description}</div>} */}
+          {activeTabs === 1 && <div>{data?.description}</div>}
           {activeTabs === 2 && <PolicyService></PolicyService>}
           {activeTabs === 3 && <h1>Đánh Giá Của Khách Hàng</h1>}
         </>
