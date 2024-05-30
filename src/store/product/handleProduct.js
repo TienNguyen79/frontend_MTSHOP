@@ -4,6 +4,7 @@ import requestGetTopSoldProduct, {
   requestGetDetailsProduct,
   requestGetNewArrivals,
   requestGetQuantityProduct,
+  requestSuggestProduct,
 } from "./requestProduct";
 
 export const handleGetAllProduct = createAsyncThunk(
@@ -59,6 +60,18 @@ export const handleGetQuantityProduct = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const response = await requestGetQuantityProduct(data);
+      return response.data.results;
+    } catch (error) {
+      console.log("🚀 ~ error:", error);
+    }
+  }
+);
+
+export const handleSuggestProduct = createAsyncThunk(
+  "product/handleSuggestProduct",
+  async (id, thunkAPI) => {
+    try {
+      const response = await requestSuggestProduct(id);
       return response.data.results;
     } catch (error) {
       console.log("🚀 ~ error:", error);

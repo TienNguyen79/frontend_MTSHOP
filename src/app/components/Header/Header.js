@@ -1,4 +1,10 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Image from "../Image/Image";
 import NavMenu from "./NavMenu/NavMenu";
 import Input from "../Input/Input";
@@ -22,6 +28,7 @@ import CartPreview from "../../modules/Cart/CartPreview";
 import { handleGetAllCart } from "../../../store/cart/handleCart";
 import PopUpSearch from "../Popup/PopUpSearch";
 import { handleGetAllProduct } from "../../../store/product/handleProduct";
+import { debounce } from "lodash";
 
 const Header = () => {
   const { control } = useForm();
@@ -31,6 +38,7 @@ const Header = () => {
   const [openPopupAuth, setOpenPopupAuth] = useState(false);
   const [openPopupMe, setOpenPopupMe] = useState(false);
   const [openPopupInfoProduct, setOpenPopupInfoProduct] = useState(false);
+  const [textSearch, setTextSearch] = useState("");
   const ref = useRef(null);
   const ref2 = useRef(null);
   const refSearchProduct = useRef(null);
@@ -74,9 +82,23 @@ const Header = () => {
 
   const { dataCurrentUser } = useSelector((state) => state.user);
 
+  // const handleSearchProduct = (e) => {
+  //   dispatch(handleGetAllProduct({ name: e.target.value }));
+  //   setTextSearch(e.target.value);
+  // };
+
+  const debounceSearch = useCallback(
+    debounce((value) => {
+      dispatch(handleGetAllProduct({ name: value }));
+    }, 300),
+    [] // Add dependencies if necessary
+  );
+
   const handleSearchProduct = (e) => {
-    dispatch(handleGetAllProduct({ name: e.target.value }));
+    setTextSearch(e.target.value);
+    debounceSearch(e.target.value);
   };
+
   const dataProduct = useSelector(
     (state) => state.product.dataAllProduct.results
   );
@@ -115,6 +137,7 @@ const Header = () => {
                   <PopUpSearch
                     data={dataProduct}
                     loading={loadingSearchProduct}
+                    text={textSearch}
                   ></PopUpSearch>
                 )}
               </div>

@@ -5,6 +5,7 @@ import {
   handleGetNewArrivals,
   handleGetQuantityProduct,
   handleGetTopSoldProduct,
+  handleSuggestProduct,
 } from "./handleProduct";
 
 //Reducer Là các hàm xử lý các action và cập nhật trạng thái của ứng dụng.
@@ -73,6 +74,14 @@ const productSlice = createSlice({
       })
       .addCase(handleGetQuantityProduct.rejected, (state, action) => {
         state.dataQuantityProduct = {};
+      })
+
+      //data suggest  Product
+      .addCase(handleSuggestProduct.fulfilled, (state, action) => {
+        state.dataAllProduct = action.payload;
+      })
+      .addCase(handleSuggestProduct.rejected, (state, action) => {
+        state.dataAllProduct = [];
       });
   },
 });

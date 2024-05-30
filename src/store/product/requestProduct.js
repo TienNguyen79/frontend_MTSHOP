@@ -30,7 +30,10 @@ export function requestGetDetailsProduct(id) {
 
 export function requestGetQuantityProduct(data) {
   const { id, ...rest } = data;
-  console.log("🚀 ~ requestGetQuantityProduct ~ data:", data);
 
   return axiosClient.post(`/product/getQuantity/${data.id}`, rest);
+}
+
+export function requestSuggestProduct(id) {
+  return axiosClient.get(`/suggestProduct/${id}`);
 }

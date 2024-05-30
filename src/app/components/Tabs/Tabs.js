@@ -7,6 +7,7 @@ const Tabs = ({
   title3 = "",
   activeTabs = 1,
   onChange,
+  className = "",
 }) => {
   const [sliderPosition, setSliderPosition] = useState(0);
   const tab1Ref = useRef(null);
@@ -30,7 +31,9 @@ const Tabs = ({
   };
 
   return (
-    <div className="relative mt-[50px] flex items-center gap-x-10 mb-10">
+    <div
+      className={`relative mt-[80px] flex items-center gap-x-10 ${className}`}
+    >
       {title1 && (
         <h1
           ref={tab1Ref}
