@@ -69,23 +69,18 @@ const Header = () => {
     setOpenPopupAuth(false); // Close popup on route change
   }, [location]);
 
-  useEffect(() => {
-    dispatch(handleGetAllCart());
-  }, [dispatch]);
-
   const [openCartPreview, setOpenCartPreview] = useState(false);
   const showCartPreview = () => {
     setOpenCartPreview(true);
   };
 
-  const dataCartAll = useSelector((state) => state.cart.dataCartAll);
-
   const { dataCurrentUser } = useSelector((state) => state.user);
 
-  // const handleSearchProduct = (e) => {
-  //   dispatch(handleGetAllProduct({ name: e.target.value }));
-  //   setTextSearch(e.target.value);
-  // };
+  useEffect(() => {
+    dispatch(handleGetAllCart());
+  }, [dataCurrentUser?.id, dispatch]);
+
+  const dataCartAll = useSelector((state) => state.cart.dataCartAll);
 
   const debounceSearch = useCallback(
     debounce((value) => {

@@ -42,7 +42,7 @@ const userSlice = createSlice({
         state.dataCurrentUser = action.payload;
       })
       .addCase(handleGetCurrentUser.rejected, (state, action) => {
-        state.dataCurrentUser = {};
+        state.dataCurrentUser = null;
       })
 
       //login thành công cập nhật render ra UI
