@@ -6,9 +6,10 @@ export function requestGetAllProduct(data) {
   const page = data?.page || 1;
   const name = data?.name;
   const category = data?.category;
+  const topDisCount = data?.topDisCount;
 
   return axiosClient.get(
-    `/product?limit=${limit}&page=${page}&name=${name}&category=${category}`
+    `/product?limit=${limit}&page=${page}&name=${name}&category=${category}&topDisCount=${topDisCount}`
   );
 }
 

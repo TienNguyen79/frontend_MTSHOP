@@ -7,9 +7,6 @@ import AuthRoute from "./routes/AuthRoute";
 import { useDispatch } from "react-redux";
 import { getTokenFromLocalStorage } from "../utils/localStorage";
 import { handleGetCurrentUser } from "../store/user/handleUser";
-import LayoutPrimary from "./components/Layout/LayoutPrimary";
-import LayoutDetails from "./components/Layout/LayoutDetails";
-import ProductDetailsPage from "./pages/Product/ProductDetailsPage";
 
 const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
@@ -20,6 +17,15 @@ const LoginPage = lazy(() => import("./pages/AuthPage/LoginPage"));
 const RegisterPage = lazy(() => import("./pages/AuthPage/RegisterPage"));
 const ForgotPassPage = lazy(() => import("./pages/AuthPage/ForgotPassPage"));
 const ResetPassPage = lazy(() => import("./pages/AuthPage/ResetPassPage"));
+const CombineProductsPage = lazy(() =>
+  import("./pages/Product/CombineProductsPage")
+);
+const ProductDetailsPage = lazy(() =>
+  import("./pages/Product/ProductDetailsPage")
+);
+const LayoutDetails = lazy(() => import("./components/Layout/LayoutDetails"));
+const LayoutPrimary = lazy(() => import("./components/Layout/LayoutPrimary"));
+const ShoppingPage = lazy(() => import("./pages/ShoppingPage"));
 
 function App() {
   // const handleClick = () => {
@@ -83,9 +89,14 @@ function App() {
             path={Epath.productDetails}
             element={<ProductDetailsPage></ProductDetailsPage>}
           ></Route>
-          {/* <Route element={<AuthRoute auth={true} isAuthenticated={true} />}>
-            <Route path={Epath.testPage2} element={<TestPage2 />} />
-          </Route> */}
+          <Route
+            path={Epath.productsCombine}
+            element={<CombineProductsPage></CombineProductsPage>}
+          ></Route>
+          <Route
+            path={Epath.shopping}
+            element={<ShoppingPage></ShoppingPage>}
+          ></Route>
         </Route>
 
         <Route element={<Layout2 />}>

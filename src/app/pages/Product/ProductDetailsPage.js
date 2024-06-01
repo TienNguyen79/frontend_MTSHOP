@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Gap from "../../components/Commom/Gap";
 import ProductDetails from "../../modules/Product/ProductDetails";
 import Tabs from "../../components/Tabs/Tabs";
@@ -8,9 +8,11 @@ import {
   handleGetDetailsProduct,
   handleSuggestProduct,
 } from "../../../store/product/handleProduct";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Title from "../../components/Commom/Title";
 import ProductItem from "../../modules/Product/ProductItem";
+import { getVariablesLC, saveVariablesLC } from "../../../utils/localStorage";
+import useLocationChange from "../../../utils/functions";
 
 const ProductDetailsPage = () => {
   const dispatch = useDispatch();
@@ -28,6 +30,14 @@ const ProductDetailsPage = () => {
   const dataSuggest = useSelector((state) => state.product.dataAllProduct);
 
   const data = useSelector((state) => state.product.dataDetailsProduct);
+
+  // // Callback to save tabsProDetails as 1 when navigating away from this page
+  // const handleSaveTabOnExit = useCallback(() => {
+  //   saveVariablesLC("tabsProDetails", 1);
+  // }, []);
+
+  // // Use the custom hook to detect location changes
+  // useLocationChange(handleSaveTabOnExit);
 
   return (
     <div>

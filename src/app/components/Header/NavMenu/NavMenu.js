@@ -29,7 +29,7 @@ const navLink = [
   {
     id: 2,
     name: "Sản Phẩm",
-    url: "/shop",
+    url: "/shopping/all",
     icon: <Shirt />,
     icon2: <FontAwesomeIcon size="xs" icon={faChevronDown} />,
     navSub: "yes",

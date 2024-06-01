@@ -4,6 +4,7 @@ import {
   handleGetDetailsProduct,
   handleGetNewArrivals,
   handleGetQuantityProduct,
+  handleGetTopDiscountProduct,
   handleGetTopSoldProduct,
   handleSuggestProduct,
 } from "./handleProduct";
@@ -17,6 +18,7 @@ const initialState = {
   dataDetailsProduct: {},
   dataQuantityProduct: {},
   dataTopSoldProduct: [],
+  dataTopDiscountProduct: [],
   dataNewArrivals: [],
   loading: false,
   loadingSearchProduct: false,
@@ -58,6 +60,14 @@ const productSlice = createSlice({
       })
       .addCase(handleGetNewArrivals.rejected, (state, action) => {
         state.dataNewArrivals = [];
+      })
+
+      //Get TopDiscount Product
+      .addCase(handleGetTopDiscountProduct.fulfilled, (state, action) => {
+        state.dataTopDiscountProduct = action.payload;
+      })
+      .addCase(handleGetTopDiscountProduct.rejected, (state, action) => {
+        state.dataTopDiscountProduct = [];
       })
 
       //data Details Product

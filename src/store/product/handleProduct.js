@@ -31,6 +31,18 @@ export const handleGetTopSoldProduct = createAsyncThunk(
   }
 );
 
+export const handleGetTopDiscountProduct = createAsyncThunk(
+  "product/handleGetTopDiscountProduct",
+  async (data, thunkAPI) => {
+    try {
+      const response = await requestGetAllProduct(data);
+      return response.data;
+    } catch (error) {
+      console.log("🚀 ~ error:", error);
+    }
+  }
+);
+
 export const handleGetNewArrivals = createAsyncThunk(
   "product/handleGetNewArrivals",
   async (data, thunkAPI) => {

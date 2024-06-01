@@ -1,5 +1,7 @@
+import { useLocation } from "react-router-dom";
 import IconStarGray from "../app/components/Icon/IconStarGray";
 import IconStarYellow from "../app/components/Icon/IconStarYellow";
+import { useEffect } from "react";
 
 // check ảnh
 export function checkImageExtension(fileNameOrUrl) {
@@ -112,3 +114,15 @@ export const sortByQuantityProduct = (array, acs) => {
   );
   return arraySort;
 };
+
+const useLocationChange = (onLocationChange) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    onLocationChange(location);
+
+    // You can also return a cleanup function if needed
+  }, [location, onLocationChange]);
+};
+
+export default useLocationChange;

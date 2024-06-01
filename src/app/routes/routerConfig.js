@@ -20,6 +20,12 @@ export const Epath = {
   // product Details
   productDetails: "/product/:id",
 
+  // product combines
+  productsCombine: "/productsCombine",
+
+  // shopping
+  shopping: "/shopping/:params",
+
   testPage: "/test",
   testPage2: "/test2",
 };

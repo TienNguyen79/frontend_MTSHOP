@@ -198,3 +198,43 @@ body {
 .scroll-hidden::-webkit-scrollbar {
   display: none;
 }
+
+.filterProduct {
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  // //tree
+  // .ant-tree-title {
+  //   @apply text-text3;
+  // }
+  .ant-tree-node-selected {
+    color: #70c1b3;
+    background-color: unset !important;
+  }
+  // .ant-tree-list-holder-inner {
+  //   row-gap: 16px;
+  //   @apply transition-all;
+  // }
+  // .ant-tree-treenode-motion {
+  // }
+  .ant-tree-treenode {
+    margin-bottom: 10px;
+  }
+}
+
+// custom radio
+:where(.css-dev-only-do-not-override-mzwlov).ant-radio-wrapper
+  .ant-radio-checked
+  .ant-radio-inner {
+  border-color: #70c1b3;
+  background-color: #70c1b3;
+}

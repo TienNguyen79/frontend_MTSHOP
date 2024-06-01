@@ -19,14 +19,17 @@ import BrandFashion from "../../modules/HomePage/BrandFashion/BrandFashion";
 import FashionNews from "../../modules/FashionNews/FashionNews";
 import {
   handleGetNewArrivals,
+  handleGetTopDiscountProduct,
   handleGetTopSoldProduct,
 } from "../../../store/product/handleProduct";
+import { useLocation } from "react-router-dom";
 const HomePage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(handleGetTopSoldProduct());
     dispatch(handleGetNewArrivals());
+    dispatch(handleGetTopDiscountProduct({ topDisCount: 80 }));
   }, [dispatch]);
 
   const dataTopSoldProduct = useSelector(
@@ -35,7 +38,11 @@ const HomePage = () => {
   const dataNewArrivalProduct = useSelector(
     (state) => state.product.dataNewArrivals.results
   );
-  console.log("🚀 ~ HomePage ~ dataNewArrivalProduct:", dataNewArrivalProduct);
+
+  const datTopDiscountProduct = useSelector(
+    (state) => state.product.dataTopDiscountProduct.results
+  );
+
   return (
     <div>
       <SliderBanner></SliderBanner>
@@ -56,8 +63,20 @@ const HomePage = () => {
 
         <div className="mt-[60px]">
           <FlexRow>
+            <Title title="Sản Phẩm Mới Ra" width="after:w-[190px]"></Title>
+          </FlexRow>
+          <div className="grid grid-cols-4 gap-x-5 gap-y-10">
+            {dataNewArrivalProduct?.length > 0 &&
+              dataNewArrivalProduct.map((product) => (
+                <ProductItem key={product.id} data={product}></ProductItem>
+              ))}
+          </div>
+        </div>
+
+        <div className="mt-[60px]">
+          <FlexRow>
             <Title title="Sản Phẩm Bán Chạy" width="after:w-[220px]"></Title>
-            <LabelRedirect title="Xem thêm" />
+            <LabelRedirect url="/productsCombine" title="Xem thêm" />
           </FlexRow>
           <div className="grid grid-cols-4 gap-x-5 gap-y-10">
             {dataTopSoldProduct?.length > 0 &&
@@ -69,13 +88,19 @@ const HomePage = () => {
 
         <div className="mt-[60px]">
           <FlexRow>
-            <Title title="Sản Phẩm Mới Ra" width="after:w-[190px]"></Title>
+            <Title
+              title="Sản Phẩm Siêu Giảm Giá"
+              width="after:w-[265px]"
+            ></Title>
+            <LabelRedirect url="/productsCombine" title="Xem thêm" />
           </FlexRow>
           <div className="grid grid-cols-4 gap-x-5 gap-y-10">
-            {dataNewArrivalProduct?.length > 0 &&
-              dataNewArrivalProduct.map((product) => (
-                <ProductItem key={product.id} data={product}></ProductItem>
-              ))}
+            {datTopDiscountProduct?.length > 0 &&
+              datTopDiscountProduct
+                .slice(0, 8)
+                .map((product) => (
+                  <ProductItem key={product.id} data={product}></ProductItem>
+                ))}
           </div>
         </div>
 
