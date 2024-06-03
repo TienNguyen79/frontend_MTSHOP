@@ -10,6 +10,7 @@ const TextArea = (props) => {
     name,
     placeholder = "",
     children,
+    className = "",
     onChange = () => {},
     ...rest
   } = props;
@@ -31,7 +32,7 @@ const TextArea = (props) => {
 
   return (
     <textarea
-      className="py-4 px-6 w-full min-h-[141px] outline-none resize-none border font-medium  rounded-xl "
+      className={`py-4 px-6 w-full min-h-[141px] outline-none resize-none border font-medium  rounded-xl ${className}`}
       placeholder={placeholder}
       id={name}
       {...rest}

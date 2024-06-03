@@ -26,6 +26,12 @@ export const Epath = {
   // shopping
   shopping: "/shopping/:params",
 
+  // news
+  news: "/news",
+
+  // news
+  newsDetail: "/news/:id",
+
   testPage: "/test",
   testPage2: "/test2",
 };

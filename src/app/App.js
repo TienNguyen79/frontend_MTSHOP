@@ -7,6 +7,8 @@ import AuthRoute from "./routes/AuthRoute";
 import { useDispatch } from "react-redux";
 import { getTokenFromLocalStorage } from "../utils/localStorage";
 import { handleGetCurrentUser } from "../store/user/handleUser";
+import NewsPage from "./pages/News/NewsPage";
+import NewsDetailsPage from "./pages/News/NewsDetailsPage";
 
 const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
@@ -96,6 +98,12 @@ function App() {
           <Route
             path={Epath.shopping}
             element={<ShoppingPage></ShoppingPage>}
+          ></Route>
+
+          <Route path={Epath.news} element={<NewsPage></NewsPage>}></Route>
+          <Route
+            path={Epath.newsDetail}
+            element={<NewsDetailsPage></NewsDetailsPage>}
           ></Route>
         </Route>
 

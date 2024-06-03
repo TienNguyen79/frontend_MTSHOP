@@ -38,6 +38,14 @@ body {
   white-space: pre-wrap; /* let the text wrap preserving spaces */
 }
 
+.multiline-ellipsis3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* start showing ellipsis when 2rd line is reached */
+  white-space: pre-wrap; /* let the text wrap preserving spaces */
+}
+
 .tag {
   display: inline-block;
   padding: 5px 15px;

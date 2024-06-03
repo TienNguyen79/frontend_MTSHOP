@@ -16,7 +16,7 @@ const FashionNewsItem = () => {
           <CategoryNews className="max-w-[330px]"></CategoryNews>
           <DateCreateNews></DateCreateNews>
         </div>
-        <TitleNews className="max-w-[320px]" to="/ds"></TitleNews>
+        <TitleNews className="max-w-[320px]" to="/news/1"></TitleNews>
         <ContentNews></ContentNews>
       </div>
     </div>
