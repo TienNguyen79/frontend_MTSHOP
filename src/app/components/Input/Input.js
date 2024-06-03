@@ -40,7 +40,7 @@ const Input = (props) => {
         <input
           type={type}
           id={name}
-          className={`py-3 px-4 w-full border font-medium  rounded-md placeholder:text-text4 outline-none  ${className}   ${
+          className={`py-3 px-4 w-full border font-medium  rounded-md  outline-none  ${className}   ${
             error ? "border-error " : "border-[#D0D1D3]  "
           } ${
             children && kind === "eye"

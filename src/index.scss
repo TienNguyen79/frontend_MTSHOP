@@ -246,3 +246,12 @@ body {
   border-color: #70c1b3;
   background-color: #70c1b3;
 }
+
+.checkout {
+  .ant-select-selection-placeholder {
+    @apply text-[#9CA3AF] font-medium;
+  }
+  .ant-select-selection-item {
+    @apply text-text1 font-medium;
+  }
+}

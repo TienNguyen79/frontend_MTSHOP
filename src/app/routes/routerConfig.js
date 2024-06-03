@@ -32,6 +32,12 @@ export const Epath = {
   // news
   newsDetail: "/news/:id",
 
+  // check out
+  checkout: "/checkout",
+
+  // check out
+  contact: "/contact",
+
   testPage: "/test",
   testPage2: "/test2",
 };

@@ -9,6 +9,8 @@ import { getTokenFromLocalStorage } from "../utils/localStorage";
 import { handleGetCurrentUser } from "../store/user/handleUser";
 import NewsPage from "./pages/News/NewsPage";
 import NewsDetailsPage from "./pages/News/NewsDetailsPage";
+import CheckOutPage from "./pages/CheckOutPage";
+import ContactPage from "./pages/ContactPage";
 
 const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
@@ -74,6 +76,10 @@ function App() {
             path={Epath.forgotPass}
             element={<ForgotPassPage></ForgotPassPage>}
           ></Route>
+          <Route
+            path={Epath.contact}
+            element={<ContactPage></ContactPage>}
+          ></Route>
           <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
         </Route>
 
@@ -105,6 +111,13 @@ function App() {
             path={Epath.newsDetail}
             element={<NewsDetailsPage></NewsDetailsPage>}
           ></Route>
+
+          <Route element={<AuthRoute auth={true} isAuthenticated={true} />}>
+            <Route
+              path={Epath.checkout}
+              element={<CheckOutPage></CheckOutPage>}
+            ></Route>
+          </Route>
         </Route>
 
         <Route element={<Layout2 />}>

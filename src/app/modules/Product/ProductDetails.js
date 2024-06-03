@@ -20,6 +20,7 @@ import {
 import { getVariablesLC } from "../../../utils/localStorage";
 import { toast } from "react-toastify";
 import { handleAddtoCart } from "../../../store/cart/handleCart";
+import { Epath } from "../../routes/routerConfig";
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
@@ -286,7 +287,11 @@ const ProductDetails = () => {
             >
               Thêm vào Giỏ hàng
             </Button>
-            <Button kind="primary" className="py-3 px-4  rounded-[4px]">
+            <Button
+              href={Epath.checkout}
+              kind="primary"
+              className="py-3 px-4  rounded-[4px]"
+            >
               Mua Ngay
             </Button>
           </div>
