@@ -38,6 +38,8 @@ export const Epath = {
   // check out
   contact: "/contact",
 
+  userDashboard: "/userDashboard",
+
   testPage: "/test",
   testPage2: "/test2",
 };

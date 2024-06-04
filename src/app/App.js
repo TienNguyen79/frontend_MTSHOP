@@ -7,10 +7,6 @@ import AuthRoute from "./routes/AuthRoute";
 import { useDispatch } from "react-redux";
 import { getTokenFromLocalStorage } from "../utils/localStorage";
 import { handleGetCurrentUser } from "../store/user/handleUser";
-import NewsPage from "./pages/News/NewsPage";
-import NewsDetailsPage from "./pages/News/NewsDetailsPage";
-import CheckOutPage from "./pages/CheckOutPage";
-import ContactPage from "./pages/ContactPage";
 
 const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
@@ -30,20 +26,14 @@ const ProductDetailsPage = lazy(() =>
 const LayoutDetails = lazy(() => import("./components/Layout/LayoutDetails"));
 const LayoutPrimary = lazy(() => import("./components/Layout/LayoutPrimary"));
 const ShoppingPage = lazy(() => import("./pages/ShoppingPage"));
+const UserDashboard = lazy(() => import("./pages/UserDashboardPage"));
+const LayoutUser = lazy(() => import("./components/Layout/LayoutUser"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const CheckOutPage = lazy(() => import("./pages/CheckOutPage"));
+const NewsDetailsPage = lazy(() => import("./pages/News/NewsDetailsPage"));
+const NewsPage = lazy(() => import("./pages/News/NewsPage"));
 
 function App() {
-  // const handleClick = () => {
-  //   toast.success("ok", { autoClose: 1000 });
-  // };
-  // const [openPopup, setOpenPopup] = useState(false);
-  // const ref = useRef(null);
-  // const openerRef = useRef(null);
-  // const handleOutsideClick = () => {
-  //   setOpenPopup(false);
-  // };
-
-  // useClickOutSide(openerRef, ref, handleOutsideClick);
-
   // const dispatch = useDispatch();
 
   // useEffect(() => {
@@ -80,8 +70,10 @@ function App() {
             path={Epath.contact}
             element={<ContactPage></ContactPage>}
           ></Route>
-          <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
         </Route>
+
+        {/* Not found */}
+        <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
 
         {/* -------------Không Layout------------------------------- */}
 
@@ -116,6 +108,16 @@ function App() {
             <Route
               path={Epath.checkout}
               element={<CheckOutPage></CheckOutPage>}
+            ></Route>
+          </Route>
+        </Route>
+
+        {/* LayoutUser */}
+        <Route element={<LayoutUser />}>
+          <Route element={<AuthRoute auth={true} isAuthenticated={true} />}>
+            <Route
+              path={Epath.userDashboard}
+              element={<UserDashboard></UserDashboard>}
             ></Route>
           </Route>
         </Route>

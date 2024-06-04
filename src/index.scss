@@ -255,3 +255,9 @@ body {
     @apply text-text1 font-medium;
   }
 }
+
+//active tab
+.second-link.active {
+  background-color: #92dbcf;
+  color: #fff;
+}
