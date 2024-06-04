@@ -32,6 +32,8 @@ const ContactPage = lazy(() => import("./pages/ContactPage"));
 const CheckOutPage = lazy(() => import("./pages/CheckOutPage"));
 const NewsDetailsPage = lazy(() => import("./pages/News/NewsDetailsPage"));
 const NewsPage = lazy(() => import("./pages/News/NewsPage"));
+const MyOrdersPage = lazy(() => import("./pages/MyOrdersPage"));
+const OrderDetailsPage = lazy(() => import("./pages/OrderDetailsPage"));
 
 function App() {
   // const dispatch = useDispatch();
@@ -118,6 +120,14 @@ function App() {
             <Route
               path={Epath.userDashboard}
               element={<UserDashboard></UserDashboard>}
+            ></Route>
+            <Route
+              path={Epath.myOrders}
+              element={<MyOrdersPage></MyOrdersPage>}
+            ></Route>
+            <Route
+              path={Epath.orderDetail}
+              element={<OrderDetailsPage></OrderDetailsPage>}
             ></Route>
           </Route>
         </Route>

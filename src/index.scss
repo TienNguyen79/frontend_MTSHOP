@@ -261,3 +261,37 @@ body {
   background-color: #92dbcf;
   color: #fff;
 }
+
+.tabsOrder {
+  .ant-tabs-nav-wrap {
+    justify-content: center;
+  }
+  .ant-tabs-ink-bar.ant-tabs-ink-bar-animated {
+    background-color: #70c1b3;
+  }
+}
+:where(.css-dev-only-do-not-override-mzwlov).ant-tabs
+  .ant-tabs-tab.ant-tabs-tab-active
+  .ant-tabs-tab-btn {
+  color: #70c1b3;
+}
+:where(.css-dev-only-do-not-override-mzwlov).ant-tabs .ant-tabs-tab:hover {
+  color: #70c1b3;
+}
+
+:where(.css-dev-only-do-not-override-mzwlov).ant-steps
+  .ant-steps-item-finish
+  .ant-steps-item-icon {
+  background-color: #b5f1e7;
+}
+span.anticon.anticon-check.ant-steps-finish-icon {
+  color: #fff;
+}
+
+.ant-steps-item-icon {
+  background-color: #92dbcf !important;
+  border-color: #b5f1e7 !important;
+}
+span.ant-steps-icon {
+  color: #fff !important;
+}

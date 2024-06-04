@@ -18,7 +18,7 @@ const navLink = [
     id: 2,
     icon: <ShoppingBag />,
     name: "Đơn Hàng",
-    to: "/order_history",
+    to: Epath.myOrders,
   },
   {
     id: 3,
@@ -50,7 +50,7 @@ const LayoutUser = () => {
                 </h1>
                 {navLink.map((item) => (
                   <NavLink
-                    className="flex gap-x-[10px] items-center py-6 px-5 second-link text-[#666] "
+                    className="flex gap-x-[10px] items-center py-4 px-5 second-link text-[#666] "
                     key={item.id}
                     to={item.to}
                     activeclassname="active"
