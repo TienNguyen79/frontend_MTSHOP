@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import requestGetTopSoldProduct, {
+  requestFilterProduct,
   requestGetAllProduct,
   requestGetDetailsProduct,
   requestGetNewArrivals,
@@ -86,6 +87,18 @@ export const handleSuggestProduct = createAsyncThunk(
     try {
       const response = await requestSuggestProduct(id);
       return response.data.results;
+    } catch (error) {
+      console.log("🚀 ~ error:", error);
+    }
+  }
+);
+
+export const handleFilterProduct = createAsyncThunk(
+  "product/handleFilterProduct",
+  async (data, thunkAPI) => {
+    try {
+      const response = await requestFilterProduct(data);
+      return response.data;
     } catch (error) {
       console.log("🚀 ~ error:", error);
     }

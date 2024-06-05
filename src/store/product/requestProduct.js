@@ -38,3 +38,17 @@ export function requestGetQuantityProduct(data) {
 export function requestSuggestProduct(id) {
   return axiosClient.get(`/suggestProduct/${id}`);
 }
+
+export function requestFilterProduct(data) {
+  const queryPage = data.page ? `&page=${data.page} ` : "";
+  const queryCategory = data.category ? `&category=${data.category} ` : "";
+  const queryMinPrice = data.minPrice ? `&minPrice=${data.minPrice} ` : "";
+  const queryMaxPrice = data.maxPrice ? `&maxPrice=${data.maxPrice} ` : "";
+  const queryRate = data.rate ? `&rate=${data.rate} ` : "";
+
+  const queryString = `?limit=${
+    data.limit || 12
+  }${queryCategory}${queryMinPrice}${queryMaxPrice}${queryRate}${queryPage}`;
+
+  return axiosClient.get(`/productFilter${queryString}`);
+}

@@ -1,5 +1,6 @@
 import { createSlice, createAction } from "@reduxjs/toolkit";
 import {
+  handleFilterProduct,
   handleGetAllProduct,
   handleGetDetailsProduct,
   handleGetNewArrivals,
@@ -91,6 +92,14 @@ const productSlice = createSlice({
         state.dataAllProduct = action.payload;
       })
       .addCase(handleSuggestProduct.rejected, (state, action) => {
+        state.dataAllProduct = [];
+      })
+
+      //data filter  Product
+      .addCase(handleFilterProduct.fulfilled, (state, action) => {
+        state.dataAllProduct = action.payload;
+      })
+      .addCase(handleFilterProduct.rejected, (state, action) => {
         state.dataAllProduct = [];
       });
   },

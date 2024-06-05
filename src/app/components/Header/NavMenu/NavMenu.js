@@ -92,7 +92,7 @@ const NavMenu = () => {
                 Categories?.length > 0 &&
                 Categories.map((item, index) => (
                   <div className="relative containerNavBox1 " key={item.id}>
-                    <Link>
+                    <Link to={`shopping/${item?.id}`}>
                       <div
                         className={`flex justify-between items-center min-w-[220px] hover:bg-secondary  bg-primary text-white border-b-2 border-dotted shadow-lg py-3  ${
                           index === 0 && "rounded-tl-md rounded-tr-md"
@@ -116,7 +116,7 @@ const NavMenu = () => {
                     <div className="containerNavBox2 absolute top-0  left-[calc(100%+5px)] opacity-0 invisible translate-y-[160px]   transition-all   ">
                       {item?.children.length > 0 &&
                         item?.children?.map((child, index) => (
-                          <Link key={child.id}>
+                          <Link key={child.id} to={`shopping/${child?.id}`}>
                             <div
                               className={`min-w-[220px] bg-primary text-white border-b-2 border-dotted shadow-lg py-3 hover:bg-secondary ${
                                 index === 0 && "rounded-tl-md rounded-tr-md"

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Gap from "../components/Commom/Gap";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ProductItem from "../modules/Product/ProductItem";
-import { Divider, Radio, Space, Tree } from "antd";
+import { Divider, Pagination, Radio, Space, Tree } from "antd";
 import { Atom, BadgeCheck, Check, Dot, Hourglass, Minus } from "lucide-react";
 import Title from "../components/Commom/Title";
 import { useForm } from "react-hook-form";
@@ -15,23 +15,53 @@ import AttributeProduct from "../modules/Product/parts/AttributeProduct";
 import { useDispatch, useSelector } from "react-redux";
 import { handleGetAllCategory } from "../../store/category/handleCategory";
 import { sortByQuantityProduct } from "../../utils/functions";
-
+import { handleFilterProduct } from "../../store/product/handleProduct";
+import queryString from "query-string";
+import Image from "../components/Image/Image";
 const ShoppingPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { params } = useParams();
-  const { control, handleSubmit } = useForm();
-  const [errorPrice, setErrorPrice] = useState("");
 
+  const { control, handleSubmit, setValue } = useForm();
+  const [errorPrice, setErrorPrice] = useState("");
   const [selectedKeys, setSelectedKeys] = useState();
-  console.log("🚀 ~ ShoppingPage ~ selectedKeys:", selectedKeys);
+  const [valueRate, setValueRate] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(12);
+
+  const handlePagination = (page, pageSize) => {
+    setCurrentPage(page);
+    setPageSize(pageSize);
+  };
+
+  const currentQueryParams = queryString.parse(location.search);
+  const maxPrice = currentQueryParams.maxPrice
+    ? parseInt(currentQueryParams.maxPrice)
+    : null;
+  const minPrice = currentQueryParams.minPrice
+    ? parseInt(currentQueryParams.minPrice)
+    : null;
+  const rate = currentQueryParams.rate
+    ? parseInt(currentQueryParams.rate)
+    : null;
 
   const handleSelectCategory = (selectedKeys, info) => {
-    setSelectedKeys(selectedKeys[0]);
+    if (selectedKeys.length > 0) {
+      setSelectedKeys(selectedKeys[0]);
+      setValue("minPrice", "");
+      setValue("maxPrice", "");
+      setValueRate(null);
+      navigate(`/shopping/${selectedKeys}`);
+    } else {
+      setSelectedKeys([parseInt(params)]);
+    }
   };
 
   useEffect(() => {
     dispatch(handleGetAllCategory({ limit: LIMIT_HIGH }));
-  }, []);
+  }, [dispatch]);
 
   const dataAllCategory = useSelector(
     (state) => state.category.dataAllCategory.results
@@ -55,11 +85,34 @@ const ShoppingPage = () => {
     } else if (maxPrice < minPrice) {
       return setErrorPrice("Vui Lòng khoảng giá phù hợp !");
     } else {
-      console.log("🚀 ~ handleSubmitPrice ~ data:", data);
+      console.log("okok");
+      const currentQueryParams = queryString.parse(location.search);
+
+      // const objPrice = {};
+      // if (minPrice) {
+      //   objPrice.minPrice = minPrice;
+      // }
+
+      // if (maxPrice) {
+      //   objPrice.maxPrice = maxPrice;
+      // }
+
+      const newQueryParams = {
+        ...currentQueryParams,
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+      };
+
+      const linkPrice = queryString.stringifyUrl({
+        url: location.pathname,
+        query: newQueryParams,
+      });
+      navigate(linkPrice);
       return setErrorPrice("");
     }
   };
 
+  // đổ data tree category
   const treeDataCate =
     sortDataAllCategory.length > 0
       ? sortDataAllCategory.map((cate, index) => ({
@@ -84,10 +137,42 @@ const ShoppingPage = () => {
         }))
       : [];
 
+  // change rate
   const handleChangeRate = (e) => {
-    console.log("radio checked", e.target.value);
-    // setValue(e.target.value);
+    const currentQueryParams = queryString.parse(location.search);
+    const newQueryParams = { ...currentQueryParams, rate: e.target.value };
+    const linkRate = queryString.stringifyUrl({
+      url: location.pathname,
+      query: newQueryParams,
+    });
+    navigate(linkRate);
+    setValueRate(rate);
   };
+
+  // call api
+  useEffect(() => {
+    dispatch(
+      handleFilterProduct({
+        category: params === "all" ? "" : params,
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+        rate: rate,
+        page: currentPage,
+        limit: pageSize,
+      })
+    );
+  }, [currentPage, dispatch, maxPrice, minPrice, pageSize, params, rate]);
+
+  // khi load lại sẽ không mất value
+  useEffect(() => {
+    minPrice && setValue("minPrice", minPrice);
+    maxPrice && setValue("maxPrice", maxPrice);
+    rate && setValueRate(rate);
+    params !== "all" && setSelectedKeys([parseInt(params)]);
+  }, [maxPrice, minPrice, params, rate, setValue]);
+
+  const { dataAllProduct } = useSelector((state) => state.product);
+
   return (
     <div>
       <Gap>
@@ -110,15 +195,16 @@ const ShoppingPage = () => {
                   style={{
                     fontSize: "18px",
                     color: "#000000",
-                    textTransform: "capitalize",
-                    fontWeight: "500",
+                    textTransform: "uppercase",
+                    fontWeight: "400",
                   }}
                   className="filterProduct"
                   showIcon
-                  defaultExpandAll
-                  // expandedKeys={[1]}
-                  defaultSelectedKeys={[1]}
-                  //   switcherIcon={<Hourglass />}
+                  defaultExpandAll={params === "all"}
+                  defaultSelectedKeys={[parseInt(params)]}
+                  defaultExpandedKeys={[parseInt(params)]}
+                  selectedKeys={[parseInt(params)]}
+                  expandedKeys={[parseInt(params)]}
                   autoExpandParent={true}
                   treeData={treeDataCate}
                   onSelect={handleSelectCategory}
@@ -189,8 +275,8 @@ const ShoppingPage = () => {
                   <Radio.Group
                     onChange={handleChangeRate}
                     name="radiogroup"
-                    defaultValue={1}
-                    // value={3}
+                    defaultValue={valueRate}
+                    value={valueRate}
                   >
                     <Space direction="vertical">
                       {dataRating.map((item) => (
@@ -248,13 +334,34 @@ const ShoppingPage = () => {
           </div>
 
           <div className="col-span-5 mt-10">
+            {dataAllProduct?.totalResults <= 0 && (
+              <div className="h-full flex items-start justify-center">
+                <div>
+                  <Image url="/cart_empty.png" className="w-[200px]"></Image>
+                  <h1 className="text-center text-text3 text-[18px] mt-3">
+                    Không có Sản Phẩm Nào
+                  </h1>
+                </div>
+              </div>
+            )}
+
             <div className="grid grid-cols-3 gap-6">
-              <ProductItem></ProductItem>
-              <ProductItem></ProductItem>
-              <ProductItem></ProductItem>
-              <ProductItem></ProductItem>
-              <ProductItem></ProductItem>
+              {dataAllProduct?.results?.length > 0 &&
+                dataAllProduct.results.map((product) => (
+                  <ProductItem key={product.id} data={product}></ProductItem>
+                ))}
             </div>
+
+            {dataAllProduct?.totalPages > 1 && (
+              <div className="flex items-center justify-center mt-[40px]">
+                <Pagination
+                  total={dataAllProduct?.totalResults}
+                  defaultPageSize={pageSize}
+                  defaultCurrent={currentPage}
+                  onChange={handlePagination}
+                />
+              </div>
+            )}
           </div>
         </div>
       </Gap>
