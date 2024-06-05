@@ -24,7 +24,7 @@ const navLink = [
     id: 3,
     icon: <Settings />,
     name: "Cài Đặt",
-    to: "/settings",
+    to: Epath.settingUser,
   },
   // {
   //   id: 4,

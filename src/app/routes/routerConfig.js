@@ -43,6 +43,8 @@ export const Epath = {
   myOrders: "/myOrders",
   orderDetail: "/myOrders/:id",
 
+  settingUser: "setting",
+
   testPage: "/test",
   testPage2: "/test2",
 };

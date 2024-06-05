@@ -11,6 +11,7 @@ import { handleGetAllCart } from "../../../store/cart/handleCart";
 import { formatPrice } from "../../../utils/functions";
 import Title from "../../components/Commom/Title";
 import Image from "../../components/Image/Image";
+import { Epath } from "../../routes/routerConfig";
 
 const CartPreview = ({ openCartPreview, setOpenCartPreview }) => {
   const dispatch = useDispatch();
@@ -75,7 +76,11 @@ const CartPreview = ({ openCartPreview, setOpenCartPreview }) => {
                   Xem Giỏ Hàng
                 </Button>
 
-                <Button className="py-3 px-4 rounded-md" kind="primary">
+                <Button
+                  href={Epath.checkout}
+                  className="py-3 px-4 rounded-md"
+                  kind="primary"
+                >
                   Thanh Toán
                 </Button>
               </div>

@@ -7,6 +7,7 @@ import AuthRoute from "./routes/AuthRoute";
 import { useDispatch } from "react-redux";
 import { getTokenFromLocalStorage } from "../utils/localStorage";
 import { handleGetCurrentUser } from "../store/user/handleUser";
+import SettingsUserPage from "./pages/SettingsUserPage";
 
 const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
@@ -128,6 +129,10 @@ function App() {
             <Route
               path={Epath.orderDetail}
               element={<OrderDetailsPage></OrderDetailsPage>}
+            ></Route>
+            <Route
+              path={Epath.settingUser}
+              element={<SettingsUserPage></SettingsUserPage>}
             ></Route>
           </Route>
         </Route>
