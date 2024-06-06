@@ -23,6 +23,8 @@ import {
   handleGetTopSoldProduct,
 } from "../../../store/product/handleProduct";
 import { useLocation } from "react-router-dom";
+import { handleGetAllNews } from "../../../store/news/handleNews";
+
 const HomePage = () => {
   const dispatch = useDispatch();
 
@@ -30,6 +32,7 @@ const HomePage = () => {
     dispatch(handleGetTopSoldProduct());
     dispatch(handleGetNewArrivals());
     dispatch(handleGetTopDiscountProduct({ topDisCount: 80 }));
+    dispatch(handleGetAllNews());
   }, [dispatch]);
 
   const dataTopSoldProduct = useSelector(
@@ -42,6 +45,8 @@ const HomePage = () => {
   const datTopDiscountProduct = useSelector(
     (state) => state.product.dataTopDiscountProduct.results
   );
+
+  const dataAllNews = useSelector((state) => state.news.dataAllNews.results);
 
   return (
     <div>
@@ -108,21 +113,10 @@ const HomePage = () => {
           <FlexRow>
             <Title title="Tin Tức Thời Trang" width="after:w-[200px]"></Title>
           </FlexRow>
-          <FashionNews></FashionNews>
+
+          <FashionNews data={dataAllNews}></FashionNews>
         </div>
       </Gap>
-
-      {/* <Gap>
-        <div className="mt-10">
-          <ProductDetails></ProductDetails>
-        </div>
-      </Gap> */}
-      {/* 
-      <Gap>
-        <Button className="py-3 px-4 rounded-md   " kind="primary">
-          Mua hàng 2
-        </Button>
-      </Gap> */}
     </div>
   );
 };

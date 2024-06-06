@@ -85,7 +85,6 @@ const ShoppingPage = () => {
     } else if (maxPrice < minPrice) {
       return setErrorPrice("Vui Lòng khoảng giá phù hợp !");
     } else {
-      console.log("okok");
       const currentQueryParams = queryString.parse(location.search);
 
       // const objPrice = {};
