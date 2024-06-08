@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import LabelRedirect from "../components/Label/LabelRedirect";
 import { Table, Tabs, Tag } from "antd";
 import DateOrderProduct from "../modules/Product/parts/DateOrderProduct";
 import PriceProduct from "../modules/Product/parts/PriceProduct";
 import Box from "../components/Commom/Box";
-import { Epath } from "../routes/routerConfig";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { handleGetAllOrder } from "../../store/order/handleOrder";
+import { convertDateNumeric } from "../../utils/functions";
 
 const MyOrdersPage = () => {
+  const { statusOrder } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+
   const columns = [
     {
       title: "Mã Đơn",
@@ -55,13 +65,13 @@ const MyOrdersPage = () => {
             </Tag>
           )}
           {status === 3 && (
-            <Tag className="py-1 px-4" color="blue">
+            <Tag className="py-1 px-4 " color="blue">
               Đang Xử Lý
             </Tag>
           )}
           {status === 4 && (
-            <Tag className="py-1 px-4" color="purple">
-              Đang Giao Hàng
+            <Tag className="py-1 px-4 !cursor-pointer" color="purple">
+              Đang Giao hàng
             </Tag>
           )}
           {status === 5 && (
@@ -76,77 +86,102 @@ const MyOrdersPage = () => {
       title: "",
       key: "action",
       dataIndex: "action",
-      render: (label) => (
-        <LabelRedirect url="/myOrders/1" title={label} icon=""></LabelRedirect>
+      render: (_, { action }) => (
+        <LabelRedirect
+          url={`/myOrdersDetails/${action.orderId}`}
+          title={action.title}
+          icon=""
+        ></LabelRedirect>
       ),
-    },
-  ];
-  const data = [
-    {
-      key: 1,
-      orderId: "001",
-      date: "4/6/2024",
-      total: { price: 362000000, quantityPro: 5 },
-      status: 5,
-      action: "Xem Chi Tiết ",
-    },
-    {
-      key: 2,
-      orderId: "002",
-      date: "4/6/2024",
-      total: { price: 362000000, quantityPro: 5 },
-      status: 1,
-      action: "Xem Chi Tiết ",
     },
   ];
 
   const items = [
     {
-      key: 1,
+      key: "1",
       label: "Chờ Xác Nhận",
     },
     {
-      key: 2,
+      key: "2",
       label: "Đã Xác Nhận",
     },
     {
-      key: 3,
+      key: "3",
       label: "Đang Xử Lý",
     },
     {
-      key: 4,
+      key: "4",
       label: "Đang Giao Hàng",
     },
     {
-      key: 5,
+      key: "5",
       label: "Đã Giao Hàng",
     },
     {
-      key: 0,
+      key: "0",
       label: "Đã Hủy",
     },
   ];
 
+  const onChangeTabs = (key) => {
+    navigate(`/myOrders/${key}`);
+  };
+
+  useEffect(() => {
+    dispatch(
+      handleGetAllOrder({
+        statusOrder: statusOrder,
+        limit: pageSize,
+        page: currentPage,
+      })
+    );
+  }, [currentPage, dispatch, pageSize, statusOrder]);
+
+  // khi chuyển tabs khác phải reset về 1
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusOrder]);
+
+  const { dataAllOrder } = useSelector((state) => state.order);
+
+  const dataOrderAll =
+    dataAllOrder?.results?.length > 0
+      ? dataAllOrder?.results?.map((order) => ({
+          key: order.id,
+          orderId: order.id,
+          date: convertDateNumeric(order.createdAt),
+          total: { price: order.total, quantityPro: order.OrderDetails.length },
+          status: parseInt(order.orderState),
+          action: { title: "Xem Chi Tiết", orderId: order.id },
+        }))
+      : [];
+
   return (
     <div>
       <Tabs
-        defaultActiveKey="1"
+        activeKey={statusOrder ? statusOrder.toString() : "1"}
         items={items}
         className="tabsOrder text-textBold font-semibold  "
+        onChange={onChangeTabs}
       />
 
       <Box title="Đơn hàng của tôi">
         <Table
           columns={columns}
-          dataSource={data}
-          pagination={{
-            defaultCurrent: 1,
-            total: 50,
-            pageSize: 10,
-            // onChange: (page, pageSize) => {
-            //   console.log(`Page: ${page}, PageSize: ${pageSize}`);
-            // },
-          }}
+          dataSource={dataOrderAll}
+          pagination={
+            dataAllOrder.totalPages > 1
+              ? {
+                  current: currentPage || 1,
+                  total: dataAllOrder.totalResults,
+                  pageSize: pageSize,
+                  onChange: (page, pageSize) => {
+                    setCurrentPage(page);
+                    setPageSize(pageSize);
+                  },
+                }
+              : false
+          }
         />
       </Box>
     </div>

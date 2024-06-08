@@ -1,41 +1,44 @@
 import React from "react";
 import Header from "../Header/Header";
 import ShowPath from "../Commom/ShowPath";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useParams } from "react-router-dom";
 import Footer from "../Footer/Footer";
 import Gap from "../Commom/Gap";
 import { Epath } from "../../routes/routerConfig";
 import { LayoutDashboard, Settings, ShoppingBag } from "lucide-react";
 
-const navLink = [
-  {
-    id: 1,
-    icon: <LayoutDashboard />,
-    name: "Dashboard",
-    to: Epath.userDashboard,
-  },
-  {
-    id: 2,
-    icon: <ShoppingBag />,
-    name: "Đơn Hàng",
-    to: Epath.myOrders,
-  },
-  {
-    id: 3,
-    icon: <Settings />,
-    name: "Cài Đặt",
-    to: Epath.settingUser,
-  },
-  // {
-  //   id: 4,
-  //   icon: <IconLogout></IconLogout>,
-  //   name: "Log-out",
-  //   to: "#",
-
-  // },
-];
-
 const LayoutUser = () => {
+  const { statusOrder } = useParams();
+
+  const navLink = [
+    {
+      id: 1,
+      icon: <LayoutDashboard />,
+      name: "Dashboard",
+      to: Epath.userDashboard,
+    },
+    {
+      id: 2,
+      icon: <ShoppingBag />,
+      name: "Đơn Hàng",
+      to: `/myOrders/${statusOrder || "1"}`,
+    },
+    {
+      id: 3,
+      icon: <Settings />,
+      name: "Cài Đặt",
+      to: Epath.settingUser,
+    },
+
+    // {
+    //   id: 4,
+    //   icon: <IconLogout></IconLogout>,
+    //   name: "Log-out",
+    //   to: "#",
+
+    // },
+  ];
+
   return (
     <div>
       <Header></Header>

@@ -7,11 +7,15 @@ import ImageUpload from "../components/Image/ImageUpload";
 import Button from "../components/Button/Button";
 
 const SettingsUserPage = () => {
-  const { control } = useForm();
+  const { control, handleSubmit } = useForm();
+
+  const handleSettingUser = (data) => {
+    console.log("🚀 ~ handleSettingUser ~ data:", data);
+  };
   return (
-    <div>
+    <form onClick={handleSubmit(handleSettingUser)}>
       <Box title="Cài Đặt Tài Khoản">
-        <form className="flex flex-col gap-y-4">
+        <div className="flex flex-col gap-y-4">
           <div className="flex items-center justify-center mt-3">
             <ImageUpload className="w-[200px] h-[200px] rounded-full"></ImageUpload>
           </div>
@@ -52,9 +56,9 @@ const SettingsUserPage = () => {
           >
             Lưu Thay Đổi
           </Button>
-        </form>
+        </div>
       </Box>
-    </div>
+    </form>
   );
 };
 

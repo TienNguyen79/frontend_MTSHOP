@@ -44,7 +44,7 @@ const PopupMe = () => {
 
       <div className="border-b-[1px] ">
         <Link
-          // to="/order_history"
+          to="/myOrders/1"
           className="text-[#666] cursor-pointer text-sm py-[10px] block hover:text-primary"
         >
           Đơn hàng
@@ -53,7 +53,7 @@ const PopupMe = () => {
 
       <div className=" ">
         <Link
-          // to="/settings"
+          to="/setting"
           className="text-[#666] cursor-pointer text-sm py-[10px] block hover:text-primary"
         >
           Cài Đặt

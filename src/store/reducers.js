@@ -5,6 +5,7 @@ import categorySlice from "./category/categorySlice";
 import productSlice from "./product/productSlice";
 import cartSlice from "./cart/cartSlice";
 import newsSlice from "./news/newsSlice";
+import orderSlice from "./order/orderSlice";
 
 export const reducer = combineReducers({
   user: userSlice,
@@ -13,4 +14,5 @@ export const reducer = combineReducers({
   product: productSlice,
   cart: cartSlice,
   news: newsSlice,
+  order: orderSlice,
 });

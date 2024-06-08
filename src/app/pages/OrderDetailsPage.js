@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "../components/Commom/Box";
 import NameUser from "../modules/User/parts/NameUser";
 import ContentUser from "../modules/User/parts/ContentUser";
@@ -12,8 +12,44 @@ import { defaultImage2 } from "../../utils/commom";
 import Image from "../components/Image/Image";
 import TitleProduct from "../modules/Product/parts/TitleProduct";
 import AttributeInCart from "../modules/Product/parts/AttributeInCart";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  handleCancelOrder,
+  handleGetDetailsOrder,
+} from "../../store/order/handleOrder";
+import Button from "../components/Button/Button";
+import { Epath } from "../routes/routerConfig";
+import Swal from "sweetalert2";
 
 const OrderDetailsPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    dispatch(handleGetDetailsOrder(id));
+  }, [id, dispatch]);
+
+  const { dataDetailsOrder } = useSelector((state) => state.order);
+
+  const dataTableProduct =
+    dataDetailsOrder?.OrderDetails?.length > 0
+      ? dataDetailsOrder?.OrderDetails?.map((product) => ({
+          key: product.id,
+          product: {
+            url:
+              product?.ProductDetail?.Product?.image[0]?.url || defaultImage2,
+            name: product?.ProductDetail?.Product?.name,
+            size: product?.properties?.size?.description || "",
+            color: product?.properties?.color?.description || "",
+          },
+          price: product?.price,
+          quantity: product?.quantity,
+          total: product.total,
+        }))
+      : [];
+
   const columns = [
     {
       title: "Sản Phẩm",
@@ -21,19 +57,31 @@ const OrderDetailsPage = () => {
       key: "product",
       render: (_, { product }) => (
         <div className="flex items-start gap-x-3">
-          <Image
-            className="w-[80px] h-[80px] rounded-lg overflow-hidden"
-            url={product?.url}
-          ></Image>
-          <div className="flex flex-col">
-            <TitleProduct className="text-textBold font-medium max-w-[260px]">
+          <div className="flex-1">
+            <Image
+              className="w-[80px] h-[80px] rounded-lg overflow-hidden"
+              url={product?.url}
+            ></Image>
+          </div>
+          <div className="flex flex-col flex-[2]">
+            <TitleProduct className="text-textBold font-medium max-w-[200px]">
               {product?.name}
             </TitleProduct>
-            <AttributeInCart className="uppercase">SIZE: XL</AttributeInCart>
-            <AttributeInCart className="uppercase">COLOR: XANH</AttributeInCart>
+
+            {product.size && (
+              <AttributeInCart className="uppercase">
+                SIZE: {product.size}
+              </AttributeInCart>
+            )}
+            {product.color && (
+              <AttributeInCart className="uppercase">
+                COLOR: {product.color}
+              </AttributeInCart>
+            )}
           </div>
         </div>
       ),
+      width: 300,
     },
     {
       title: "Giá",
@@ -62,37 +110,46 @@ const OrderDetailsPage = () => {
       },
     },
   ];
-  const data = [
-    {
-      key: 1,
-      product: {
-        url: defaultImage2,
-        name: "Sản Phẩm Chất Lượng Cao Sản Phẩm Chất Lượng Cao ",
-      },
-      price: 200000,
-      quantity: 40,
-      total: 5000000,
-    },
-    {
-      key: 2,
-      product: {
-        url: defaultImage2,
-        name: "Sản Phẩm Chất Lượng Cao Sản Phẩm Chất Lượng Cao ",
-      },
-      price: 200000,
-      quantity: 40,
-      total: 5000000,
-    },
-  ];
 
   return (
     <div>
       <Box
         title="Chi Tiết Đơn Hàng"
         labelRedirec="Quay lại"
-        url="/#"
+        url={Epath.userDashboard}
         isShowLabel
       >
+        <div className="flex justify-end">
+          {dataDetailsOrder.orderState === "1" && (
+            <Button
+              className="my-2 !py-1 !px-3 text-sm rounded-md bg-error text-white"
+              onClick={() =>
+                Swal.fire({
+                  title: `Bạn có chắc chắn muốn hủy đơn hàng ?`,
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Chắc Chắn",
+                  cancelButtonText: "Hủy Bỏ",
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    dispatch(
+                      handleCancelOrder({
+                        id: dataDetailsOrder?.id,
+                        callBack: () => {
+                          navigate("/myOrders/1");
+                        },
+                      })
+                    );
+                  }
+                })
+              }
+            >
+              Hủy Đơn Hàng
+            </Button>
+          )}
+        </div>
         <div className="flex items-center gap-x-3">
           <Box isShowheader={false} className="flex-1">
             <div className="flex flex-col  py-2">
@@ -100,13 +157,13 @@ const OrderDetailsPage = () => {
                 Địa chỉ giao hàng
               </h1>
               <div className="flex justify-center items-start flex-col gap-y-3 mt-2">
-                <NameUser name="Tiến Nguyễn"></NameUser>
+                <NameUser name={dataDetailsOrder?.User?.userName}></NameUser>
                 <ContentUser>tiennguyen@gmail.com</ContentUser>
                 <ContentUser className="!text-text1 text-[16px]">
-                  Nguyễn Trãi, Quận Thanh Xuân , Thành Phố Hà Nội
+                  {dataDetailsOrder?.deliveryAddress?.address}
                 </ContentUser>
                 <ContentUser className="!text-text1 text-[16px]">
-                  09199 888 88
+                  {dataDetailsOrder?.User?.phoneNumber}
                 </ContentUser>
               </div>
             </div>
@@ -119,17 +176,19 @@ const OrderDetailsPage = () => {
               <h1>
                 Mã Đơn:{" "}
                 <span className="inline-block text-textBold font-semibold">
-                  #0001
+                  #{dataDetailsOrder?.id}
                 </span>
               </h1>
-              <h1 className="mt-1">Thanh Toán Khi Nhận Hàng</h1>
+              <h1 className="mt-1">
+                {dataDetailsOrder?.PaymentMethodUser?.PaymentMethodSystem?.name}
+              </h1>
               <div>
                 <div className="flex items-center justify-between pt-6  border-b-[3px] border-text2">
                   <Title
                     title="Tổng Tiền"
                     className="text-[17px] font-normal"
                   ></Title>
-                  <PriceProduct></PriceProduct>
+                  <PriceProduct price={dataDetailsOrder?.total}></PriceProduct>
                 </div>
                 <div className="flex items-center justify-between pt-6  border-b-[3px] border-text2">
                   <Title
@@ -143,7 +202,7 @@ const OrderDetailsPage = () => {
                     title="Tổng Tiền"
                     className="text-[17px] font-normal"
                   ></Title>
-                  <PriceProduct></PriceProduct>
+                  <PriceProduct price={dataDetailsOrder?.total}></PriceProduct>
                 </div>
               </div>
             </div>
@@ -154,7 +213,7 @@ const OrderDetailsPage = () => {
           <Steps
             className="text-text1 font-medium"
             size="small"
-            current={4}
+            current={parseInt(dataDetailsOrder?.orderState)}
             items={[
               {
                 title: "Đã Xác Nhận",
@@ -175,15 +234,9 @@ const OrderDetailsPage = () => {
         <div>
           <Table
             columns={columns}
-            dataSource={data}
-            pagination={{
-              defaultCurrent: 1,
-              total: 50,
-              pageSize: 10,
-              // onChange: (page, pageSize) => {
-              //   console.log(`Page: ${page}, PageSize: ${pageSize}`);
-              // },
-            }}
+            dataSource={dataTableProduct}
+            pagination={false}
+            scroll={{ y: 400 }}
           />
         </div>
       </Box>
