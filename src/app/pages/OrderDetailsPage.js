@@ -210,26 +210,32 @@ const OrderDetailsPage = () => {
         </div>
 
         <div className="mt-12 mb-[60px]">
-          <Steps
-            className="text-text1 font-medium"
-            size="small"
-            current={parseInt(dataDetailsOrder?.orderState)}
-            items={[
-              {
-                title: "Đã Xác Nhận",
-              },
-              {
-                title: "Đang Xử Lý",
-              },
-              {
-                title: "Đang Giao hàng",
-              },
-              {
-                title: `Giao Hàng Thành Công 😍`,
-                // icon: <Smile></Smile>,
-              },
-            ]}
-          />
+          {dataDetailsOrder?.orderState !== "0" ? (
+            <Steps
+              className="text-text1 font-medium"
+              size="small"
+              current={parseInt(dataDetailsOrder?.orderState)}
+              items={[
+                {
+                  title: "Đã Xác Nhận",
+                },
+                {
+                  title: "Đang Xử Lý",
+                },
+                {
+                  title: "Đang Giao hàng",
+                },
+                {
+                  title: `Giao Hàng Thành Công 😍`,
+                  // icon: <Smile></Smile>,
+                },
+              ]}
+            />
+          ) : (
+            <h1 className="text-center text-error font-semibold">
+              Đơn hàng đã bị Hủy
+            </h1>
+          )}
         </div>
         <div>
           <Table

@@ -31,14 +31,6 @@ const ProductDetailsPage = () => {
 
   const data = useSelector((state) => state.product.dataDetailsProduct);
 
-  // // Callback to save tabsProDetails as 1 when navigating away from this page
-  // const handleSaveTabOnExit = useCallback(() => {
-  //   saveVariablesLC("tabsProDetails", 1);
-  // }, []);
-
-  // // Use the custom hook to detect location changes
-  // useLocationChange(handleSaveTabOnExit);
-
   return (
     <div>
       <Gap>

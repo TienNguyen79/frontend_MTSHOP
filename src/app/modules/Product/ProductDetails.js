@@ -11,21 +11,23 @@ import ProHandleQuantity from "./parts/ProHandleQuantity";
 import { useForm } from "react-hook-form";
 import Button from "../../components/Button/Button";
 import StarProduct from "./parts/StarProduct";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleGetDetailsProduct,
   handleGetQuantityProduct,
 } from "../../../store/product/handleProduct";
-import { getVariablesLC } from "../../../utils/localStorage";
+import { getVariablesLC, saveArrayLS } from "../../../utils/localStorage";
 import { toast } from "react-toastify";
 import { handleAddtoCart } from "../../../store/cart/handleCart";
 import { Epath } from "../../routes/routerConfig";
+import { defaultImage2 } from "../../../utils/commom";
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
+  const navidate = useNavigate();
   const location = useLocation();
-  const { control, handleSubmit, setValue } = useForm();
+  const { control, handleSubmit, setValue, getValues } = useForm();
   const getIdProductModalfromLC = getVariablesLC("idProductModal");
   const [imgSelected, setImgSelected] = useState(0);
   const [colorSelected, setColorSelected] = useState(null);
@@ -56,9 +58,12 @@ const ProductDetails = () => {
   }, [dispatch, getIdProductModalfromLC, id]);
 
   const data = useSelector((state) => state.product.dataDetailsProduct);
+  console.log("🚀 ~ ProductDetails ~ data:", data);
+
   const quantityProduct = useSelector(
     (state) => state.product.dataQuantityProduct
   );
+
   const { loading } = useSelector((state) => state.cart);
 
   const ArrUniqueColorLength =
@@ -95,6 +100,43 @@ const ProductDetails = () => {
         },
       })
     );
+  };
+
+  const handleBuyProduct = () => {
+    if (ArrUniqueColorLength > 0 && ArrUniqueSizeLength > 0) {
+      if (!sizeSelected) {
+        return toast.error("Vui Lòng Chọn Size", { autoClose: 800 });
+      }
+
+      if (!colorSelected) {
+        return toast.error("Vui Lòng Chọn Màu Sắc", { autoClose: 800 });
+      }
+    } else if (ArrUniqueColorLength > 0 && ArrUniqueSizeLength < 0) {
+      if (!colorSelected) {
+        return toast.error("Vui Lòng Chọn Màu Sắc", { autoClose: 800 });
+      }
+    } else if (ArrUniqueSizeLength > 0 && ArrUniqueColorLength < 0) {
+      if (!sizeSelected) {
+        return toast.error("Vui Lòng Chọn Size", { autoClose: 800 });
+      }
+    }
+
+    const dataProToCheckout = [
+      {
+        idProductDetails: quantityProduct.id,
+        quantity: getValues("quantity"),
+        price: data.total,
+        name: data.name,
+        url: data?.image?.[0]?.url || defaultImage2,
+        properties: {
+          size: quantityProduct?.properties?.size?.description || "",
+          color: quantityProduct?.properties?.color?.description || "",
+        },
+      },
+    ];
+    saveArrayLS("dataProInCheckout", dataProToCheckout);
+
+    navidate(Epath.checkout);
   };
 
   const handleColorSelect = (colorId) => {
@@ -288,9 +330,9 @@ const ProductDetails = () => {
               Thêm vào Giỏ hàng
             </Button>
             <Button
-              href={Epath.checkout}
               kind="primary"
               className="py-3 px-4  rounded-[4px]"
+              onClick={handleBuyProduct}
             >
               Mua Ngay
             </Button>

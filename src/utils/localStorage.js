@@ -74,6 +74,10 @@ export const getObjectFromLS = (key) => {
   return data;
 };
 
+export const saveArrayLS = (key, array) => {
+  localStorage.setItem(key, JSON.stringify(array));
+};
+
 export const getArrayFromLS = (key) => {
   let data = [];
   if (localStorage.getItem(key)) {

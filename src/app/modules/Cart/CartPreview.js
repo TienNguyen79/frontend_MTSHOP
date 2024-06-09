@@ -12,6 +12,8 @@ import { formatPrice } from "../../../utils/functions";
 import Title from "../../components/Commom/Title";
 import Image from "../../components/Image/Image";
 import { Epath } from "../../routes/routerConfig";
+import { defaultImage2 } from "../../../utils/commom";
+import { saveArrayLS } from "../../../utils/localStorage";
 
 const CartPreview = ({ openCartPreview, setOpenCartPreview }) => {
   const dispatch = useDispatch();
@@ -35,6 +37,24 @@ const CartPreview = ({ openCartPreview, setOpenCartPreview }) => {
         parseFloat(formatPrice(currentValue.product.total).replace(".", "")),
     0
   );
+
+  const handleCheckout = () => {
+    const dataProToCheckout =
+      dataCartAll?.results?.length > 0 &&
+      dataCartAll?.results.map((item) => ({
+        idProductDetails: item.productDetails.id,
+        quantity: item.quantity,
+        price: item.product.total,
+        name: item.product.name,
+        url: item.product.image.url || defaultImage2,
+        properties: {
+          size: item?.productDetails?.properties?.size?.description || "",
+          color: item?.productDetails?.properties?.color?.description || "",
+        },
+      }));
+
+    saveArrayLS("dataProInCheckout", dataProToCheckout);
+  };
   return (
     <div>
       <Drawer
@@ -72,17 +92,20 @@ const CartPreview = ({ openCartPreview, setOpenCartPreview }) => {
                 ></PriceProduct>
               </div>
               <div className="flex items-center gap-x-4">
-                <Button className="py-3 px-4 rounded-md" kind="secondary">
+                {/* <Button className="py-3 px-4 rounded-md" kind="secondary">
                   Xem Giỏ Hàng
-                </Button>
+                </Button> */}
 
-                <Button
-                  href={Epath.checkout}
-                  className="py-3 px-4 rounded-md"
-                  kind="primary"
-                >
-                  Thanh Toán
-                </Button>
+                <div className="w-full" onClick={handleCheckout}>
+                  <Button
+                    href={Epath.checkout}
+                    type="submit"
+                    className="py-3 px-4  rounded-md hover:text-[#FFF]"
+                    kind="primary"
+                  >
+                    Thanh Toán
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

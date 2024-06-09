@@ -71,7 +71,6 @@ export const handleGetDetailsProduct = createAsyncThunk(
 export const handleGetQuantityProduct = createAsyncThunk(
   "product/handleGetQuantityProduct",
   async (data, thunkAPI) => {
-    console.log("🚀 ~ data:", data);
     try {
       const response = await requestGetQuantityProduct(data);
       return response.data.results;
