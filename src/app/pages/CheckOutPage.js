@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Gap from "../components/Commom/Gap";
 import { useForm } from "react-hook-form";
 import Input from "../components/Input/Input";
-import { Modal, Radio, Select, Space } from "antd";
+import { Form, Modal, Radio, Select, Space } from "antd";
 import Title from "../components/Commom/Title";
 import FlexCol from "../components/Commom/FlexCol";
 import ProductHozizontal from "../modules/Product/ProductHozizontal";
@@ -19,21 +19,32 @@ import {
   WalletMinimal,
 } from "lucide-react";
 import Button from "../components/Button/Button";
-import TextArea from "../components/Input/TextArea";
+import TextArea2 from "../components/Input/TextArea";
 import { getArrayFromLS } from "../../utils/localStorage";
 import { formatPrice } from "../../utils/functions";
 import { useSelector } from "react-redux";
-
+import axios from "axios";
+import TextArea from "antd/es/input/TextArea";
+import dataProvince from "../../utils/province.json";
 const CheckOutPage = () => {
-  const { control } = useForm();
+  console.log(dataProvince.data);
+  const { control, setValue } = useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
+
+  const [dataCity, setDataCity] = useState([]);
+  const [dataDistrict, setDistrict] = useState([]);
+  const [dataWards, setWards] = useState([]);
+  const [CityId, setCityId] = useState("");
+  const [districtId, setDistrictId] = useState("");
+  const [wardsId, setWardsId] = useState("");
+
   const showModal = () => {
     setIsModalOpen(true);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const [isModalOpen2, setIsModalOpen2] = useState(false);
   const showModal2 = () => {
     setIsModalOpen2(true);
     setIsModalOpen(false);
@@ -43,10 +54,22 @@ const CheckOutPage = () => {
   };
 
   const { dataCurrentUser } = useSelector((state) => state.user);
-  console.log("🚀 ~ CheckOutPage ~ dataCurrentUser:", dataCurrentUser);
+  // ------------------------
 
+  const [addressId, setAddressId] = useState(
+    dataCurrentUser?.Addresses?.[0]?.id
+  );
+  // ------------------------
+
+  const [infoAddress, setInfoAddress] = useState(
+    dataCurrentUser?.Addresses?.[0]?.address
+  );
+  // ------------------------
+
+  const splitAddress = infoAddress?.split(",");
+
+  // ------------------------
   const dataProInCheckout = getArrayFromLS("dataProInCheckout");
-
   const totalMoneyCheckout = dataProInCheckout?.reduce(
     (accumulator, currentValue) =>
       accumulator +
@@ -54,6 +77,59 @@ const CheckOutPage = () => {
         parseFloat(formatPrice(currentValue.price).replace(".", "")),
     0
   );
+  // ------------------------
+
+  const handleChangeAddress = (e) => {
+    setAddressId(e.target.value);
+    const selectedItem = dataCurrentUser.Addresses.find(
+      (item) => item.id === e.target.value
+    );
+    if (selectedItem) {
+      setInfoAddress(selectedItem.address);
+    }
+  };
+  // ------------------------
+
+  useEffect(() => {
+    setValue("name", dataCurrentUser?.userName);
+    setValue("email", dataCurrentUser?.email);
+    setValue("phoneNumber", dataCurrentUser?.phoneNumber);
+    setValue("city", splitAddress[3]);
+    setValue("district", splitAddress[2]);
+    setValue("wards", splitAddress[1]);
+    setValue("detailAddress", splitAddress[0]);
+  }, [dataCurrentUser, infoAddress]);
+  // ------------------------
+
+  // useEffect(() => {
+  //   const fetchDataCity = async () => {
+  //     const resCity = await axios.get(
+  //       "https://vapi.vnappmob.com/api/province",
+  //       {
+  //         headers: {
+  //           "Access-Control-Allow-Origin": "*",
+  //           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+  //         },
+  //       }
+  //     );
+  //     if (resCity.status === 200) {
+  //       // setDataCity(resCity.data);
+  //     }
+  //   };
+  //   fetchDataCity();
+  // }, []);
+  const handleAddAddressUser = (data) => {
+    console.log("🚀 ~ handleAddAddressUser ~ data:", data);
+  };
+
+  const validateNoComma = (_, value) => {
+    if (value && value.includes(",")) {
+      return Promise.reject(
+        new Error("Địa chỉ Chi Tiết không được chứa dấu phẩy!")
+      );
+    }
+    return Promise.resolve();
+  };
 
   return (
     <div>
@@ -63,19 +139,18 @@ const CheckOutPage = () => {
         onCancel={handleCancel}
         footer={false}
       >
-        <Radio.Group defaultValue={1}>
+        <Radio.Group
+          defaultValue={dataCurrentUser?.Addresses?.[0]?.id || 1}
+          onChange={handleChangeAddress}
+        >
           <Space direction="vertical">
-            <Radio value={1}>
-              <p className="ml-8 my-2 text-text1 font-normal text-sm">
-                Thôn Gì Đó, Huyện Này Nọ , Thành Phố Hà Nội Thôn Gì Đó, Huyện
-                Này Nọ , Thành Phố Hà Nội
-              </p>
-            </Radio>
-            <Radio value={2}>
-              <p className="ml-8 my-2 text-text1 font-normal text-sm">
-                Thôn Gì Đó 2, Huyện Này Nọ 2 , Thành Phố Hà Nội
-              </p>
-            </Radio>
+            {dataCurrentUser?.Addresses?.map((item) => (
+              <Radio key={item.id} value={item.id}>
+                <p className="ml-8 my-2 text-text1 font-normal text-sm">
+                  {item.address}
+                </p>
+              </Radio>
+            ))}
           </Space>
         </Radio.Group>
         <div className="flex items-center justify-end">
@@ -97,150 +172,197 @@ const CheckOutPage = () => {
         footer={false}
         width={600}
       >
-        <div className="checkout flex flex-col items-center gap-y-5">
-          <FlexCol title="Thành Phố" className="w-full">
-            <Select
-              showSearch
-              // className="w-[300px] h-[45px]"
-              className=" w-full h-[45px]"
-              placeholder="Thành Phố của bạn..."
-              optionFilterProp="children"
-              filterOption={(input, option) =>
-                (option?.label ?? "").includes(input)
-              }
-              filterSort={(optionA, optionB) =>
-                (optionA?.label ?? "")
-                  .toLowerCase()
-                  .localeCompare((optionB?.label ?? "").toLowerCase())
-              }
-              options={[
-                {
-                  value: "1",
-                  label: "Not Identified",
-                },
-                {
-                  value: "2",
-                  label: "Closed",
-                },
-                {
-                  value: "3",
-                  label: "Communicated",
-                },
-                {
-                  value: "4",
-                  label: "Identified",
-                },
-                {
-                  value: "5",
-                  label: "Resolved",
-                },
-                {
-                  value: "6",
-                  label: "Cancelled",
-                },
-              ]}
-            />
-          </FlexCol>
-          <FlexCol title="Quận Huyện" className="w-full">
-            <Select
-              showSearch
-              // className="w-[300px] h-[45px]"
-              className=" w-full h-[45px]"
-              placeholder="Quận Huyện của bạn...."
-              optionFilterProp="children"
-              filterOption={(input, option) =>
-                (option?.label ?? "").includes(input)
-              }
-              filterSort={(optionA, optionB) =>
-                (optionA?.label ?? "")
-                  .toLowerCase()
-                  .localeCompare((optionB?.label ?? "").toLowerCase())
-              }
-              options={[
-                {
-                  value: "1",
-                  label: "Not Identified",
-                },
-                {
-                  value: "2",
-                  label: "Closed",
-                },
-                {
-                  value: "3",
-                  label: "Communicated",
-                },
-                {
-                  value: "4",
-                  label: "Identified",
-                },
-                {
-                  value: "5",
-                  label: "Resolved",
-                },
-                {
-                  value: "6",
-                  label: "Cancelled",
-                },
-              ]}
-            />
-          </FlexCol>
+        <Form onFinish={handleAddAddressUser}>
+          <div className="checkout flex flex-col items-center ">
+            <FlexCol title="Thành Phố" className="w-full">
+              <Form.Item
+                name="city"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng chọn Thành Phố !",
+                  },
+                ]}
+              >
+                <Select
+                  showSearch
+                  // className="w-[300px] h-[45px]"
+                  className=" w-full h-[45px]"
+                  placeholder="Thành Phố của bạn..."
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "").includes(input)
+                  }
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? "")
+                      .toLowerCase()
+                      .localeCompare((optionB?.label ?? "").toLowerCase())
+                  }
+                  options={[
+                    {
+                      value: "1",
+                      label: "Hà Nội",
+                    },
+                    {
+                      value: "2",
+                      label: "Thành Phố HCM",
+                    },
+                    {
+                      value: "3",
+                      label: "Đà Lạt",
+                    },
+                    {
+                      value: "4",
+                      label: "Tuyên Quang",
+                    },
+                    {
+                      value: "5",
+                      label: "Đà Nẵng",
+                    },
+                    {
+                      value: "6",
+                      label: "Bình Dương",
+                    },
+                  ]}
+                />
+              </Form.Item>
+            </FlexCol>
+            <FlexCol title="Quận Huyện" className="w-full">
+              <Form.Item
+                name="province"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng chọn Quận Huyện !",
+                  },
+                ]}
+              >
+                <Select
+                  showSearch
+                  // className="w-[300px] h-[45px]"
+                  className=" w-full h-[45px]"
+                  placeholder="Quận Huyện của bạn...."
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "").includes(input)
+                  }
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? "")
+                      .toLowerCase()
+                      .localeCompare((optionB?.label ?? "").toLowerCase())
+                  }
+                  options={[
+                    {
+                      value: "1",
+                      label: "Thanh Xuân",
+                    },
+                    {
+                      value: "2",
+                      label: "Huyện Fake 1",
+                    },
+                    {
+                      value: "3",
+                      label: "Huyện Fake 2",
+                    },
+                    {
+                      value: "4",
+                      label: "Huyện Fake 4",
+                    },
+                    {
+                      value: "5",
+                      label: "Huyện Fake 5",
+                    },
+                    {
+                      value: "6",
+                      label: "Cancelled",
+                    },
+                  ]}
+                />
+              </Form.Item>
+            </FlexCol>
 
-          <FlexCol title="Xã Phường" className="w-full">
-            <Select
-              showSearch
-              // className="w-[300px] h-[45px]"
-              className=" w-full h-[45px] !text-emerald-600"
-              placeholder="Xã Phường của bạn"
-              optionFilterProp="children"
-              filterOption={(input, option) =>
-                (option?.label ?? "").includes(input)
-              }
-              filterSort={(optionA, optionB) =>
-                (optionA?.label ?? "")
-                  .toLowerCase()
-                  .localeCompare((optionB?.label ?? "").toLowerCase())
-              }
-              options={[
-                {
-                  value: "1",
-                  label: "Not Identified",
-                },
-                {
-                  value: "2",
-                  label: "Closed",
-                },
-                {
-                  value: "3",
-                  label: "Communicated",
-                },
-                {
-                  value: "4",
-                  label: "Identified",
-                },
-                {
-                  value: "5",
-                  label: "Resolved",
-                },
-                {
-                  value: "6",
-                  label: "Cancelled",
-                },
-              ]}
-            />
-          </FlexCol>
+            <FlexCol title="Xã Phường" className="w-full">
+              <Form.Item
+                name="wards"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng chọn Xã Phường !",
+                  },
+                ]}
+              >
+                <Select
+                  showSearch
+                  // className="w-[300px] h-[45px]"
+                  className=" w-full h-[45px] !text-emerald-600"
+                  placeholder="Xã Phường của bạn"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "").includes(input)
+                  }
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? "")
+                      .toLowerCase()
+                      .localeCompare((optionB?.label ?? "").toLowerCase())
+                  }
+                  options={[
+                    {
+                      value: "1",
+                      label: "Xã Fake 1",
+                    },
+                    {
+                      value: "2",
+                      label: "Xã Fake 2",
+                    },
+                    {
+                      value: "3",
+                      label: "Xã Fake 3",
+                    },
+                    {
+                      value: "4",
+                      label: "Xã Fake 4",
+                    },
+                    {
+                      value: "5",
+                      label: "Xã Fake 5",
+                    },
+                    {
+                      value: "6",
+                      label: "Xã Fake 6",
+                    },
+                  ]}
+                />
+              </Form.Item>
+            </FlexCol>
 
-          <FlexCol title="Chi Tiết Địa Chỉ" className="w-full">
-            <TextArea
-              control={control}
-              placeholder="Chi tiết địa chỉ của bạn..."
-              name="detailAddress"
-            ></TextArea>
-          </FlexCol>
-        </div>
+            <FlexCol title="Chi Tiết Địa Chỉ" className="w-full">
+              <Form.Item
+                name="AdetailAddress"
+                rules={[
+                  {
+                    required: true,
+                    message: " Vui Lòng Nhập địa chỉ chi tiết",
+                  },
+                  { validator: validateNoComma },
+                ]}
+              >
+                <TextArea
+                  rows={4}
+                  placeholder="Chi tiết địa chỉ của bạn..."
+                  // maxLength={6}
+                />
+              </Form.Item>
+            </FlexCol>
+          </div>
 
-        <Button className="py-2 px-5 rounded mt-3 w-full " kind="secondary">
-          <h1 className="ml-2">Hoàn thành</h1>
-        </Button>
+          <Button
+            className="py-2 px-5 rounded mt-3 w-full "
+            type="submit"
+            kind="secondary"
+          >
+            <h1 className="ml-2">Hoàn thành</h1>
+          </Button>
+        </Form>
       </Modal>
       <Gap>
         <div className="grid grid-cols-7 gap-x-6">
@@ -267,7 +389,7 @@ const CheckOutPage = () => {
                       </Title>
                     </div>
                     <p className="ml-8 my-3 text-text1 font-normal text-sm">
-                      Thôn Gì Đó, Huyện Này Nọ , Thành Phố Hà Nội
+                      {infoAddress}
                     </p>
                   </div>
                   <ChevronRight></ChevronRight>
@@ -279,6 +401,7 @@ const CheckOutPage = () => {
                     control={control}
                     name="name"
                     placeholder="Tên của bạn..."
+                    disabled
                   ></Input>
                 </FlexCol>
                 <FlexCol title="Email" className="w-full">
@@ -286,6 +409,7 @@ const CheckOutPage = () => {
                     control={control}
                     name="email"
                     placeholder="Email của bạn..."
+                    disabled
                   ></Input>
                 </FlexCol>
               </div>
@@ -294,147 +418,44 @@ const CheckOutPage = () => {
                   control={control}
                   name="phoneNumber"
                   placeholder="Số điện thoại của bạn..."
+                  disabled
                 ></Input>
               </FlexCol>
               {dataCurrentUser?.Addresses?.length > 0 ? (
                 <div className="checkout flex flex-col items-center gap-y-5">
                   <FlexCol title="Thành Phố" className="w-full">
-                    <Select
-                      showSearch
-                      // className="w-[300px] h-[45px]"
-                      className=" w-full h-[45px]"
+                    <Input
+                      control={control}
                       placeholder="Thành Phố của bạn..."
-                      optionFilterProp="children"
-                      filterOption={(input, option) =>
-                        (option?.label ?? "").includes(input)
-                      }
-                      filterSort={(optionA, optionB) =>
-                        (optionA?.label ?? "")
-                          .toLowerCase()
-                          .localeCompare((optionB?.label ?? "").toLowerCase())
-                      }
-                      options={[
-                        {
-                          value: "1",
-                          label: "Not Identified",
-                        },
-                        {
-                          value: "2",
-                          label: "Closed",
-                        },
-                        {
-                          value: "3",
-                          label: "Communicated",
-                        },
-                        {
-                          value: "4",
-                          label: "Identified",
-                        },
-                        {
-                          value: "5",
-                          label: "Resolved",
-                        },
-                        {
-                          value: "6",
-                          label: "Cancelled",
-                        },
-                      ]}
-                    />
+                      name="city"
+                      disabled
+                    ></Input>
                   </FlexCol>
                   <FlexCol title="Quận Huyện" className="w-full">
-                    <Select
-                      showSearch
-                      // className="w-[300px] h-[45px]"
-                      className=" w-full h-[45px]"
-                      placeholder="Quận Huyện của bạn...."
-                      optionFilterProp="children"
-                      filterOption={(input, option) =>
-                        (option?.label ?? "").includes(input)
-                      }
-                      filterSort={(optionA, optionB) =>
-                        (optionA?.label ?? "")
-                          .toLowerCase()
-                          .localeCompare((optionB?.label ?? "").toLowerCase())
-                      }
-                      options={[
-                        {
-                          value: "1",
-                          label: "Not Identified",
-                        },
-                        {
-                          value: "2",
-                          label: "Closed",
-                        },
-                        {
-                          value: "3",
-                          label: "Communicated",
-                        },
-                        {
-                          value: "4",
-                          label: "Identified",
-                        },
-                        {
-                          value: "5",
-                          label: "Resolved",
-                        },
-                        {
-                          value: "6",
-                          label: "Cancelled",
-                        },
-                      ]}
-                    />
+                    <Input
+                      control={control}
+                      placeholder="Quận Huyện của bạn..."
+                      name="district"
+                      disabled
+                    ></Input>
                   </FlexCol>
 
                   <FlexCol title="Xã Phường" className="w-full">
-                    <Select
-                      showSearch
-                      // className="w-[300px] h-[45px]"
-                      className=" w-full h-[45px] !text-emerald-600"
-                      placeholder="Xã Phường của bạn"
-                      optionFilterProp="children"
-                      filterOption={(input, option) =>
-                        (option?.label ?? "").includes(input)
-                      }
-                      filterSort={(optionA, optionB) =>
-                        (optionA?.label ?? "")
-                          .toLowerCase()
-                          .localeCompare((optionB?.label ?? "").toLowerCase())
-                      }
-                      options={[
-                        {
-                          value: "1",
-                          label: "Not Identified",
-                        },
-                        {
-                          value: "2",
-                          label: "Closed",
-                        },
-                        {
-                          value: "3",
-                          label: "Communicated",
-                        },
-                        {
-                          value: "4",
-                          label: "Identified",
-                        },
-                        {
-                          value: "5",
-                          label: "Resolved",
-                        },
-                        {
-                          value: "6",
-                          label: "Cancelled",
-                        },
-                      ]}
-                    />
+                    <Input
+                      control={control}
+                      placeholder="Xã Phường của bạn..."
+                      name="wards"
+                      disabled
+                    ></Input>
                   </FlexCol>
 
                   <FlexCol title="Chi Tiết Địa Chỉ" className="w-full">
-                    <TextArea
+                    <TextArea2
                       control={control}
                       placeholder="Chi tiết địa chỉ của bạn..."
                       name="detailAddress"
-                    ></TextArea>
+                      disabled
+                    ></TextArea2>
                   </FlexCol>
                 </div>
               ) : (
