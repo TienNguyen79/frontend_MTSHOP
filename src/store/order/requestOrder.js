@@ -16,3 +16,7 @@ export function requestGetDetailsOrder(id) {
 export function requestCancelOrder(data) {
   return axiosClient.put(`/cancelOrder/${data.id}`);
 }
+
+export function requestOrderProduct(data) {
+  return axiosClient.post(`/order`, data);
+}

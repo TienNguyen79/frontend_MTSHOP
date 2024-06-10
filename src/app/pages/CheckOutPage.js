@@ -22,22 +22,27 @@ import Button from "../components/Button/Button";
 import TextArea2 from "../components/Input/TextArea";
 import { getArrayFromLS } from "../../utils/localStorage";
 import { formatPrice } from "../../utils/functions";
-import { useSelector } from "react-redux";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 import TextArea from "antd/es/input/TextArea";
 import dataProvince from "../../utils/province.json";
+import { handleAddAddressUser } from "../../store/user/handleUser";
+import { toast } from "react-toastify";
+import { handleOrderProduct } from "../../store/order/handleOrder";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 const CheckOutPage = () => {
-  console.log(dataProvince.data);
   const { control, setValue } = useForm();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalOpen2, setIsModalOpen2] = useState(false);
-
-  const [dataCity, setDataCity] = useState([]);
+  const [form] = Form?.useForm();
+  const [dataCity, setDataCity] = useState(dataProvince.data);
   const [dataDistrict, setDistrict] = useState([]);
   const [dataWards, setWards] = useState([]);
-  const [CityId, setCityId] = useState("");
-  const [districtId, setDistrictId] = useState("");
-  const [wardsId, setWardsId] = useState("");
+  const [labelCity, setlabelCity] = useState("");
+  const [labelDistrict, setLabelDistrict] = useState("");
+  const [labelWards, setLabelWards] = useState("");
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -57,8 +62,10 @@ const CheckOutPage = () => {
   // ------------------------
 
   const [addressId, setAddressId] = useState(
-    dataCurrentUser?.Addresses?.[0]?.id
+    dataCurrentUser?.Addresses?.[0]?.id || undefined
   );
+
+  const [PaymentMehodId, setPaymentMehodId] = useState(1);
   // ------------------------
 
   const [infoAddress, setInfoAddress] = useState(
@@ -88,6 +95,16 @@ const CheckOutPage = () => {
       setInfoAddress(selectedItem.address);
     }
   };
+
+  const handleChangePaymentMethod = (e) => {
+    setPaymentMehodId(e.target.value);
+    if (e.target.value === 2) {
+      toast.warning("Tính năng này sẽ phát triển sớm !", {
+        autoClose: 1000,
+      });
+      setPaymentMehodId(1);
+    }
+  };
   // ------------------------
 
   useEffect(() => {
@@ -101,38 +118,120 @@ const CheckOutPage = () => {
   }, [dataCurrentUser, infoAddress]);
   // ------------------------
 
-  // useEffect(() => {
-  //   const fetchDataCity = async () => {
-  //     const resCity = await axios.get(
-  //       "https://vapi.vnappmob.com/api/province",
-  //       {
-  //         headers: {
-  //           "Access-Control-Allow-Origin": "*",
-  //           "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-  //         },
-  //       }
-  //     );
-  //     if (resCity.status === 200) {
-  //       // setDataCity(resCity.data);
-  //     }
-  //   };
-  //   fetchDataCity();
-  // }, []);
-  const handleAddAddressUser = (data) => {
-    console.log("🚀 ~ handleAddAddressUser ~ data:", data);
+  const handleAddAddressUserForn = (data) => {
+    const checkAdetailAddress = data.AdetailAddress.split(",");
+
+    const joinAddress = `${checkAdetailAddress.join(
+      " "
+    )}, ${labelWards}, ${labelDistrict}, ${labelCity}`;
+
+    dispatch(
+      handleAddAddressUser({
+        address: joinAddress,
+        callBack: () => {
+          toast.success("Thêm địa chỉ thành công", { autoClose: 800 });
+          setIsModalOpen2(false);
+        },
+      })
+    );
   };
 
-  const validateNoComma = (_, value) => {
-    if (value && value.includes(",")) {
-      return Promise.reject(
-        new Error("Địa chỉ Chi Tiết không được chứa dấu phẩy!")
-      );
-    }
-    return Promise.resolve();
+  // const validateNoComma = (_, value) => {
+  //   if (value && value.includes(",")) {
+  //     return Promise.reject(
+  //       new Error("Địa chỉ Chi Tiết không được chứa dấu phẩy!")
+  //     );
+  //   }
+  //   return Promise.resolve();
+  // };
+
+  const handleCityChange = (cityId, { label }) => {
+    const selectedCity = dataCity.find((city) => city.id === cityId);
+    setDistrict(selectedCity ? selectedCity.data2 : []);
+    setlabelCity(label);
+    form.resetFields(["district", "wards"]);
+    setWards([]);
+  };
+
+  const handleDistrictChange = (districtId, { label }) => {
+    const selectedProvince = dataDistrict.find(
+      (province) => province.id === districtId
+    );
+    setLabelDistrict(label);
+    setWards(selectedProvince ? selectedProvince.data3 : []);
+    form.resetFields(["wards"]);
+  };
+
+  const handleWardsChange = (_, { label }) => {
+    setLabelWards(label);
+    console.log("🚀 ~ handleWardsChange ~ label:", label);
+  };
+
+  const optionCity = dataProvince.data.map((city) => ({
+    value: city.id,
+    label: city.full_name,
+  }));
+
+  const optionDistrict = dataDistrict.map((district) => ({
+    value: district.id,
+    label: district.full_name,
+  }));
+
+  const optionWards = dataWards.map((wards) => ({
+    value: wards.id,
+    label: wards.full_name,
+  }));
+
+  const handleOrderProductForm = () => {
+    const dataProInCheckout = getArrayFromLS("dataProInCheckout");
+
+    const dataPro =
+      dataProInCheckout.length > 0 &&
+      dataProInCheckout.map((product) => ({
+        idProductDetails: product.idProductDetails,
+        quantity: product.quantity,
+        price: product.price,
+      }));
+
+    const data = {
+      addressId: addressId,
+      paymentmethoduserId: PaymentMehodId,
+      productDetails: dataPro,
+      callBack: () => {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Đặt Hàng Thành Công !",
+          text: "Cảm ơn quý khách hàng rất nhiều ạ 😍 ",
+          showConfirmButton: true,
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#70c1b3",
+          confirmButtonText: "In Hóa Đơn",
+          cancelButtonText: "Tiếp Tục Mua Sắm",
+          allowOutsideClick: false,
+
+          // timer: 1500,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            toast.warning("Tính năng này sẽ phát triển sớm !", {
+              autoClose: 1000,
+            });
+            navigate("/");
+          } else {
+            navigate("/shopping/all");
+          }
+        });
+      },
+    };
+
+    dispatch(handleOrderProduct(data));
+
+    // console.log("🚀 ~ handleOrderProduct ~ data:", data);
   };
 
   return (
-    <div>
+    <Form onFinish={handleOrderProductForm}>
       <Modal
         title="Chọn địa chỉ nhận hàng"
         open={isModalOpen}
@@ -172,7 +271,7 @@ const CheckOutPage = () => {
         footer={false}
         width={600}
       >
-        <Form onFinish={handleAddAddressUser}>
+        <Form form={form} onFinish={handleAddAddressUserForn}>
           <div className="checkout flex flex-col items-center ">
             <FlexCol title="Thành Phố" className="w-full">
               <Form.Item
@@ -198,38 +297,15 @@ const CheckOutPage = () => {
                       .toLowerCase()
                       .localeCompare((optionB?.label ?? "").toLowerCase())
                   }
-                  options={[
-                    {
-                      value: "1",
-                      label: "Hà Nội",
-                    },
-                    {
-                      value: "2",
-                      label: "Thành Phố HCM",
-                    },
-                    {
-                      value: "3",
-                      label: "Đà Lạt",
-                    },
-                    {
-                      value: "4",
-                      label: "Tuyên Quang",
-                    },
-                    {
-                      value: "5",
-                      label: "Đà Nẵng",
-                    },
-                    {
-                      value: "6",
-                      label: "Bình Dương",
-                    },
-                  ]}
+                  onChange={handleCityChange}
+                  // onSelect={(value, { label }) => console.log("HEHE", label)}
+                  options={optionCity}
                 />
               </Form.Item>
             </FlexCol>
             <FlexCol title="Quận Huyện" className="w-full">
               <Form.Item
-                name="province"
+                name="district"
                 rules={[
                   {
                     required: true,
@@ -251,32 +327,8 @@ const CheckOutPage = () => {
                       .toLowerCase()
                       .localeCompare((optionB?.label ?? "").toLowerCase())
                   }
-                  options={[
-                    {
-                      value: "1",
-                      label: "Thanh Xuân",
-                    },
-                    {
-                      value: "2",
-                      label: "Huyện Fake 1",
-                    },
-                    {
-                      value: "3",
-                      label: "Huyện Fake 2",
-                    },
-                    {
-                      value: "4",
-                      label: "Huyện Fake 4",
-                    },
-                    {
-                      value: "5",
-                      label: "Huyện Fake 5",
-                    },
-                    {
-                      value: "6",
-                      label: "Cancelled",
-                    },
-                  ]}
+                  onChange={handleDistrictChange}
+                  options={optionDistrict}
                 />
               </Form.Item>
             </FlexCol>
@@ -305,32 +357,8 @@ const CheckOutPage = () => {
                       .toLowerCase()
                       .localeCompare((optionB?.label ?? "").toLowerCase())
                   }
-                  options={[
-                    {
-                      value: "1",
-                      label: "Xã Fake 1",
-                    },
-                    {
-                      value: "2",
-                      label: "Xã Fake 2",
-                    },
-                    {
-                      value: "3",
-                      label: "Xã Fake 3",
-                    },
-                    {
-                      value: "4",
-                      label: "Xã Fake 4",
-                    },
-                    {
-                      value: "5",
-                      label: "Xã Fake 5",
-                    },
-                    {
-                      value: "6",
-                      label: "Xã Fake 6",
-                    },
-                  ]}
+                  onChange={handleWardsChange}
+                  options={optionWards}
                 />
               </Form.Item>
             </FlexCol>
@@ -343,7 +371,7 @@ const CheckOutPage = () => {
                     required: true,
                     message: " Vui Lòng Nhập địa chỉ chi tiết",
                   },
-                  { validator: validateNoComma },
+                  // { validator: validateNoComma },
                 ]}
               >
                 <TextArea
@@ -527,7 +555,11 @@ const CheckOutPage = () => {
                 ></Title>
               </div>
               <div>
-                <Radio.Group defaultValue={1}>
+                <Radio.Group
+                  defaultValue={1}
+                  value={PaymentMehodId}
+                  onChange={handleChangePaymentMethod}
+                >
                   <Space direction="vertical">
                     <Radio value={1}>
                       <Title
@@ -545,13 +577,17 @@ const CheckOutPage = () => {
                 </Radio.Group>
               </div>
             </div>
-            <Button className="py-3 px-4 w-full mt-4 rounded-md" kind="primary">
+            <Button
+              type="submit"
+              className="py-3 px-4 w-full mt-4 rounded-md"
+              kind="primary"
+            >
               Đặt Hàng Ngay
             </Button>
           </div>
         </div>
       </Gap>
-    </div>
+    </Form>
   );
 };
 

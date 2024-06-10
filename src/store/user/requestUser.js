@@ -8,3 +8,7 @@ export default function requestGetUser() {
 export function requestGetCurrentUser() {
   return axiosClient.get(`/currentUser`);
 }
+
+export function requestAddAddressUser(data) {
+  return axiosClient.post(`/address`, data);
+}

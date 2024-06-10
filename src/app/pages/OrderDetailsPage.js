@@ -214,7 +214,7 @@ const OrderDetailsPage = () => {
             <Steps
               className="text-text1 font-medium"
               size="small"
-              current={parseInt(dataDetailsOrder?.orderState)}
+              current={parseInt(dataDetailsOrder?.orderState - 1)}
               items={[
                 {
                   title: "Đã Xác Nhận",

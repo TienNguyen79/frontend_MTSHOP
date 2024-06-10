@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import requestGetAllOrder, {
   requestCancelOrder,
   requestGetDetailsOrder,
+  requestOrderProduct,
 } from "./requestOrder";
 import { toast } from "react-toastify";
 
@@ -36,6 +37,20 @@ export const handleCancelOrder = createAsyncThunk(
       const response = await requestCancelOrder(data);
       if (response.status === 200) {
         toast.success("Đơn hàng đã được hủy!", { autoClose: 800 });
+        data?.callBack?.();
+      }
+    } catch (error) {
+      console.log("🚀 ~ error:", error);
+    }
+  }
+);
+
+export const handleOrderProduct = createAsyncThunk(
+  "order/handleOrderProduct",
+  async (data, thunkAPI) => {
+    try {
+      const response = await requestOrderProduct(data);
+      if (response.status === 200) {
         data?.callBack?.();
       }
     } catch (error) {
