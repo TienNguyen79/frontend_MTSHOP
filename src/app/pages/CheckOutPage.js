@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Gap from "../components/Commom/Gap";
 import { useForm } from "react-hook-form";
 import Input from "../components/Input/Input";
@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import Button from "../components/Button/Button";
 import TextArea2 from "../components/Input/TextArea";
-import { getArrayFromLS } from "../../utils/localStorage";
+import { getArrayFromLS, saveArrayLS } from "../../utils/localStorage";
 import { formatPrice } from "../../utils/functions";
 import { useDispatch, useSelector } from "react-redux";
 import TextArea from "antd/es/input/TextArea";
@@ -30,6 +30,8 @@ import { toast } from "react-toastify";
 import { handleOrderProduct } from "../../store/order/handleOrder";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import ReactToPrint from "react-to-print";
+import InvoiceComponent from "../components/Invoice/InvoiceComponent";
 const CheckOutPage = () => {
   const { control, setValue } = useForm();
   const dispatch = useDispatch();
@@ -43,6 +45,10 @@ const CheckOutPage = () => {
   const [labelCity, setlabelCity] = useState("");
   const [labelDistrict, setLabelDistrict] = useState("");
   const [labelWards, setLabelWards] = useState("");
+  const [shouldPrint, setShouldPrint] = useState(false);
+  const [swalInstance, setSwalInstance] = useState(null);
+  const btnRef = useRef();
+  const invoiceRef = useRef();
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -58,6 +64,20 @@ const CheckOutPage = () => {
     setIsModalOpen2(false);
   };
 
+  const [isModalOpen3, setIsModalOpen3] = useState(false);
+
+  const showModal3 = () => {
+    setIsModalOpen3(true);
+  };
+
+  const handleOk3 = () => {
+    setIsModalOpen3(false);
+  };
+
+  const handleCancel3 = () => {
+    setIsModalOpen3(false);
+  };
+
   const { dataCurrentUser } = useSelector((state) => state.user);
   // ------------------------
 
@@ -66,6 +86,9 @@ const CheckOutPage = () => {
   );
 
   const [PaymentMehodId, setPaymentMehodId] = useState(1);
+  const [selectedTitlePaymentMehod, setSelectedTitlePaymentMehod] = useState(
+    "Thanh Toán Khi Nhận Hàng"
+  );
   // ------------------------
 
   const [infoAddress, setInfoAddress] = useState(
@@ -98,6 +121,14 @@ const CheckOutPage = () => {
 
   const handleChangePaymentMethod = (e) => {
     setPaymentMehodId(e.target.value);
+
+    // lấy title để lưu vào hóa đơn
+    const title =
+      e.target.value === 1
+        ? "Thanh Toán Khi Nhận Hàng"
+        : "Thanh Toán Qua Ngân Hàng";
+    setSelectedTitlePaymentMehod(title);
+
     if (e.target.value === 2) {
       toast.warning("Tính năng này sẽ phát triển sớm !", {
         autoClose: 1000,
@@ -185,6 +216,32 @@ const CheckOutPage = () => {
   const handleOrderProductForm = () => {
     const dataProInCheckout = getArrayFromLS("dataProInCheckout");
 
+    //--- lưu trong hóa đơn
+
+    const formatDataPro =
+      dataProInCheckout.length > 0 &&
+      dataProInCheckout.map((product) => ({
+        key: product.idProductDetails,
+        url: product?.url,
+        name: product?.name,
+        product: {
+          size: product?.properties?.size || "",
+          color: product?.properties?.color || "",
+        },
+        price: product?.price,
+        quantity: product?.quantity,
+        total: product?.price * product?.quantity,
+      }));
+
+    const dataInvoice = {
+      address: infoAddress,
+      arrPro: formatDataPro,
+      paymentMethod: selectedTitlePaymentMehod,
+    };
+    saveArrayLS("dataInvoice", dataInvoice);
+
+    //-------------------------------------
+
     const dataPro =
       dataProInCheckout.length > 0 &&
       dataProInCheckout.map((product) => ({
@@ -198,40 +255,84 @@ const CheckOutPage = () => {
       paymentmethoduserId: PaymentMehodId,
       productDetails: dataPro,
       callBack: () => {
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Đặt Hàng Thành Công !",
-          text: "Cảm ơn quý khách hàng rất nhiều ạ 😍 ",
-          showConfirmButton: true,
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#70c1b3",
-          confirmButtonText: "In Hóa Đơn",
-          cancelButtonText: "Tiếp Tục Mua Sắm",
-          allowOutsideClick: false,
+        // Swal.fire({
+        //   position: "center",
+        //   icon: "success",
+        //   title: "Đặt Hàng Thành Công !",
+        //   text: "Cảm ơn quý khách hàng rất nhiều ạ 😍 ",
+        //   showConfirmButton: true,
+        //   showCancelButton: true,
+        //   confirmButtonColor: "#3085d6",
+        //   cancelButtonColor: "#70c1b3",
+        //   confirmButtonText: "In hóa đơn",
+        //   cancelButtonText: "Tiếp Tục Mua Sắm",
+        //   allowOutsideClick: false,
+        //   html: true,
+        //   // timer: 500,
+        // }).then((result) => {
+        //   if (result.isConfirmed) {
+        //     setShouldPrint(true);
+        //   } else {
+        //     navigate("/shopping/all");
+        //   }
+        // });
 
-          // timer: 1500,
-        }).then((result) => {
-          if (result.isConfirmed) {
-            toast.warning("Tính năng này sẽ phát triển sớm !", {
-              autoClose: 1000,
-            });
-            navigate("/");
-          } else {
-            navigate("/shopping/all");
-          }
-        });
+        showModal3();
       },
     };
 
     dispatch(handleOrderProduct(data));
-
-    // console.log("🚀 ~ handleOrderProduct ~ data:", data);
   };
+
+  // useEffect(() => {
+  //   if (shouldPrint) {
+  //     handlePrint();
+  //   }
+  // }, [shouldPrint]);
+
+  // const handlePrint = () => {
+  //   if (btnRef.current) {
+  //     btnRef.current.click();
+  //   }
+  // };
 
   return (
     <Form onFinish={handleOrderProductForm}>
+      <div>
+        {/* <ReactToPrint
+          trigger={() => (
+            <button style={{ display: "none" }} ref={btnRef}>
+              In Hóa Đơn
+            </button>
+          )}
+          content={() => invoiceRef.current}
+          onAfterPrint={() => {
+            Swal.close();
+            setShouldPrint(false);
+            navigate("/");
+          }}
+        />
+
+        <div className="hidden">
+          <InvoiceComponent ref={invoiceRef} />
+        </div> */}
+      </div>
+
+      <Modal
+        title="Đặt Hàng Thành Công"
+        open={isModalOpen3}
+        onCancel={handleCancel3}
+        maskClosable={false}
+        closeIcon={false}
+        okText="In hóa đơn"
+        cancelText="Tiếp Tục Mua hàng"
+        centered
+      >
+        <p>Đặt Hàng Thành Công...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal>
+
       <Modal
         title="Chọn địa chỉ nhận hàng"
         open={isModalOpen}
