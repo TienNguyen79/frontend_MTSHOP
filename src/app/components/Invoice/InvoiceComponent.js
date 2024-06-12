@@ -13,7 +13,7 @@ const InvoiceComponent = React.forwardRef((props, ref) => {
   const dataProInCheckout = getArrayFromLS("dataInvoice");
 
   const dataTableProduct =
-    dataProInCheckout?.arrPro.length > 0
+    dataProInCheckout?.arrPro?.length > 0
       ? dataProInCheckout?.arrPro.map((product, index) => ({
           key: index,
           product: {

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Box from "../components/Commom/Box";
 import NameUser from "../modules/User/parts/NameUser";
 import ContentUser from "../modules/User/parts/ContentUser";
@@ -21,10 +21,14 @@ import {
 import Button from "../components/Button/Button";
 import { Epath } from "../routes/routerConfig";
 import Swal from "sweetalert2";
+import { saveArrayLS } from "../../utils/localStorage";
+import ReactToPrint from "react-to-print";
+import InvoiceComponent from "../components/Invoice/InvoiceComponent";
 
 const OrderDetailsPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const invoiceRef = useRef();
   const { id } = useParams();
 
   useEffect(() => {
@@ -49,6 +53,34 @@ const OrderDetailsPage = () => {
           total: product.total,
         }))
       : [];
+  console.log("🚀 ~ OrderDetailsPage ~ dataTableProduct:", dataTableProduct);
+
+  //--- lưu trong hóa đơn
+
+  const formatDataPro =
+    dataTableProduct?.length > 0 &&
+    dataTableProduct.map((item) => ({
+      key: item.key,
+      url: item?.product?.url,
+      name: item?.product?.name,
+      product: {
+        size: item?.product?.size || "",
+        color: item?.product?.color || "",
+      },
+      price: item?.price,
+      quantity: item?.quantity,
+      total: item.total,
+    }));
+
+  const dataInvoice = {
+    address: dataDetailsOrder?.deliveryAddress?.address,
+    arrPro: formatDataPro,
+    paymentMethod:
+      dataDetailsOrder?.PaymentMethodUser?.PaymentMethodSystem?.name,
+  };
+  saveArrayLS("dataInvoice", dataInvoice);
+
+  //-------------------------------------
 
   const columns = [
     {
@@ -113,13 +145,26 @@ const OrderDetailsPage = () => {
 
   return (
     <div>
+      <div className="hidden">
+        <InvoiceComponent ref={invoiceRef} />
+      </div>
       <Box
         title="Chi Tiết Đơn Hàng"
         labelRedirec="Quay lại"
         url={Epath.userDashboard}
         isShowLabel
       >
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-x-3">
+          {dataDetailsOrder.orderState !== "0" && (
+            <ReactToPrint
+              trigger={() => (
+                <Button className="my-2 !py-1 !px-3 text-sm rounded-md bg-primary text-white">
+                  In Hóa Đơn
+                </Button>
+              )}
+              content={() => invoiceRef.current}
+            />
+          )}
           {dataDetailsOrder.orderState === "1" && (
             <Button
               className="my-2 !py-1 !px-3 text-sm rounded-md bg-error text-white"
