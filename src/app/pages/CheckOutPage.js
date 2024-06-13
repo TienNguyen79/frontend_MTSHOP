@@ -115,10 +115,10 @@ const CheckOutPage = () => {
     setValue("name", dataCurrentUser?.userName);
     setValue("email", dataCurrentUser?.email);
     setValue("phoneNumber", dataCurrentUser?.phoneNumber);
-    setValue("city", splitAddress[3]);
-    setValue("district", splitAddress[2]);
-    setValue("wards", splitAddress[1]);
-    setValue("detailAddress", splitAddress[0]);
+    setValue("city", splitAddress?.[3] || "");
+    setValue("district", splitAddress?.[2] || "");
+    setValue("wards", splitAddress?.[1] || "");
+    setValue("detailAddress", splitAddress?.[0] || "");
   }, [dataCurrentUser, infoAddress]);
   // ------------------------
 

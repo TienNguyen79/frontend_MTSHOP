@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import requestGetUser, {
   requestAddAddressUser,
   requestGetCurrentUser,
+  requestUpdateInfoUser,
 } from "./requestUser";
 import { OK } from "../../utils/httpStatus";
 import { toast } from "react-toastify";
@@ -39,6 +40,22 @@ export const handleAddAddressUser = createAsyncThunk(
 
       if (response.status === OK) {
         data?.callBack?.();
+        thunkAPI.dispatch(handleGetCurrentUser());
+      }
+    } catch (error) {
+      console.log("🚀 ~ error:", error);
+    }
+  }
+);
+
+export const handleUpdateInfoUser = createAsyncThunk(
+  "user/handleUpdateInfoUser",
+  async (data, thunkAPI) => {
+    try {
+      const response = await requestUpdateInfoUser(data);
+
+      if (response.status === OK) {
+        toast.success("Cập nhật thành công", { autoClose: 800 });
         thunkAPI.dispatch(handleGetCurrentUser());
       }
     } catch (error) {

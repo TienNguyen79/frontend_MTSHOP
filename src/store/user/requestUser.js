@@ -12,3 +12,7 @@ export function requestGetCurrentUser() {
 export function requestAddAddressUser(data) {
   return axiosClient.post(`/address`, data);
 }
+
+export function requestUpdateInfoUser(data) {
+  return axiosClient.put(`/user`, data);
+}
