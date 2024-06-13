@@ -52,3 +52,7 @@ export function requestFilterProduct(data) {
 
   return axiosClient.get(`/productFilter${queryString}`);
 }
+
+export function requestReviewProduct(data) {
+  return axiosClient.post(`/productReviews/${data.idProduct}`, data);
+}

@@ -58,7 +58,6 @@ const ProductDetails = () => {
   }, [dispatch, getIdProductModalfromLC, id]);
 
   const data = useSelector((state) => state.product.dataDetailsProduct);
-  console.log("🚀 ~ ProductDetails ~ data:", data);
 
   const quantityProduct = useSelector(
     (state) => state.product.dataQuantityProduct

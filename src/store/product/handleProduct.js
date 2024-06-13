@@ -5,6 +5,7 @@ import requestGetTopSoldProduct, {
   requestGetDetailsProduct,
   requestGetNewArrivals,
   requestGetQuantityProduct,
+  requestReviewProduct,
   requestSuggestProduct,
 } from "./requestProduct";
 
@@ -98,6 +99,20 @@ export const handleFilterProduct = createAsyncThunk(
     try {
       const response = await requestFilterProduct(data);
       return response.data;
+    } catch (error) {
+      console.log("🚀 ~ error:", error);
+    }
+  }
+);
+
+export const handleReviewProduct = createAsyncThunk(
+  "product/handleReviewProduct",
+  async (data, thunkAPI) => {
+    try {
+      const response = await requestReviewProduct(data);
+      if (response.status === 200) {
+        data?.callback?.();
+      }
     } catch (error) {
       console.log("🚀 ~ error:", error);
     }

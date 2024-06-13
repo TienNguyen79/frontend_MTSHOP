@@ -1,14 +1,14 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Box from "../components/Commom/Box";
 import NameUser from "../modules/User/parts/NameUser";
 import ContentUser from "../modules/User/parts/ContentUser";
 import Title from "../components/Commom/Title";
 import PriceProduct from "../modules/Product/parts/PriceProduct";
-import { Steps, Table, Tag } from "antd";
-import { Smile } from "lucide-react";
+import { Modal, Radio, Space, Steps, Table, Tag } from "antd";
+import { MessageSquareCode, Smile } from "lucide-react";
 import LabelRedirect from "../components/Label/LabelRedirect";
 import DateOrderProduct from "../modules/Product/parts/DateOrderProduct";
-import { defaultImage2 } from "../../utils/commom";
+import { dataRating, defaultImage2 } from "../../utils/commom";
 import Image from "../components/Image/Image";
 import TitleProduct from "../modules/Product/parts/TitleProduct";
 import AttributeInCart from "../modules/Product/parts/AttributeInCart";
@@ -24,18 +24,42 @@ import Swal from "sweetalert2";
 import { saveArrayLS } from "../../utils/localStorage";
 import ReactToPrint from "react-to-print";
 import InvoiceComponent from "../components/Invoice/InvoiceComponent";
+import { handleGetDetailsProduct } from "../../store/product/handleProduct";
+import { useForm } from "react-hook-form";
+import TextArea from "../components/Input/TextArea";
 
 const OrderDetailsPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { control } = useForm();
   const invoiceRef = useRef();
   const { id } = useParams();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [idProduct, setIdProduct] = useState();
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     dispatch(handleGetDetailsOrder(id));
   }, [id, dispatch]);
 
+  useEffect(() => {
+    if (idProduct) {
+      dispatch(handleGetDetailsProduct(idProduct));
+    }
+  }, [dispatch, idProduct]);
+
   const { dataDetailsOrder } = useSelector((state) => state.order);
+  const { dataDetailsProduct } = useSelector((state) => state.product);
 
   const dataTableProduct =
     dataDetailsOrder?.OrderDetails?.length > 0
@@ -50,10 +74,10 @@ const OrderDetailsPage = () => {
           },
           price: product?.price,
           quantity: product?.quantity,
-          total: product.total,
+          total: product?.total,
+          proId: product?.ProductDetail?.Product?.id,
         }))
       : [];
-  console.log("🚀 ~ OrderDetailsPage ~ dataTableProduct:", dataTableProduct);
 
   //--- lưu trong hóa đơn
 
@@ -82,72 +106,218 @@ const OrderDetailsPage = () => {
 
   //-------------------------------------
 
-  const columns = [
-    {
-      title: "Sản Phẩm",
-      dataIndex: "product",
-      key: "product",
-      render: (_, { product }) => (
-        <div className="flex items-start gap-x-3">
-          <div className="flex-1">
-            <Image
-              className="w-[80px] h-[80px] rounded-lg overflow-hidden"
-              url={product?.url}
-            ></Image>
-          </div>
-          <div className="flex flex-col flex-[2]">
-            <TitleProduct className="text-textBold font-medium max-w-[200px]">
-              {product?.name}
-            </TitleProduct>
+  const columns =
+    dataDetailsOrder.orderState === "5"
+      ? [
+          {
+            title: "Sản Phẩm",
+            dataIndex: "product",
+            key: "product",
+            render: (_, { product }) => (
+              <div className="flex items-start gap-x-3">
+                <div className="flex-1">
+                  <Image
+                    className="w-[80px] h-[80px] rounded-lg overflow-hidden"
+                    url={product?.url}
+                  ></Image>
+                </div>
+                <div className="flex flex-col flex-[2]">
+                  <TitleProduct className="text-textBold font-medium max-w-[200px]">
+                    {product?.name}
+                  </TitleProduct>
 
-            {product.size && (
-              <AttributeInCart className="uppercase">
-                SIZE: {product.size}
-              </AttributeInCart>
-            )}
-            {product.color && (
-              <AttributeInCart className="uppercase">
-                COLOR: {product.color}
-              </AttributeInCart>
-            )}
-          </div>
-        </div>
-      ),
-      width: 300,
-    },
-    {
-      title: "Giá",
-      dataIndex: "price",
-      key: "price",
-      render: (_, { price }) => {
-        return <PriceProduct price={price}></PriceProduct>;
-      },
-    },
-    {
-      title: "Số Lượng",
-      key: "quantity",
-      dataIndex: "quantity",
-      render: (_, { quantity }) => {
-        return (
-          <h1 className="text-textBold text-[15px] font-medium">{quantity}</h1>
-        );
-      },
-    },
-    {
-      title: "Tổng Tiền",
-      key: "action",
-      dataIndex: "total",
-      render: (_, { total }) => {
-        return <PriceProduct price={total}></PriceProduct>;
-      },
-    },
-  ];
+                  {product.size && (
+                    <AttributeInCart className="uppercase">
+                      SIZE: {product.size}
+                    </AttributeInCart>
+                  )}
+                  {product.color && (
+                    <AttributeInCart className="uppercase">
+                      COLOR: {product.color}
+                    </AttributeInCart>
+                  )}
+                </div>
+              </div>
+            ),
+            width: 300,
+          },
+          {
+            title: "Giá",
+            dataIndex: "price",
+            key: "price",
+            render: (_, { price }) => {
+              return <PriceProduct price={price}></PriceProduct>;
+            },
+          },
+          {
+            title: "Số Lượng",
+            key: "quantity",
+            dataIndex: "quantity",
+            render: (_, { quantity }) => {
+              return (
+                <h1 className="text-textBold text-[15px] font-medium">
+                  {quantity}
+                </h1>
+              );
+            },
+          },
+          {
+            title: "Tổng Tiền",
+            key: "total",
+            dataIndex: "total",
+            render: (_, { total }) => {
+              return <PriceProduct price={total}></PriceProduct>;
+            },
+          },
+          {
+            title: "Đánh Giá",
+            key: "review",
+            dataIndex: "review",
+            align: "center",
+
+            render: (_, { proId }) => (
+              <div
+                className="flex items-center justify-center cursor-pointer transition-all hover:text-primary"
+                onClick={() => {
+                  showModal();
+                  setIdProduct(proId);
+                }}
+              >
+                <MessageSquareCode />
+              </div>
+            ),
+          },
+        ]
+      : [
+          {
+            title: "Sản Phẩm",
+            dataIndex: "product",
+            key: "product",
+            render: (_, { product }) => (
+              <div className="flex items-start gap-x-3">
+                <div className="flex-1">
+                  <Image
+                    className="w-[80px] h-[80px] rounded-lg overflow-hidden"
+                    url={product?.url}
+                  ></Image>
+                </div>
+                <div className="flex flex-col flex-[2]">
+                  <TitleProduct className="text-textBold font-medium max-w-[200px]">
+                    {product?.name}
+                  </TitleProduct>
+
+                  {product.size && (
+                    <AttributeInCart className="uppercase">
+                      SIZE: {product.size}
+                    </AttributeInCart>
+                  )}
+                  {product.color && (
+                    <AttributeInCart className="uppercase">
+                      COLOR: {product.color}
+                    </AttributeInCart>
+                  )}
+                </div>
+              </div>
+            ),
+            width: 300,
+          },
+          {
+            title: "Giá",
+            dataIndex: "price",
+            key: "price",
+            render: (_, { price }) => {
+              return <PriceProduct price={price}></PriceProduct>;
+            },
+          },
+          {
+            title: "Số Lượng",
+            key: "quantity",
+            dataIndex: "quantity",
+            render: (_, { quantity }) => {
+              return (
+                <h1 className="text-textBold text-[15px] font-medium">
+                  {quantity}
+                </h1>
+              );
+            },
+          },
+          {
+            title: "Tổng Tiền",
+            key: "total",
+            dataIndex: "total",
+            render: (_, { total }) => {
+              return <PriceProduct price={total}></PriceProduct>;
+            },
+          },
+        ];
 
   return (
     <div>
+      <Modal
+        title="Đánh Giá Sản Phẩm"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="Đánh Giá"
+        cancelText="Hủy Bỏ"
+        width={"800px"}
+      >
+        <div>
+          <div className="flex flex-col gap-y-4">
+            <div className="flex items-start gap-x-6 ">
+              <div className="">
+                <Image
+                  className="w-[80px] h-[80px] rounded-lg overflow-hidden"
+                  url={dataDetailsProduct?.image?.[0]?.url}
+                ></Image>
+              </div>
+              <div className="flex flex-col  justify-center">
+                <TitleProduct className="text-textBold text-[18px] font-medium max-w-[350px]">
+                  {dataDetailsProduct?.name}
+                </TitleProduct>
+
+                <PriceProduct
+                  className="text-[22px] font-semibold"
+                  price={dataDetailsProduct?.total}
+                ></PriceProduct>
+              </div>
+            </div>
+            <div>
+              <div>
+                <Radio.Group
+                  // onChange={handleChangeRate}
+                  name="radiogroup"
+                  defaultValue={5}
+                  // value={valueRate}
+                >
+                  <Space direction="vertical">
+                    {dataRating.map((item) => (
+                      <Radio key={item.id} value={item.id}>
+                        <div className="flex items-center gap-x-2 ">
+                          {item.stars.map((star, index) => (
+                            <div key={index}>{star}</div>
+                          ))}
+                        </div>
+                      </Radio>
+                    ))}
+                  </Space>
+                </Radio.Group>
+              </div>
+            </div>
+            <div>
+              <TextArea
+                placeholder="Hãy để lại đánh giá của bạn về sản phẩm !"
+                control={control}
+                name="description"
+              ></TextArea>
+            </div>
+          </div>
+        </div>
+      </Modal>
       <div className="hidden">
         <InvoiceComponent ref={invoiceRef} />
       </div>
+
       <Box
         title="Chi Tiết Đơn Hàng"
         labelRedirec="Quay lại"

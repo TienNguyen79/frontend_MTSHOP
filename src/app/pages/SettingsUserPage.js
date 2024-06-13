@@ -45,6 +45,7 @@ const SettingsUserPage = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm({
     resolver: yupResolver(InfoSettingSchema),
     mode: "onChange",
@@ -63,13 +64,6 @@ const SettingsUserPage = () => {
   const { dataCurrentUser } = useSelector((state) => state.user);
   console.log("🚀 ~ SettingsUserPage ~ currentUser:", dataCurrentUser);
 
-  useEffect(() => {
-    setValue("userName", dataCurrentUser?.userName);
-    setValue("email", dataCurrentUser?.email);
-    setValue("phoneNumber", dataCurrentUser?.phoneNumber);
-    setValue("avatar", dataCurrentUser?.avatar);
-  }, [dataCurrentUser]);
-
   const handleSettingUser = (data) => {
     dispatch(handleUpdateInfoUser(data));
   };
@@ -77,13 +71,27 @@ const SettingsUserPage = () => {
   const handleChangePassword = (data) => {
     dispatch(handleUpdateInfoUser(data));
   };
+
+  useEffect(() => {
+    setValue("userName", dataCurrentUser?.userName);
+    setValue("email", dataCurrentUser?.email);
+    setValue("phoneNumber", dataCurrentUser?.phoneNumber);
+    setValue("avatar", dataCurrentUser?.avatar);
+  }, [dataCurrentUser, setValue]);
+
   return (
     <div>
       <form onSubmit={handleSubmit(handleSettingUser)}>
         <Box title="Cài Đặt Tài Khoản">
           <div className="flex flex-col gap-y-4">
             <div className="flex items-center justify-center mt-3">
-              <ImageUpload className="w-[200px] h-[200px] rounded-full"></ImageUpload>
+              <ImageUpload
+                className="w-[200px] h-[200px] rounded-full"
+                name="avatar"
+                onChange={(name, data) => setValue("avatar", data.url)}
+                getValues={getValues("avatar") || dataCurrentUser?.avatar}
+                setValue={setValue}
+              ></ImageUpload>
             </div>
             <FlexCol title="Tên " className="w-full">
               <Input

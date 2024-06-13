@@ -8,7 +8,7 @@ import { handleGetCurrentUser } from "../../../store/user/handleUser";
 import { getTokenFromLocalStorage } from "../../../utils/localStorage";
 import { Epath } from "../../routes/routerConfig";
 
-const PopupMe = () => {
+const PopupMe = ({ handleOutsideClick2 }) => {
   const dispatch = useDispatch();
   const naviage = useNavigate();
   const { dataCurrentUser } = useSelector((state) => state.user);
@@ -37,6 +37,7 @@ const PopupMe = () => {
         <Link
           to={Epath.userDashboard}
           className="text-[#666] cursor-pointer text-sm py-[10px] block hover:text-primary"
+          onClick={handleOutsideClick2}
         >
           DashBoard
         </Link>
@@ -46,6 +47,7 @@ const PopupMe = () => {
         <Link
           to="/myOrders/1"
           className="text-[#666] cursor-pointer text-sm py-[10px] block hover:text-primary"
+          onClick={handleOutsideClick2}
         >
           Đơn hàng
         </Link>
@@ -55,6 +57,7 @@ const PopupMe = () => {
         <Link
           to="/setting"
           className="text-[#666] cursor-pointer text-sm py-[10px] block hover:text-primary"
+          onClick={handleOutsideClick2}
         >
           Cài Đặt
         </Link>

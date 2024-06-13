@@ -150,7 +150,9 @@ const Header = () => {
                 </div>
                 {openPopupMe && (
                   <div ref={openerRef2}>
-                    <PopupMe></PopupMe>
+                    <PopupMe
+                      handleOutsideClick2={handleOutsideClick2} // khi click vào các item trong sẽ tắt đi
+                    ></PopupMe>
                   </div>
                 )}
               </Fragment>

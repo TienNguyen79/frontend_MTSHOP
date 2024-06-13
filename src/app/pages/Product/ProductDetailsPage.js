@@ -13,6 +13,7 @@ import Title from "../../components/Commom/Title";
 import ProductItem from "../../modules/Product/ProductItem";
 import { getVariablesLC, saveVariablesLC } from "../../../utils/localStorage";
 import useLocationChange from "../../../utils/functions";
+import UserCommentItem from "../../modules/User/UserCommentItem";
 
 const ProductDetailsPage = () => {
   const dispatch = useDispatch();
@@ -54,7 +55,14 @@ const ProductDetailsPage = () => {
         <>
           {activeTabs === 1 && <div>{data?.description}</div>}
           {activeTabs === 2 && <PolicyService></PolicyService>}
-          {activeTabs === 3 && <h1>Đánh Giá Của Khách Hàng</h1>}
+          {activeTabs === 3 && (
+            <div className="flex flex-col gap-y-6">
+              {data?.Ratings?.length > 0 &&
+                data?.Ratings.map((item) => (
+                  <UserCommentItem key={item.id} data={item}></UserCommentItem>
+                ))}
+            </div>
+          )}
         </>
       </Gap>
       <div>

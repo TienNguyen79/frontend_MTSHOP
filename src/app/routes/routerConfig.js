@@ -43,7 +43,7 @@ export const Epath = {
   myOrders: "/myOrders/:statusOrder",
   orderDetail: "/myOrdersDetails/:id",
 
-  settingUser: "setting",
+  settingUser: "/setting",
 
   testPage: "/test",
   testPage2: "/test2",

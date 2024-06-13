@@ -59,6 +59,7 @@ export const handleUpdateInfoUser = createAsyncThunk(
         thunkAPI.dispatch(handleGetCurrentUser());
       }
     } catch (error) {
+      toast.error(error?.response?.data?.ms, { autoClose: 800 });
       console.log("🚀 ~ error:", error);
     }
   }

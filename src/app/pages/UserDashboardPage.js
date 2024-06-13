@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleGetAllOrder } from "../../store/order/handleOrder";
 import { convertDateNumeric } from "../../utils/functions";
 import { useParams } from "react-router-dom";
+import { defaultImage2 } from "../../utils/commom";
 
 const UserDashboardPage = () => {
   const dispatch = useDispatch();
@@ -124,9 +125,15 @@ const UserDashboardPage = () => {
         <Box isShowheader={false} className="flex-1">
           <div className="flex items-center gap-x-4 justify-center">
             <div className="flex   justify-center items-center flex-col gap-y-4">
-              <Image className="w-[160px] h-[160px] rounded-full overflow-hidden"></Image>
+              <Image
+                url={dataCurrentUser?.avatar || defaultImage2}
+                className="w-[160px] h-[160px] rounded-full overflow-hidden"
+              ></Image>
               <NameUser name={dataCurrentUser?.userName}></NameUser>
-              <LabelRedirect title="Chỉnh sửa thông tin "></LabelRedirect>
+              <LabelRedirect
+                title="Chỉnh sửa thông tin "
+                url={Epath.settingUser}
+              ></LabelRedirect>
             </div>
           </div>
         </Box>
@@ -146,8 +153,6 @@ const UserDashboardPage = () => {
               <ContentUser className="!text-text1 text-[16px]">
                 {dataCurrentUser?.phoneNumber}
               </ContentUser>
-
-              <LabelRedirect title="Chỉnh sửa thông tin "></LabelRedirect>
             </div>
           </div>
         </Box>
