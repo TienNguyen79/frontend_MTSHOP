@@ -45,14 +45,19 @@ export function requestFilterProduct(data) {
   const queryMinPrice = data.minPrice ? `&minPrice=${data.minPrice} ` : "";
   const queryMaxPrice = data.maxPrice ? `&maxPrice=${data.maxPrice} ` : "";
   const queryRate = data.rate ? `&rate=${data.rate} ` : "";
+  const querySizes = data.sizes ? `&sizes=${data.sizes} ` : "";
 
   const queryString = `?limit=${
     data.limit || 12
-  }${queryCategory}${queryMinPrice}${queryMaxPrice}${queryRate}${queryPage}`;
+  }${queryCategory}${queryMinPrice}${queryMaxPrice}${queryRate}${querySizes}${queryPage}`;
 
   return axiosClient.get(`/productFilter${queryString}`);
 }
 
 export function requestReviewProduct(data) {
-  return axiosClient.post(`/productReviews/${data.idProduct}`, data);
+  return axiosClient.post(`/productReviews/${data.idOrder}`, data);
+}
+
+export function requestGetAllSize() {
+  return axiosClient.get(`/product/sizes`);
 }

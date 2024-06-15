@@ -2,12 +2,14 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import requestGetTopSoldProduct, {
   requestFilterProduct,
   requestGetAllProduct,
+  requestGetAllSize,
   requestGetDetailsProduct,
   requestGetNewArrivals,
   requestGetQuantityProduct,
   requestReviewProduct,
   requestSuggestProduct,
 } from "./requestProduct";
+import { toast } from "react-toastify";
 
 export const handleGetAllProduct = createAsyncThunk(
   "product/handleGetAllProduct",
@@ -111,8 +113,21 @@ export const handleReviewProduct = createAsyncThunk(
     try {
       const response = await requestReviewProduct(data);
       if (response.status === 200) {
-        data?.callback?.();
+        data?.callBack?.();
       }
+    } catch (error) {
+      toast.error(error?.response?.data?.ms, { autoClose: 800 });
+      console.log("🚀 ~ error:", error);
+    }
+  }
+);
+
+export const handleGetAllSize = createAsyncThunk(
+  "product/handleGetAllSize",
+  async (data, thunkAPI) => {
+    try {
+      const response = await requestGetAllSize();
+      return response.data.results;
     } catch (error) {
       console.log("🚀 ~ error:", error);
     }

@@ -17,7 +17,7 @@ const listImg = [
   },
   {
     id: 7,
-    url: "/Sliderbanner/FS_B1.png",
+    url: "/Sliderbanner/ronaldoImg.png",
     to: "",
   },
   {
@@ -41,6 +41,11 @@ const listImg = [
     to: "",
   },
   {
+    id: 12,
+    url: "/Sliderbanner/FS_B1.png",
+    to: "",
+  },
+  {
     id: 5,
     url: "/Sliderbanner/FS_G5.png",
     to: "",
@@ -61,11 +66,7 @@ const listImg = [
     url: "/Sliderbanner/FS_B4.png",
     to: "",
   },
-  {
-    id: 12,
-    url: "/Sliderbanner/Mu1.png",
-    to: "",
-  },
+
   {
     id: 13,
     url: "/Sliderbanner/Vi_1.png",
@@ -95,7 +96,7 @@ const SliderBanner = () => {
     speed: 1000,
     autoplaySpeed: 3000,
     cssEase: "ease-in",
-    // arrows: true, // Bật mũi tên điều hướng
+    arrows: false,
     // prevArrow: <FontAwesomeIcon icon={faChevronLeft} />, // Component mũi tên prev
     // nextArrow: <FontAwesomeIcon icon={faChevronRight} />, // Component mũi tên next
   };
@@ -106,21 +107,23 @@ const SliderBanner = () => {
           {listImg.length > 0 &&
             listImg.map((img) => (
               <div className="relative" key={img.id}>
-                <Link>
-                  <Image
-                    url={img.url}
-                    className={`h-[610px] z-[1] ${isHovered ? " blur-sm" : ""}`}
-                  ></Image>
-                </Link>
+                <Image
+                  url={img.url}
+                  className={`h-[650px] z-[1] ${isHovered ? " blur-sm" : ""}`}
+                ></Image>
 
-                <Button
-                  kind="secondary"
-                  className="shopnow py-3 px-4 rounded-md absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 text-white opacity-60 hover:bg-primary hover:text-white transition-all hover:opacity-100 "
+                <div
                   onMouseEnter={() => setIsHovered(true)}
                   onMouseLeave={() => setIsHovered(false)}
                 >
-                  Mua sắm ngay!
-                </Button>
+                  <Button
+                    kind="secondary"
+                    className="shopnow py-3 px-4 rounded-md absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 text-white opacity-60 hover:bg-primary hover:text-white transition-all hover:opacity-100 "
+                    href="/shopping/all"
+                  >
+                    Mua sắm ngay!
+                  </Button>
+                </div>
               </div>
             ))}
           {/* <div>

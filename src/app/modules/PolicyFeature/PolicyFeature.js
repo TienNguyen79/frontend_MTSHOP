@@ -4,26 +4,26 @@ const dataUtil = [
   {
     id: 1,
     url: "/policyFeature/car.png",
-    title: "Free Shipping",
-    contentDesc: "Free shipping with discount",
+    title: "Miến Phí Vận Chuyển",
+    contentDesc: "Miễn Phí với tất cả đơn hàng",
   },
   {
     id: 2,
     url: "/policyFeature/headphone.png",
-    title: "Great Support 24/7",
-    contentDesc: "Instant access to Contact",
+    title: "Hỗ trợ 24/7",
+    contentDesc: "Hãy liên hệ với chúng tôi bất cứ khi nào",
   },
   {
     id: 3,
     url: "/policyFeature/wallet.png",
-    title: "100% Sucure Payment",
-    contentDesc: "We ensure your money is save",
+    title: "Thanh Toán An Toàn 100%",
+    contentDesc: "Hoàn tiền 100% khi có sự cố ",
   },
   {
     id: 4,
     url: "/policyFeature/box.png",
-    title: "Money-Back Guarantee",
-    contentDesc: "30 days money-back",
+    title: "Chính Sách Hoàn Trả",
+    contentDesc: "Hoàn trả trong vòng 30 ngày",
   },
 ];
 

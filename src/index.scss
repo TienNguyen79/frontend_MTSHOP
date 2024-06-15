@@ -295,3 +295,31 @@ span.anticon.anticon-check.ant-steps-finish-icon {
 span.ant-steps-icon {
   color: #fff !important;
 }
+
+.disable-custom {
+  pointer-events: none;
+  opacity: 80;
+}
+
+//------
+.running-text-container {
+  width: 100%; /* Đảm bảo văn bản chiếm toàn bộ chiều rộng */
+  overflow: hidden; /* Ẩn phần vượt ra ngoài khung */
+}
+
+.running-text {
+  text-align: center;
+  display: block;
+  white-space: nowrap; /* Ngăn ngừa xuống dòng */
+  animation: runningText 15s linear infinite; /* Độ dài và tốc độ của animation */
+  transform: translateX(100%);
+}
+
+@keyframes runningText {
+  0% {
+    transform: translateX(100%); /* Bắt đầu từ bên phải */
+  }
+  100% {
+    transform: translateX(-100%); /* Di chuyển sang bên trái */
+  }
+}

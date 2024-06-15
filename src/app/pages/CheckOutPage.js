@@ -64,7 +64,7 @@ const CheckOutPage = () => {
   // ------------------------
 
   const [addressId, setAddressId] = useState(
-    dataCurrentUser?.Addresses?.[0]?.id || undefined
+    dataCurrentUser?.Addresses?.[0]?.id
   );
 
   const [PaymentMehodId, setPaymentMehodId] = useState(1);
@@ -74,6 +74,17 @@ const CheckOutPage = () => {
   const [infoAddress, setInfoAddress] = useState(
     dataCurrentUser?.Addresses?.[0]?.address
   );
+
+  // mục đích để khi thêm address lần đầu nó hiện lên luôn
+  useEffect(() => {
+    if (dataCurrentUser?.Addresses?.[0]?.address) {
+      setInfoAddress(dataCurrentUser?.Addresses?.[0]?.address);
+    }
+    if (dataCurrentUser?.Addresses?.[0]?.id) {
+      setAddressId(dataCurrentUser?.Addresses?.[0]?.id);
+    }
+  }, [dataCurrentUser?.Addresses]);
+
   // ------------------------
 
   const splitAddress = infoAddress?.split(",");
@@ -119,7 +130,7 @@ const CheckOutPage = () => {
     setValue("district", splitAddress?.[2] || "");
     setValue("wards", splitAddress?.[1] || "");
     setValue("detailAddress", splitAddress?.[0] || "");
-  }, [dataCurrentUser, infoAddress]);
+  }, [dataCurrentUser, infoAddress, setValue, splitAddress]);
   // ------------------------
 
   const handleAddAddressUserForn = (data) => {
@@ -168,7 +179,6 @@ const CheckOutPage = () => {
 
   const handleWardsChange = (_, { label }) => {
     setLabelWards(label);
-    console.log("🚀 ~ handleWardsChange ~ label:", label);
   };
 
   const optionCity = dataProvince.data.map((city) => ({
@@ -196,6 +206,10 @@ const CheckOutPage = () => {
         quantity: product.quantity,
         price: product.price,
       }));
+
+    if (!addressId) {
+      toast.error("Vui lòng thêm địa chỉ của bạn !", { autoClose: 800 });
+    }
 
     const data = {
       addressId: addressId,
@@ -237,7 +251,10 @@ const CheckOutPage = () => {
         footer={false}
       >
         <Radio.Group
-          defaultValue={dataCurrentUser?.Addresses?.[0]?.id || 1}
+          defaultValue={
+            dataCurrentUser?.Addresses?.length > 0 &&
+            dataCurrentUser?.Addresses?.[0]?.id
+          }
           onChange={handleChangeAddress}
         >
           <Space direction="vertical">
@@ -577,7 +594,7 @@ const CheckOutPage = () => {
             </div>
             <Button
               type="submit"
-              className="py-3 px-4 w-full mt-4 rounded-md"
+              className="py-3 px-4 w-full mt-4 rounded-md hover:scale-105 transition-all"
               kind="primary"
             >
               Đặt Hàng Ngay

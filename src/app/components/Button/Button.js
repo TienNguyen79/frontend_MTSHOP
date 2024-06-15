@@ -45,7 +45,7 @@ const Button = ({
       break;
     case "discard":
       defaultClassName =
-        defaultClassName + "bg-transparent border border-danger text-danger   ";
+        defaultClassName + "bg-transparent border border-error text-error   ";
       break;
     default:
       break;

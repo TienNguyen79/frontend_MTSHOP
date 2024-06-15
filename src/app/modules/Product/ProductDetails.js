@@ -44,13 +44,15 @@ const ProductDetails = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    dispatch(
-      handleGetQuantityProduct({
-        id: id || getIdProductModalfromLC,
-        sizeId: sizeSelected,
-        colorId: colorSelected,
-      })
-    );
+    if (sizeSelected && colorSelected) {
+      dispatch(
+        handleGetQuantityProduct({
+          id: id || getIdProductModalfromLC,
+          sizeId: sizeSelected,
+          colorId: colorSelected,
+        })
+      );
+    }
   }, [colorSelected, dispatch, getIdProductModalfromLC, id, sizeSelected]);
 
   useEffect(() => {
@@ -312,9 +314,17 @@ const ProductDetails = () => {
                   control={control}
                   name="quantity"
                 ></ProHandleQuantity>
-                <h1 className="text-text3 text-[12px] font-normal">
-                  {quantityProduct?.quantity || 0} sản phẩm có sẵn
-                </h1>
+                {quantityProduct?.quantity > 0 ? (
+                  <h1 className="text-text3 text-[12px] font-normal">
+                    {quantityProduct?.quantity} sản phẩm có sẵn
+                  </h1>
+                ) : (
+                  quantityProduct?.quantity <= 0 && (
+                    <h1 className="text-error text-[12px] font-normal">
+                      Số lượng trong kho không đủ
+                    </h1>
+                  )
+                )}
               </div>
             </div>
           </div>
@@ -323,14 +333,18 @@ const ProductDetails = () => {
             <Button
               type="submit"
               kind="secondary"
-              className="py-3 px-4 rounded-[4px] min-w-[192px]"
+              className={`py-3 px-4 rounded-[4px] min-w-[192px] hover:bg-primary hover:text-white transition-all ${
+                quantityProduct?.quantity <= 0 && "disable-custom"
+              }`}
               isLoading={loading}
             >
               Thêm vào Giỏ hàng
             </Button>
             <Button
               kind="primary"
-              className="py-3 px-4  rounded-[4px]"
+              className={`py-3 px-4  rounded-[4px] hover:opacity-80 ${
+                quantityProduct?.quantity <= 0 && "disable-custom"
+              }`}
               onClick={handleBuyProduct}
             >
               Mua Ngay

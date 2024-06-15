@@ -2,6 +2,7 @@ import { createSlice, createAction } from "@reduxjs/toolkit";
 import {
   handleFilterProduct,
   handleGetAllProduct,
+  handleGetAllSize,
   handleGetDetailsProduct,
   handleGetNewArrivals,
   handleGetQuantityProduct,
@@ -21,6 +22,7 @@ const initialState = {
   dataTopSoldProduct: [],
   dataTopDiscountProduct: [],
   dataNewArrivals: [],
+  dataAllSize: [],
   loading: false,
   loadingSearchProduct: false,
 };
@@ -101,6 +103,14 @@ const productSlice = createSlice({
       })
       .addCase(handleFilterProduct.rejected, (state, action) => {
         state.dataAllProduct = [];
+      })
+
+      //data get all size Product
+      .addCase(handleGetAllSize.fulfilled, (state, action) => {
+        state.dataAllSize = action.payload;
+      })
+      .addCase(handleGetAllSize.rejected, (state, action) => {
+        state.dataAllSize = [];
       });
   },
 });

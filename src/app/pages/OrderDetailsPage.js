@@ -4,7 +4,7 @@ import NameUser from "../modules/User/parts/NameUser";
 import ContentUser from "../modules/User/parts/ContentUser";
 import Title from "../components/Commom/Title";
 import PriceProduct from "../modules/Product/parts/PriceProduct";
-import { Modal, Radio, Space, Steps, Table, Tag } from "antd";
+import { Form, Modal, Radio, Space, Steps, Table, Tag } from "antd";
 import { MessageSquareCode, Smile } from "lucide-react";
 import LabelRedirect from "../components/Label/LabelRedirect";
 import DateOrderProduct from "../modules/Product/parts/DateOrderProduct";
@@ -12,7 +12,7 @@ import { dataRating, defaultImage2 } from "../../utils/commom";
 import Image from "../components/Image/Image";
 import TitleProduct from "../modules/Product/parts/TitleProduct";
 import AttributeInCart from "../modules/Product/parts/AttributeInCart";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleCancelOrder,
@@ -24,18 +24,39 @@ import Swal from "sweetalert2";
 import { saveArrayLS } from "../../utils/localStorage";
 import ReactToPrint from "react-to-print";
 import InvoiceComponent from "../components/Invoice/InvoiceComponent";
-import { handleGetDetailsProduct } from "../../store/product/handleProduct";
+import {
+  handleGetDetailsProduct,
+  handleReviewProduct,
+} from "../../store/product/handleProduct";
 import { useForm } from "react-hook-form";
 import TextArea from "../components/Input/TextArea";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
+import { parseISO, addHours, addMinutes, addDays, isAfter } from "date-fns";
+const InfoReviewSchema = yup.object().shape({
+  description: yup.string().required("Đánh giá không được để trống"),
+});
 
 const OrderDetailsPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { control } = useForm();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    resolver: yupResolver(InfoReviewSchema),
+    mode: "onChange",
+  });
   const invoiceRef = useRef();
   const { id } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [idProduct, setIdProduct] = useState();
+  const [valueRate, setValueRate] = useState(5);
+  const [canRate, setCanRate] = useState(true);
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -46,6 +67,8 @@ const OrderDetailsPage = () => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    setValue("description", "");
+    setValueRate(5);
   };
 
   useEffect(() => {
@@ -59,6 +82,9 @@ const OrderDetailsPage = () => {
   }, [dispatch, idProduct]);
 
   const { dataDetailsOrder } = useSelector((state) => state.order);
+
+  const createdAt = dataDetailsOrder?.createdAt || "";
+
   const { dataDetailsProduct } = useSelector((state) => state.product);
 
   const dataTableProduct =
@@ -113,8 +139,11 @@ const OrderDetailsPage = () => {
             title: "Sản Phẩm",
             dataIndex: "product",
             key: "product",
-            render: (_, { product }) => (
-              <div className="flex items-start gap-x-3">
+            render: (_, { product, proId }) => (
+              <Link
+                to={`/product/${proId}`}
+                className="flex items-start gap-x-3"
+              >
                 <div className="flex-1">
                   <Image
                     className="w-[80px] h-[80px] rounded-lg overflow-hidden"
@@ -137,7 +166,7 @@ const OrderDetailsPage = () => {
                     </AttributeInCart>
                   )}
                 </div>
-              </div>
+              </Link>
             ),
             width: 300,
           },
@@ -177,7 +206,9 @@ const OrderDetailsPage = () => {
 
             render: (_, { proId }) => (
               <div
-                className="flex items-center justify-center cursor-pointer transition-all hover:text-primary"
+                className={`flex items-center justify-center cursor-pointer transition-all hover:text-primary ${
+                  !canRate && "hidden"
+                } `}
                 onClick={() => {
                   showModal();
                   setIdProduct(proId);
@@ -251,69 +282,133 @@ const OrderDetailsPage = () => {
           },
         ];
 
+  const handleChangeRate = (e) => {
+    setValueRate(e.target.value);
+  };
+  const handleReviewProductForm = (data) => {
+    const formData = {
+      idOrder: id,
+      idProduct: idProduct,
+      description: data.description,
+      rate: valueRate.toString(),
+      callBack: () => {
+        toast.success("Đánh Giá Thành Công!", { autoClose: 800 });
+        navigate(`/product/${idProduct}`);
+      },
+    };
+    dispatch(handleReviewProduct(formData));
+  };
+
+  // check sau thời gian một phút sẽ không đánh giá được nữa
+
+  useEffect(() => {
+    const checkTime = () => {
+      const createdAtDate = parseISO(createdAt);
+      // const limitDate = addMinutes(createdAtDate, 1); // Thêm 1 phút
+      const limitDate = addDays(createdAtDate, 2); // Thêm 2 ngày
+      const now = new Date();
+
+      if (isAfter(now, limitDate)) {
+        //kiểm tra xem thời gian hiện tại (now) đã vượt qua thời gian giới hạn (limitDate) chưa
+        setCanRate(false);
+      }
+    };
+
+    checkTime();
+
+    // const interval = setInterval(checkTime, 1000); // Kiểm tra lại mỗi giây
+    const interval = setInterval(checkTime, 60000); // Kiểm tra lại mỗi phút
+    return () => clearInterval(interval);
+  }, [createdAt]);
+
   return (
     <div>
-      <Modal
-        title="Đánh Giá Sản Phẩm"
-        open={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        okText="Đánh Giá"
-        cancelText="Hủy Bỏ"
-        width={"800px"}
-      >
-        <div>
-          <div className="flex flex-col gap-y-4">
-            <div className="flex items-start gap-x-6 ">
-              <div className="">
-                <Image
-                  className="w-[80px] h-[80px] rounded-lg overflow-hidden"
-                  url={dataDetailsProduct?.image?.[0]?.url}
-                ></Image>
-              </div>
-              <div className="flex flex-col  justify-center">
-                <TitleProduct className="text-textBold text-[18px] font-medium max-w-[350px]">
-                  {dataDetailsProduct?.name}
-                </TitleProduct>
+      <>
+        <Modal
+          title="Đánh Giá Sản Phẩm"
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          okText="Đánh Giá"
+          cancelText="Hủy Bỏ"
+          width={"800px"}
+          footer={null}
+        >
+          <form onSubmit={handleSubmit(handleReviewProductForm)}>
+            <div className="flex flex-col gap-y-4">
+              <div className="flex items-start gap-x-6 ">
+                <div className="">
+                  <Image
+                    className="w-[80px] h-[80px] rounded-lg overflow-hidden"
+                    url={dataDetailsProduct?.image?.[0]?.url}
+                  ></Image>
+                </div>
+                <div className="flex flex-col  justify-center">
+                  <TitleProduct className="text-textBold text-[18px] font-medium max-w-[350px]">
+                    {dataDetailsProduct?.name}
+                  </TitleProduct>
 
-                <PriceProduct
-                  className="text-[22px] font-semibold"
-                  price={dataDetailsProduct?.total}
-                ></PriceProduct>
+                  <PriceProduct
+                    className="text-[22px] font-semibold"
+                    price={dataDetailsProduct?.total}
+                  ></PriceProduct>
+                </div>
               </div>
-            </div>
-            <div>
               <div>
-                <Radio.Group
-                  // onChange={handleChangeRate}
-                  name="radiogroup"
-                  defaultValue={5}
-                  // value={valueRate}
-                >
-                  <Space direction="vertical">
-                    {dataRating.map((item) => (
-                      <Radio key={item.id} value={item.id}>
-                        <div className="flex items-center gap-x-2 ">
-                          {item.stars.map((star, index) => (
-                            <div key={index}>{star}</div>
-                          ))}
-                        </div>
-                      </Radio>
-                    ))}
-                  </Space>
-                </Radio.Group>
+                <div>
+                  <Radio.Group
+                    onChange={handleChangeRate}
+                    name="radiogroup"
+                    defaultValue={5}
+                    value={valueRate}
+                  >
+                    <Space direction="vertical">
+                      {dataRating.map((item) => (
+                        <Radio key={item.id} value={item.id}>
+                          <div className="flex items-center gap-x-2 ">
+                            {item.stars.map((star, index) => (
+                              <div key={index}>{star}</div>
+                            ))}
+                          </div>
+                        </Radio>
+                      ))}
+                    </Space>
+                  </Radio.Group>
+                </div>
+              </div>
+              <div>
+                <TextArea
+                  placeholder="Hãy để lại đánh giá của bạn về sản phẩm !"
+                  control={control}
+                  name="description"
+                ></TextArea>
+                {errors?.description?.message && (
+                  <h1 className="ml-2 text-error">
+                    {errors?.description?.message}
+                  </h1>
+                )}
               </div>
             </div>
-            <div>
-              <TextArea
-                placeholder="Hãy để lại đánh giá của bạn về sản phẩm !"
-                control={control}
-                name="description"
-              ></TextArea>
+            <div className="flex items-center gap-x-2 justify-end">
+              <Button
+                kind="discard"
+                type="submit"
+                className="!py-2 !px-4 rounded-md hover:bg-error hover:text-white transition-all"
+                onClick={handleCancel}
+              >
+                Hủy Bỏ
+              </Button>
+              <Button
+                type="submit"
+                className="!py-2 !px-4 rounded-md hover:opacity-80"
+                kind="primary"
+              >
+                Đánh Giá
+              </Button>
             </div>
-          </div>
-        </div>
-      </Modal>
+          </form>
+        </Modal>
+      </>
       <div className="hidden">
         <InvoiceComponent ref={invoiceRef} />
       </div>

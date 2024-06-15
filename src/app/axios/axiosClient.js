@@ -93,7 +93,6 @@ class Http {
 
     if (config.url !== "/auth" && config.url !== "/refreshToken" && response) {
       if (response.status === StatusCode.Unauthorized && !config._retry) {
-        // toast.error("Bạn Cần Đăng Nhập", { autoClose: 800 });
         config._retry = true;
         try {
           const rs = await axiosClient.post("/refreshToken");

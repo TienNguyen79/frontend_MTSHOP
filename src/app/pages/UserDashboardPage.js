@@ -26,7 +26,6 @@ const UserDashboardPage = () => {
   const { dataAllOrder } = useSelector((state) => state.order);
 
   const { dataCurrentUser } = useSelector((state) => state.user);
-  console.log("🚀 ~ UserDashboardPage ~ dataCurrentUser:", dataCurrentUser);
 
   const columns = [
     {

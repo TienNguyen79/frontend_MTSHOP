@@ -54,6 +54,7 @@ const CartPreview = ({ openCartPreview, setOpenCartPreview }) => {
       }));
 
     saveArrayLS("dataProInCheckout", dataProToCheckout);
+    onClose();
   };
   return (
     <div>

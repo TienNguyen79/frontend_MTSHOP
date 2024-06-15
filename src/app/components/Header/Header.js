@@ -18,7 +18,7 @@ import {
 import useClickOutSide from "../../../utils/customHook/useClickOutSide";
 import Button from "../Button/Button";
 import { CircleUserRound, ShoppingCart } from "lucide-react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Epath } from "../../routes/routerConfig";
 import { useDispatch, useSelector } from "react-redux";
 import { handleGetCurrentUser } from "../../../store/user/handleUser";
@@ -104,10 +104,12 @@ const Header = () => {
     <div className="py-3 px-12 shadow-lg fixed top-0 left-0 right-0 z-[99] bg-white">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-x-4">
-          <Image
-            url="/logo3.png"
-            className=" w-[120px] h-[80px] rounded-lg overflow-hidden"
-          ></Image>
+          <Link to={"/"}>
+            <Image
+              url="/logo3.png"
+              className=" w-[120px] h-[80px] rounded-lg overflow-hidden"
+            ></Image>
+          </Link>
           <NavMenu></NavMenu>
         </div>
         <div className="relative flex items-center gap-x-6">

@@ -15,7 +15,10 @@ import AttributeProduct from "../modules/Product/parts/AttributeProduct";
 import { useDispatch, useSelector } from "react-redux";
 import { handleGetAllCategory } from "../../store/category/handleCategory";
 import { sortByQuantityProduct } from "../../utils/functions";
-import { handleFilterProduct } from "../../store/product/handleProduct";
+import {
+  handleFilterProduct,
+  handleGetAllSize,
+} from "../../store/product/handleProduct";
 import queryString from "query-string";
 import Image from "../components/Image/Image";
 const ShoppingPage = () => {
@@ -28,6 +31,7 @@ const ShoppingPage = () => {
   const [errorPrice, setErrorPrice] = useState("");
   const [selectedKeys, setSelectedKeys] = useState();
   const [valueRate, setValueRate] = useState();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(12);
 
@@ -37,6 +41,12 @@ const ShoppingPage = () => {
   };
 
   const currentQueryParams = queryString.parse(location.search);
+
+  const sizeFromParams =
+    currentQueryParams?.sizes?.split(",")?.length > 0
+      ? currentQueryParams.sizes.split(",").map((size) => parseInt(size, 10))
+      : [];
+
   const maxPrice = currentQueryParams.maxPrice
     ? parseInt(currentQueryParams.maxPrice)
     : null;
@@ -156,11 +166,21 @@ const ShoppingPage = () => {
         minPrice: minPrice,
         maxPrice: maxPrice,
         rate: rate,
+        sizes: currentQueryParams.sizes,
         page: currentPage,
         limit: pageSize,
       })
     );
-  }, [currentPage, dispatch, maxPrice, minPrice, pageSize, params, rate]);
+  }, [
+    currentPage,
+    currentQueryParams.sizes,
+    dispatch,
+    maxPrice,
+    minPrice,
+    pageSize,
+    params,
+    rate,
+  ]);
 
   // khi load lại sẽ không mất value
   useEffect(() => {
@@ -171,6 +191,53 @@ const ShoppingPage = () => {
   }, [maxPrice, minPrice, params, rate, setValue]);
 
   const { dataAllProduct } = useSelector((state) => state.product);
+
+  //get size
+  useEffect(() => {
+    dispatch(handleGetAllSize());
+  }, []);
+
+  const { dataAllSize } = useSelector((state) => state.product);
+
+  // const toggleSizeSelection = (id) => {
+  //   setIdSize((prevSelectedSizes) => {
+  //     const newSelectedSizes = prevSelectedSizes.includes(id)
+  //       ? prevSelectedSizes.filter((sizeId) => sizeId !== id)
+  //       : [...prevSelectedSizes, id];
+
+  //     const currentQueryParams = queryString.parse(location.search);
+  //     const newQueryParams = {
+  //       ...currentQueryParams,
+  //       sizes: newSelectedSizes.join(","),
+  //     };
+
+  //     const linkRate = queryString.stringifyUrl({
+  //       url: location.pathname,
+  //       query: newQueryParams,
+  //     });
+  //     navigate(linkRate);
+
+  //     return newSelectedSizes;
+  //   });
+  // };
+
+  const toggleSizeSelection = (id) => {
+    const newSelectedSizes = sizeFromParams.includes(id)
+      ? sizeFromParams.filter((sizeId) => sizeId !== id)
+      : [...sizeFromParams, id];
+
+    const currentQueryParams = queryString.parse(location.search);
+    const newQueryParams = {
+      ...currentQueryParams,
+      sizes: newSelectedSizes.join(","),
+    };
+
+    const linkRate = queryString.stringifyUrl({
+      url: location.pathname,
+      query: newQueryParams,
+    });
+    navigate(linkRate);
+  };
 
   return (
     <div>
@@ -306,26 +373,22 @@ const ShoppingPage = () => {
                   </div>
 
                   <div className=" grid grid-cols-3 gap-3">
-                    <AttributeProduct
-                      className={`max-w-[80px] !py-1 !px-3  uppercase cursor-pointer `}
-                      title={"XL"}
-                    ></AttributeProduct>
-                    <AttributeProduct
-                      className={`max-w-[80px] !py-1 !px-3  uppercase cursor-pointer `}
-                      title={"XL"}
-                    ></AttributeProduct>
-                    <AttributeProduct
-                      className={`max-w-[80px] !py-1 !px-3  uppercase cursor-pointer `}
-                      title={"XL"}
-                    ></AttributeProduct>
-                    <AttributeProduct
-                      className={`max-w-[80px] !py-1 !px-3  uppercase cursor-pointer `}
-                      title={"XL"}
-                    ></AttributeProduct>
-                    <AttributeProduct
-                      className={`max-w-[80px] !py-1 !px-3  uppercase cursor-pointer `}
-                      title={"XL"}
-                    ></AttributeProduct>
+                    {dataAllSize.length > 0 &&
+                      dataAllSize.map((item) => (
+                        <div
+                          key={item.id}
+                          onClick={() => toggleSizeSelection(item.id)}
+                        >
+                          <AttributeProduct
+                            className={`max-w-[80px] !py-1 !px-3  uppercase cursor-pointer ${
+                              sizeFromParams.includes(item.id)
+                                ? " !border-primary !border-[2px] "
+                                : ""
+                            }`}
+                            title={item?.description}
+                          ></AttributeProduct>
+                        </div>
+                      ))}
                   </div>
                 </div>
               </div>
