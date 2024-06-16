@@ -54,7 +54,7 @@ const UserDashboardPage = () => {
       ),
     },
     {
-      title: "Trạng Thái",
+      title: "Trạng Thái Giao Hàng",
       key: "status",
       dataIndex: "status",
       render: (_, { status }) => (

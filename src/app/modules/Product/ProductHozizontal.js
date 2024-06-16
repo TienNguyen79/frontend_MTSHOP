@@ -5,7 +5,7 @@ import PriceProduct from "./parts/PriceProduct";
 import AttributeInCart from "./parts/AttributeInCart";
 import { X } from "lucide-react";
 
-const ProductHozizontal = ({ data }) => {
+const ProductHozizontal = ({ data, maxWidth = "max-w-[220px]" }) => {
   return (
     <div className="flex items-center justify-between gap-x-2">
       <div className="flex items-center  gap-x-2">
@@ -16,7 +16,9 @@ const ProductHozizontal = ({ data }) => {
           ></Image>
         </div>
         <div className="flex flex-col">
-          <TitleProduct className="limitText flex-[3] max-w-[220px] flex items-center gap-x-2  text-textBold font-normal text-[18px]">
+          <TitleProduct
+            className={`limitText flex-[3] ${maxWidth} flex items-center gap-x-2  text-textBold font-normal text-[18px]`}
+          >
             {data?.name} <X size={"10px"} />{" "}
             <span className="inline-block text-[15px] text-text3">
               {data.quantity}

@@ -122,6 +122,10 @@ const CheckOutPage = () => {
   };
 
   const handlePaymentPayOsForm = () => {
+    if (!addressId) {
+      toast.error("Vui lòng thêm địa chỉ của bạn !", { autoClose: 800 });
+    }
+
     const data = {
       description: "CHUYEN TIEN CHO MTSHOP",
       amount: totalMoneyCheckout,
@@ -133,6 +137,25 @@ const CheckOutPage = () => {
     };
 
     dispatch(handleCreateLinkPayment(data));
+
+    // phục vụ cho trang payment success
+    const dataProInCheckout = getArrayFromLS("dataProInCheckout");
+
+    const dataPro =
+      dataProInCheckout.length > 0 &&
+      dataProInCheckout.map((product) => ({
+        idProductDetails: product.idProductDetails,
+        quantity: product.quantity,
+        price: product.price,
+      }));
+    const datatoPaymentSuccess = {
+      addressId: addressId,
+      paymentmethoduserId: PaymentMehodId,
+      productDetails: dataPro,
+    };
+
+    saveArrayLS("datatoPaymentSuccess", datatoPaymentSuccess);
+
     console.log("🚀 ~ handlePaymentPayOsForm ~ data:", data);
   };
   // ------------------------
@@ -212,6 +235,8 @@ const CheckOutPage = () => {
         quantity: product.quantity,
         price: product.price,
       }));
+
+    console.log("🚀 ~ handleOrderProductForm ~ dataPro:", dataPro);
 
     if (!addressId) {
       toast.error("Vui lòng thêm địa chỉ của bạn !", { autoClose: 800 });
