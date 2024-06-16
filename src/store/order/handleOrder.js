@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import requestGetAllOrder, {
   requestCancelOrder,
+  requestCreateLinkPayment,
   requestGetDetailsOrder,
   requestOrderProduct,
 } from "./requestOrder";
@@ -52,6 +53,22 @@ export const handleOrderProduct = createAsyncThunk(
       const response = await requestOrderProduct(data);
       if (response.status === 200) {
         data?.callBack?.();
+      }
+    } catch (error) {
+      console.log("🚀 ~ error:", error);
+    }
+  }
+);
+
+// payment
+
+export const handleCreateLinkPayment = createAsyncThunk(
+  "order/handleCreateLinkPayment",
+  async (data, thunkAPI) => {
+    try {
+      const response = await requestCreateLinkPayment(data);
+      if (response.status === 200) {
+        data?.callBack?.(response.data.results.checkoutUrl);
       }
     } catch (error) {
       console.log("🚀 ~ error:", error);

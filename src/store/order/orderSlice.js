@@ -1,5 +1,9 @@
 import { createSlice, createAction } from "@reduxjs/toolkit";
-import { handleGetAllOrder, handleGetDetailsOrder } from "./handleOrder";
+import {
+  handleCreateLinkPayment,
+  handleGetAllOrder,
+  handleGetDetailsOrder,
+} from "./handleOrder";
 
 //Reducer Là các hàm xử lý các action và cập nhật trạng thái của ứng dụng.
 export const setLoading = createAction("setLoading");
@@ -34,6 +38,17 @@ const OrderSlice = createSlice({
       })
       .addCase(handleGetDetailsOrder.rejected, (state, action) => {
         state.dataDetailsOrder = {};
+      })
+
+      // create Link Payment
+      .addCase(handleCreateLinkPayment.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(handleCreateLinkPayment.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(handleCreateLinkPayment.rejected, (state, action) => {
+        state.loading = false;
       })
 
       .addCase(setLoading, (state, action) => {

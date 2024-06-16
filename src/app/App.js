@@ -7,7 +7,6 @@ import AuthRoute from "./routes/AuthRoute";
 import { useDispatch } from "react-redux";
 import { getTokenFromLocalStorage } from "../utils/localStorage";
 import { handleGetCurrentUser } from "../store/user/handleUser";
-import SettingsUserPage from "./pages/SettingsUserPage";
 
 const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
@@ -35,6 +34,9 @@ const NewsDetailsPage = lazy(() => import("./pages/News/NewsDetailsPage"));
 const NewsPage = lazy(() => import("./pages/News/NewsPage"));
 const MyOrdersPage = lazy(() => import("./pages/MyOrdersPage"));
 const OrderDetailsPage = lazy(() => import("./pages/OrderDetailsPage"));
+const PaymentErrorPage = lazy(() => import("./pages/PaymentErrorPage"));
+const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
+const SettingsUserPage = lazy(() => import("./pages/SettingsUserPage"));
 
 function App() {
   // const dispatch = useDispatch();
@@ -83,6 +85,16 @@ function App() {
         <Route
           path={Epath.resetPass}
           element={<ResetPassPage></ResetPassPage>}
+        ></Route>
+
+        <Route
+          path={Epath.paymentSuccess}
+          element={<PaymentSuccessPage></PaymentSuccessPage>}
+        ></Route>
+
+        <Route
+          path={Epath.paymentError}
+          element={<PaymentErrorPage></PaymentErrorPage>}
         ></Route>
 
         {/* ----------------Layout Details---------------------------- */}

@@ -27,11 +27,14 @@ import TextArea from "antd/es/input/TextArea";
 import dataProvince from "../../utils/province.json";
 import { handleAddAddressUser } from "../../store/user/handleUser";
 import { toast } from "react-toastify";
-import { handleOrderProduct } from "../../store/order/handleOrder";
+import {
+  handleCreateLinkPayment,
+  handleOrderProduct,
+} from "../../store/order/handleOrder";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import ReactToPrint from "react-to-print";
-import InvoiceComponent from "../components/Invoice/InvoiceComponent";
+import Image from "../components/Image/Image";
+import { Epath } from "../routes/routerConfig";
 const CheckOutPage = () => {
   const { control, setValue } = useForm();
   const dispatch = useDispatch();
@@ -61,6 +64,7 @@ const CheckOutPage = () => {
   };
 
   const { dataCurrentUser } = useSelector((state) => state.user);
+  const { loading } = useSelector((state) => state.order);
   // ------------------------
 
   const [addressId, setAddressId] = useState(
@@ -114,11 +118,22 @@ const CheckOutPage = () => {
     setPaymentMehodId(e.target.value);
 
     if (e.target.value === 2) {
-      toast.warning("Tính năng này sẽ phát triển sớm !", {
-        autoClose: 1000,
-      });
-      setPaymentMehodId(1);
     }
+  };
+
+  const handlePaymentPayOsForm = () => {
+    const data = {
+      description: "CHUYEN TIEN CHO MTSHOP",
+      amount: totalMoneyCheckout,
+      cancelUrl: `http://localhost:3000${Epath.paymentError}`,
+      returnUrl: `http://localhost:3000${Epath.paymentSuccess}`,
+      callBack: (checkoutUrl) => {
+        window.location.href = checkoutUrl;
+      },
+    };
+
+    dispatch(handleCreateLinkPayment(data));
+    console.log("🚀 ~ handlePaymentPayOsForm ~ data:", data);
   };
   // ------------------------
 
@@ -150,15 +165,6 @@ const CheckOutPage = () => {
       })
     );
   };
-
-  // const validateNoComma = (_, value) => {
-  //   if (value && value.includes(",")) {
-  //     return Promise.reject(
-  //       new Error("Địa chỉ Chi Tiết không được chứa dấu phẩy!")
-  //     );
-  //   }
-  //   return Promise.resolve();
-  // };
 
   const handleCityChange = (cityId, { label }) => {
     const selectedCity = dataCity.find((city) => city.id === cityId);
@@ -529,7 +535,7 @@ const CheckOutPage = () => {
                 {dataProInCheckout?.length > 0 &&
                   dataProInCheckout.map((item, index) => (
                     <ProductHozizontal
-                      key={item.idProductDetails}
+                      key={index}
                       totalMoneyCheckout={totalMoneyCheckout}
                       data={item}
                     ></ProductHozizontal>
@@ -584,21 +590,40 @@ const CheckOutPage = () => {
                     </Radio>
                     <Radio value={2}>
                       <Title
-                        title="Thanh Toán Qua Ngân Hàng"
+                        title="Thanh Toán Online"
                         className="text-[16px]"
                       ></Title>
                     </Radio>
                   </Space>
                 </Radio.Group>
+                {PaymentMehodId === 2 && (
+                  <div>
+                    <Image url="/payos-logo.svg"></Image>
+                    <h1 className="py-4 text-center text-text3 font-medium">
+                      Xử lý giao dịch Thanh toán chuyển khoản Napas 24/7{" "}
+                    </h1>
+                  </div>
+                )}
               </div>
             </div>
-            <Button
-              type="submit"
-              className="py-3 px-4 w-full mt-4 rounded-md hover:scale-105 transition-all"
-              kind="primary"
-            >
-              Đặt Hàng Ngay
-            </Button>
+            {PaymentMehodId === 1 ? (
+              <Button
+                type="submit"
+                className="py-3 px-4 w-full mt-4 rounded-md hover:scale-105 transition-all"
+                kind="primary"
+              >
+                Đặt Hàng Ngay
+              </Button>
+            ) : (
+              <Button
+                className="py-3 px-4 w-full mt-4 rounded-md hover:scale-105 transition-all"
+                kind="primary"
+                isLoading={loading}
+                onClick={handlePaymentPayOsForm}
+              >
+                Tiến hàng Thanh Toán
+              </Button>
+            )}
           </div>
         </div>
       </Gap>

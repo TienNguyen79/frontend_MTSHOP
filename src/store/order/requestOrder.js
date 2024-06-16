@@ -20,3 +20,7 @@ export function requestCancelOrder(data) {
 export function requestOrderProduct(data) {
   return axiosClient.post(`/order`, data);
 }
+
+export function requestCreateLinkPayment(data) {
+  return axiosClient.post(`/payment/createLink`, data);
+}

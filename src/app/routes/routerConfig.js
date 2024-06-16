@@ -38,12 +38,22 @@ export const Epath = {
   // check out
   contact: "/contact",
 
+  // userDashboard
   userDashboard: "/userDashboard",
-
+  // myOrders
   myOrders: "/myOrders/:statusOrder",
+
+  // orderDetail
   orderDetail: "/myOrdersDetails/:id",
 
+  // settingUser
   settingUser: "/setting",
+
+  // settingUser
+  paymentSuccess: "/paymentSuccess",
+
+  //paymentError
+  paymentError: "/paymentError",
 
   testPage: "/test",
   testPage2: "/test2",
