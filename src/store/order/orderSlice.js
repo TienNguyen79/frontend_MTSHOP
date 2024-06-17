@@ -3,6 +3,7 @@ import {
   handleCreateLinkPayment,
   handleGetAllOrder,
   handleGetDetailsOrder,
+  handleGetOrderPayment,
 } from "./handleOrder";
 
 //Reducer Là các hàm xử lý các action và cập nhật trạng thái của ứng dụng.
@@ -12,6 +13,7 @@ export const setLoading = createAction("setLoading");
 const initialState = {
   dataAllOrder: [],
   dataDetailsOrder: {},
+  dataOrderPayment: {},
   loading: false,
 };
 const OrderSlice = createSlice({
@@ -49,6 +51,14 @@ const OrderSlice = createSlice({
       })
       .addCase(handleCreateLinkPayment.rejected, (state, action) => {
         state.loading = false;
+      })
+
+      // get data order Payment
+      .addCase(handleGetOrderPayment.fulfilled, (state, action) => {
+        state.dataOrderPayment = action.payload;
+      })
+      .addCase(handleGetOrderPayment.rejected, (state, action) => {
+        state.dataOrderPayment = {};
       })
 
       .addCase(setLoading, (state, action) => {

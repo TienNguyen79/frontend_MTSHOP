@@ -9,10 +9,15 @@ import Gap from "../components/Commom/Gap";
 import Button from "../components/Button/Button";
 import { useDispatch } from "react-redux";
 import { handleOrderProduct } from "../../store/order/handleOrder";
+import { useLocation } from "react-router-dom";
+import queryString from "query-string";
+import { statusPayment } from "../../utils/commom";
 
 const PaymentSuccessPage = () => {
   const dispatch = useDispatch();
   const dataProInCheckout = getArrayFromLS("dataProInCheckout");
+  const location = useLocation();
+  const parsedSearch = queryString.parse(location.search);
 
   const totalMoneyCheckout = dataProInCheckout?.reduce(
     (accumulator, currentValue) =>
@@ -22,11 +27,20 @@ const PaymentSuccessPage = () => {
     0
   );
 
-  const datatoPaymentSuccess = getArrayFromLS("datatoPaymentSuccess");
-
-  // useEffect(() => { không ổn
-  //   dispatch(handleOrderProduct(datatoPaymentSuccess));
-  // }, []);
+  useEffect(() => {
+    const datatoPaymentSuccess = getArrayFromLS("datatoPaymentSuccess");
+    const mergeData = {
+      ...datatoPaymentSuccess,
+      orderId: Number(parsedSearch.orderCode),
+    };
+    if (
+      parsedSearch.code === "00" &&
+      parsedSearch.orderCode &&
+      parsedSearch.status === statusPayment.PAID
+    ) {
+      dispatch(handleOrderProduct(mergeData));
+    }
+  }, []);
 
   return (
     <Gap>

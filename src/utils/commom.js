@@ -61,3 +61,10 @@ export const dataRating = [
     ],
   },
 ];
+
+export const statusPayment = {
+  CANCELLED: "CANCELLED",
+  PROCESSING: "PROCESSING",
+  PENDING: "PENDING",
+  PAID: "PAID",
+};

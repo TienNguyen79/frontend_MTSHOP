@@ -126,19 +126,6 @@ const CheckOutPage = () => {
       toast.error("Vui lòng thêm địa chỉ của bạn !", { autoClose: 800 });
     }
 
-    const data = {
-      description: "CHUYEN TIEN CHO MTSHOP",
-      amount: totalMoneyCheckout,
-      cancelUrl: `http://localhost:3000${Epath.paymentError}`,
-      returnUrl: `http://localhost:3000${Epath.paymentSuccess}`,
-      callBack: (checkoutUrl) => {
-        window.location.href = checkoutUrl;
-      },
-    };
-
-    dispatch(handleCreateLinkPayment(data));
-
-    // phục vụ cho trang payment success
     const dataProInCheckout = getArrayFromLS("dataProInCheckout");
 
     const dataPro =
@@ -148,10 +135,42 @@ const CheckOutPage = () => {
         quantity: product.quantity,
         price: product.price,
       }));
+
+    const datatoPaymentPending = {
+      addressId: addressId,
+      paymentmethoduserId: PaymentMehodId,
+      productDetails: dataPro,
+      orderState: "1",
+    };
+
+    // mới đàu cứ phải cho trạng thái pending
+    const data = {
+      description: "CHUYEN TIEN CHO MTSHOP",
+      amount: totalMoneyCheckout,
+      cancelUrl: `http://localhost:3000${Epath.paymentError}`,
+      returnUrl: `http://localhost:3000${Epath.paymentSuccess}`,
+      callBack: (checkoutUrl, orderCode) => {
+        dispatch(
+          handleOrderProduct({
+            ...datatoPaymentPending,
+            orderId: Number(orderCode),
+            callBack: () => {
+              window.location.href = checkoutUrl;
+            },
+          })
+        );
+      },
+    };
+
+    dispatch(handleCreateLinkPayment(data));
+
+    // phục vụ cho trang payment success
+
     const datatoPaymentSuccess = {
       addressId: addressId,
       paymentmethoduserId: PaymentMehodId,
       productDetails: dataPro,
+      orderState: "2",
     };
 
     saveArrayLS("datatoPaymentSuccess", datatoPaymentSuccess);

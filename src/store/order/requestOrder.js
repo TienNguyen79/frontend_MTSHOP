@@ -24,3 +24,11 @@ export function requestOrderProduct(data) {
 export function requestCreateLinkPayment(data) {
   return axiosClient.post(`/payment/createLink`, data);
 }
+
+export function requestGetOrderPayment(id) {
+  return axiosClient.get(`/payment/${id}`);
+}
+
+export function requesCancelOrderPayment(data) {
+  return axiosClient.get(`/payment/cancel/${data.id}`);
+}

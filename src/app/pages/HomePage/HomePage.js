@@ -36,14 +36,14 @@ const HomePage = () => {
   }, [dispatch]);
 
   const dataTopSoldProduct = useSelector(
-    (state) => state.product.dataTopSoldProduct.results
+    (state) => state?.product?.dataTopSoldProduct?.results
   );
   const dataNewArrivalProduct = useSelector(
-    (state) => state.product.dataNewArrivals.results
+    (state) => state?.product?.dataNewArrivals?.results
   );
 
   const datTopDiscountProduct = useSelector(
-    (state) => state.product.dataTopDiscountProduct.results
+    (state) => state?.product?.dataTopDiscountProduct?.results
   );
 
   const dataAllNews = useSelector((state) => state.news.dataAllNews.results);

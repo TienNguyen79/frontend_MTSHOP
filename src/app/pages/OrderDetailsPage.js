@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import Box from "../components/Commom/Box";
 import NameUser from "../modules/User/parts/NameUser";
 import ContentUser from "../modules/User/parts/ContentUser";
 import Title from "../components/Commom/Title";
 import PriceProduct from "../modules/Product/parts/PriceProduct";
 import { Form, Modal, Radio, Space, Steps, Table, Tag } from "antd";
-import { MessageSquareCode, Smile } from "lucide-react";
+import { Dot, MessageSquareCode, Smile } from "lucide-react";
 import LabelRedirect from "../components/Label/LabelRedirect";
 import DateOrderProduct from "../modules/Product/parts/DateOrderProduct";
-import { dataRating, defaultImage2 } from "../../utils/commom";
+import { dataRating, defaultImage2, statusPayment } from "../../utils/commom";
 import Image from "../components/Image/Image";
 import TitleProduct from "../modules/Product/parts/TitleProduct";
 import AttributeInCart from "../modules/Product/parts/AttributeInCart";
@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   handleCancelOrder,
   handleGetDetailsOrder,
+  handleGetOrderPayment,
 } from "../../store/order/handleOrder";
 import Button from "../components/Button/Button";
 import { Epath } from "../routes/routerConfig";
@@ -73,6 +74,7 @@ const OrderDetailsPage = () => {
 
   useEffect(() => {
     dispatch(handleGetDetailsOrder(id));
+    dispatch(handleGetOrderPayment(id));
   }, [id, dispatch]);
 
   useEffect(() => {
@@ -80,6 +82,8 @@ const OrderDetailsPage = () => {
       dispatch(handleGetDetailsProduct(idProduct));
     }
   }, [dispatch, idProduct]);
+
+  const { dataOrderPayment } = useSelector((state) => state.order);
 
   const { dataDetailsOrder } = useSelector((state) => state.order);
 
@@ -489,9 +493,44 @@ const OrderDetailsPage = () => {
                   #{dataDetailsOrder?.id}
                 </span>
               </h1>
-              <h1 className="mt-1">
-                {dataDetailsOrder?.PaymentMethodUser?.PaymentMethodSystem?.name}
-              </h1>
+              <div className="mt-1 flex items-center gap-x-3">
+                <span>
+                  {
+                    dataDetailsOrder?.PaymentMethodUser?.PaymentMethodSystem
+                      ?.name
+                  }
+                </span>
+                {dataDetailsOrder?.PaymentMethodUser?.PaymentMethodSystem
+                  ?.id === 2 && (
+                  <Fragment>
+                    <Dot />
+                    <h1
+                      className={`block ${
+                        dataOrderPayment?.status === statusPayment.PAID &&
+                        "text-primary"
+                      } 
+                  ${
+                    dataOrderPayment?.status === statusPayment.PENDING &&
+                    "text-orange-400"
+                  } 
+
+                   ${
+                     dataOrderPayment?.status === statusPayment.PROCESSING &&
+                     "text-blue-500"
+                   } 
+                   font-semibold `}
+                    >
+                      {dataOrderPayment?.status === statusPayment.PENDING
+                        ? "Chờ Thanh Toán"
+                        : dataOrderPayment?.status === statusPayment.PAID
+                        ? "Đã Thanh Toán"
+                        : dataOrderPayment?.status === statusPayment.CANCELLED
+                        ? "Đã Hủy"
+                        : ""}
+                    </h1>
+                  </Fragment>
+                )}
+              </div>
               <div>
                 <div className="flex items-center justify-between pt-6  border-b-[3px] border-text2">
                   <Title
@@ -514,6 +553,17 @@ const OrderDetailsPage = () => {
                   ></Title>
                   <PriceProduct price={dataDetailsOrder?.total}></PriceProduct>
                 </div>
+
+                {dataOrderPayment?.status === statusPayment.PENDING && (
+                  <div className="flex items-center justify-center ">
+                    <Button
+                      href={`https://pay.payos.vn/web/${dataOrderPayment?.id}/`}
+                      className="!py-2 !px-4 bg-primary text-white rounded-lg w-full transition-all hover:opacity-80"
+                    >
+                      Thanh Toán Ngay
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </Box>
