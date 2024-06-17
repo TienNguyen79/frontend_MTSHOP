@@ -44,18 +44,6 @@ const ProductDetails = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    if (sizeSelected && colorSelected) {
-      dispatch(
-        handleGetQuantityProduct({
-          id: id || getIdProductModalfromLC,
-          sizeId: sizeSelected,
-          colorId: colorSelected,
-        })
-      );
-    }
-  }, [colorSelected, dispatch, getIdProductModalfromLC, id, sizeSelected]);
-
-  useEffect(() => {
     dispatch(handleGetDetailsProduct(id || getIdProductModalfromLC));
   }, [dispatch, getIdProductModalfromLC, id]);
 
@@ -71,6 +59,48 @@ const ProductDetails = () => {
     data?.productVariantUnique?.ArrUniqueColor.length;
   const ArrUniqueSizeLength = data?.productVariantUnique?.ArrUniqueSize.length;
 
+  useEffect(() => {
+    if (ArrUniqueColorLength > 0 && ArrUniqueSizeLength > 0) {
+      if (sizeSelected && colorSelected) {
+        dispatch(
+          handleGetQuantityProduct({
+            id: id || getIdProductModalfromLC,
+            sizeId: sizeSelected,
+            colorId: colorSelected,
+          })
+        );
+      }
+    } else if (ArrUniqueColorLength > 0 && ArrUniqueSizeLength <= 0) {
+      if (colorSelected) {
+        dispatch(
+          handleGetQuantityProduct({
+            id: id || getIdProductModalfromLC,
+            sizeId: sizeSelected,
+            colorId: colorSelected,
+          })
+        );
+      }
+    } else if (ArrUniqueSizeLength > 0 && ArrUniqueColorLength <= 0) {
+      if (sizeSelected) {
+        dispatch(
+          handleGetQuantityProduct({
+            id: id || getIdProductModalfromLC,
+            sizeId: sizeSelected,
+            colorId: colorSelected,
+          })
+        );
+      }
+    }
+  }, [
+    ArrUniqueColorLength,
+    ArrUniqueSizeLength,
+    colorSelected,
+    dispatch,
+    getIdProductModalfromLC,
+    id,
+    sizeSelected,
+  ]);
+
   const handleAddToCartForm = (results) => {
     if (ArrUniqueColorLength > 0 && ArrUniqueSizeLength > 0) {
       if (!sizeSelected) {
@@ -80,11 +110,11 @@ const ProductDetails = () => {
       if (!colorSelected) {
         return toast.error("Vui Lòng Chọn Màu Sắc", { autoClose: 800 });
       }
-    } else if (ArrUniqueColorLength > 0 && ArrUniqueSizeLength < 0) {
+    } else if (ArrUniqueColorLength > 0 && ArrUniqueSizeLength <= 0) {
       if (!colorSelected) {
         return toast.error("Vui Lòng Chọn Màu Sắc", { autoClose: 800 });
       }
-    } else if (ArrUniqueSizeLength > 0 && ArrUniqueColorLength < 0) {
+    } else if (ArrUniqueSizeLength > 0 && ArrUniqueColorLength <= 0) {
       if (!sizeSelected) {
         return toast.error("Vui Lòng Chọn Size", { autoClose: 800 });
       }
