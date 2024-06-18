@@ -1,6 +1,6 @@
-import React, { useRef } from "react";
+import React, { Fragment, useRef } from "react";
 import { getArrayFromLS } from "../../../utils/localStorage";
-import { defaultImage2 } from "../../../utils/commom";
+import { defaultImage2, statusPayment } from "../../../utils/commom";
 import Image from "../Image/Image";
 import TitleProduct from "../../modules/Product/parts/TitleProduct";
 import AttributeInCart from "../../modules/Product/parts/AttributeInCart";
@@ -165,6 +165,46 @@ const InvoiceComponent = React.forwardRef((props, ref) => {
                   {dataProInCheckout?.paymentMethod}
                 </p>
               </div>
+              {dataProInCheckout.status && (
+                <div className="mt-4 flex items-center gap-x-2 ">
+                  <Title
+                    className="text-[18px] !text-text1 font-normal"
+                    title="Trạng Thái: "
+                  ></Title>
+
+                  <Fragment>
+                    <h1
+                      className={`block ${
+                        dataProInCheckout.status === statusPayment.PAID &&
+                        "text-primary"
+                      } 
+                  ${
+                    dataProInCheckout.status === statusPayment.PENDING &&
+                    "text-orange-400"
+                  } 
+
+                   ${
+                     dataProInCheckout.status === statusPayment.PROCESSING &&
+                     "text-blue-500"
+                   } 
+
+                       ${
+                         dataProInCheckout.status === statusPayment.CANCELLED &&
+                         "text-error"
+                       } 
+                   font-semibold `}
+                    >
+                      {dataProInCheckout.status === statusPayment.PENDING
+                        ? "Chờ Thanh Toán"
+                        : dataProInCheckout.status === statusPayment.PAID
+                        ? "Đã Thanh Toán"
+                        : dataProInCheckout.status === statusPayment.CANCELLED
+                        ? "Đã Hủy"
+                        : ""}
+                    </h1>
+                  </Fragment>
+                </div>
+              )}
             </div>
           </div>
         </div>

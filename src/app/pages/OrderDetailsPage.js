@@ -132,6 +132,7 @@ const OrderDetailsPage = () => {
     arrPro: formatDataPro,
     paymentMethod:
       dataDetailsOrder?.PaymentMethodUser?.PaymentMethodSystem?.name,
+    status: dataOrderPayment.status,
   };
   saveArrayLS("dataInvoice", dataInvoice);
 
@@ -425,7 +426,8 @@ const OrderDetailsPage = () => {
         isShowLabel
       >
         <div className="flex justify-end gap-x-3">
-          {dataDetailsOrder.orderState !== "0" && (
+          {dataDetailsOrder.orderState === "5" ||
+          dataOrderPayment.status === statusPayment.PAID ? (
             <ReactToPrint
               trigger={() => (
                 <Button className="my-2 !py-1 !px-3 text-sm rounded-md bg-primary text-white">
@@ -434,6 +436,8 @@ const OrderDetailsPage = () => {
               )}
               content={() => invoiceRef.current}
             />
+          ) : (
+            ""
           )}
           {dataDetailsOrder.orderState === "1" && (
             <Button

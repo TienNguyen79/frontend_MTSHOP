@@ -95,19 +95,19 @@ function App() {
           element={<ResetPassPage></ResetPassPage>}
         ></Route>
 
-        <Route
+        {/* <Route
           element={<AuthRoute auth={true} isAuthenticated={isAuthenticated} />}
         >
-          <Route
-            path={Epath.paymentSuccess}
-            element={<PaymentSuccessPage></PaymentSuccessPage>}
-          ></Route>
+        </Route> */}
+        <Route
+          path={Epath.paymentSuccess}
+          element={<PaymentSuccessPage></PaymentSuccessPage>}
+        ></Route>
 
-          <Route
-            path={Epath.paymentError}
-            element={<PaymentErrorPage></PaymentErrorPage>}
-          ></Route>
-        </Route>
+        <Route
+          path={Epath.paymentError}
+          element={<PaymentErrorPage></PaymentErrorPage>}
+        ></Route>
 
         {/* ----------------Layout Details---------------------------- */}
 

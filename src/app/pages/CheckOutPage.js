@@ -143,12 +143,13 @@ const CheckOutPage = () => {
       orderState: "1",
     };
 
+    // window.location.port lấy được port hiện tại vd: 3000
     // mới đàu cứ phải cho trạng thái pending
     const data = {
       description: "CHUYEN TIEN CHO MTSHOP",
       amount: totalMoneyCheckout,
-      cancelUrl: `http://localhost:3002${Epath.paymentError}`,
-      returnUrl: `http://localhost:3002${Epath.paymentSuccess}`,
+      cancelUrl: `http://localhost:${window.location.port}${Epath.paymentError}`,
+      returnUrl: `http://localhost:${window.location.port}${Epath.paymentSuccess}`,
       callBack: (checkoutUrl, orderCode) => {
         dispatch(
           handleOrderProduct({
