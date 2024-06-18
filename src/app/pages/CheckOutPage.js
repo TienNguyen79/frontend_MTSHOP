@@ -147,8 +147,8 @@ const CheckOutPage = () => {
     const data = {
       description: "CHUYEN TIEN CHO MTSHOP",
       amount: totalMoneyCheckout,
-      cancelUrl: `http://localhost:3000${Epath.paymentError}`,
-      returnUrl: `http://localhost:3000${Epath.paymentSuccess}`,
+      cancelUrl: `http://localhost:3002${Epath.paymentError}`,
+      returnUrl: `http://localhost:3002${Epath.paymentSuccess}`,
       callBack: (checkoutUrl, orderCode) => {
         dispatch(
           handleOrderProduct({
@@ -163,19 +163,6 @@ const CheckOutPage = () => {
     };
 
     dispatch(handleCreateLinkPayment(data));
-
-    // phục vụ cho trang payment success
-
-    const datatoPaymentSuccess = {
-      addressId: addressId,
-      paymentmethoduserId: PaymentMehodId,
-      productDetails: dataPro,
-      orderState: "2",
-    };
-
-    saveArrayLS("datatoPaymentSuccess", datatoPaymentSuccess);
-
-    console.log("🚀 ~ handlePaymentPayOsForm ~ data:", data);
   };
   // ------------------------
 

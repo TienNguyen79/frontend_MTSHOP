@@ -35,19 +35,19 @@ const ResetPassPage = () => {
   const [searchParams] = useSearchParams();
   const { loading } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    const countdown = setInterval(() => {
-      if (seconds > 0) {
-        setSeconds(seconds - 1);
-      } else {
-        clearInterval(countdown); // Dừng đếm ngược khi số giây bằng 0
-      }
-    }, 1000);
+  // useEffect(() => {
+  //   const countdown = setInterval(() => {
+  //     if (seconds > 0) {
+  //       setSeconds(seconds - 1);
+  //     } else {
+  //       clearInterval(countdown); // Dừng đếm ngược khi số giây bằng 0
+  //     }
+  //   }, 1000);
 
-    return () => {
-      clearInterval(countdown); // Hủy đếm ngược khi component bị unmounted
-    };
-  }, [seconds]);
+  //   return () => {
+  //     clearInterval(countdown); // Hủy đếm ngược khi component bị unmounted
+  //   };
+  // }, [seconds]);
 
   useEffect(() => {
     setValue("email", searchParams.get("email"));
@@ -83,9 +83,9 @@ const ResetPassPage = () => {
           </h1>
 
           <p className="text-textBold text-center px-10">
-            Vui lòng nhập mật khẩu mới khi token còn hiệu lực
+            Vui lòng nhập mật khẩu mới
           </p>
-          <div className="flex items-center gap-x-1 text-gray-700  text-[15px]  justify-center font-medium">
+          {/* <div className="flex items-center gap-x-1 text-gray-700  text-[15px]  justify-center font-medium">
             {seconds > 0 ? (
               <Fragment>
                 <span>Token có hiệu lực trong </span>
@@ -94,7 +94,7 @@ const ResetPassPage = () => {
             ) : (
               <span className="text-error  ">Token đã hết hạn</span>
             )}
-          </div>
+          </div> */}
           <Input
             control={control}
             name="email"

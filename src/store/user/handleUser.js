@@ -26,7 +26,7 @@ export const handleGetCurrentUser = createAsyncThunk(
         return response.data.results;
       }
     } catch (error) {
-      toast.error("Bạn Cần Đăng Nhập", { autoClose: 800 });
+      // toast.error("Bạn Cần Đăng Nhập", { autoClose: 800 });
       console.log("🚀 ~ error:", error);
     }
   }

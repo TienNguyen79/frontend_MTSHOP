@@ -30,5 +30,9 @@ export function requestGetOrderPayment(id) {
 }
 
 export function requesCancelOrderPayment(data) {
-  return axiosClient.get(`/payment/cancel/${data.id}`);
+  return axiosClient.put(`/payment/cancel/${data.id}`);
+}
+
+export function requesUpdateStatuslOrderPayment(id) {
+  return axiosClient.put(`/payment/success/${id}`);
 }

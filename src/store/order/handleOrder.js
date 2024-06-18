@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import requestGetAllOrder, {
   requesCancelOrderPayment,
+  requesUpdateStatuslOrderPayment,
   requestCancelOrder,
   requestCreateLinkPayment,
   requestGetDetailsOrder,
@@ -101,6 +102,17 @@ export const handleCancelOrderPayment = createAsyncThunk(
       if (response.status === 200) {
         data?.callBack?.();
       }
+    } catch (error) {
+      console.log("🚀 ~ error:", error);
+    }
+  }
+);
+
+export const handleUpdateStatuslOrderPayment = createAsyncThunk(
+  "order/handleUpdateStatuslOrderPayment",
+  async (id, thunkAPI) => {
+    try {
+      const response = await requesUpdateStatuslOrderPayment(id);
     } catch (error) {
       console.log("🚀 ~ error:", error);
     }

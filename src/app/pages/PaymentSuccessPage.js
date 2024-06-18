@@ -8,7 +8,10 @@ import PriceProduct from "../modules/Product/parts/PriceProduct";
 import Gap from "../components/Commom/Gap";
 import Button from "../components/Button/Button";
 import { useDispatch } from "react-redux";
-import { handleOrderProduct } from "../../store/order/handleOrder";
+import {
+  handleOrderProduct,
+  handleUpdateStatuslOrderPayment,
+} from "../../store/order/handleOrder";
 import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 import { statusPayment } from "../../utils/commom";
@@ -28,17 +31,12 @@ const PaymentSuccessPage = () => {
   );
 
   useEffect(() => {
-    const datatoPaymentSuccess = getArrayFromLS("datatoPaymentSuccess");
-    const mergeData = {
-      ...datatoPaymentSuccess,
-      orderId: Number(parsedSearch.orderCode),
-    };
     if (
       parsedSearch.code === "00" &&
       parsedSearch.orderCode &&
       parsedSearch.status === statusPayment.PAID
     ) {
-      dispatch(handleOrderProduct(mergeData));
+      dispatch(handleUpdateStatuslOrderPayment(parsedSearch.orderCode));
     }
   }, []);
 

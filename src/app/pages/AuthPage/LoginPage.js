@@ -40,7 +40,7 @@ const LoginPage = () => {
     );
   };
   return (
-    <div className="py-[140px] px-[300px] ">
+    <div className="pb-[140px] pt-[180px]  px-[300px] ">
       <div className="bg-white shadow-custom2 rounded-[14px]">
         <div className="flex justify-between">
           <div className="flex-1 bg-primary min-h-[450px] w-[400px] rounded-custom2 relative">

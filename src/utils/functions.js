@@ -114,15 +114,3 @@ export const sortByQuantityProduct = (array, acs) => {
   );
   return arraySort;
 };
-
-const useLocationChange = (onLocationChange) => {
-  const location = useLocation();
-
-  useEffect(() => {
-    onLocationChange(location);
-
-    // You can also return a cleanup function if needed
-  }, [location, onLocationChange]);
-};
-
-export default useLocationChange;

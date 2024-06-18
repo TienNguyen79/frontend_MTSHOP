@@ -35,7 +35,6 @@ export const handleLogin = createAsyncThunk(
 
       if (response.status === OK) {
         toast.success("Đăng nhập thành công", { autoClose: 1000 });
-
         saveToken(response.data.token.accessToken);
         data.callback?.();
         return response.data.results;

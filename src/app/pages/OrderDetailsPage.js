@@ -16,6 +16,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   handleCancelOrder,
+  handleCancelOrderPayment,
   handleGetDetailsOrder,
   handleGetOrderPayment,
 } from "../../store/order/handleOrder";
@@ -452,8 +453,13 @@ const OrderDetailsPage = () => {
                       handleCancelOrder({
                         id: dataDetailsOrder?.id,
                         callBack: () => {
-                          navigate("/myOrders/1");
+                          navigate("/myOrders/0");
                         },
+                      })
+                    );
+                    dispatch(
+                      handleCancelOrderPayment({
+                        id: dataOrderPayment?.orderCode,
                       })
                     );
                   }
@@ -518,6 +524,11 @@ const OrderDetailsPage = () => {
                      dataOrderPayment?.status === statusPayment.PROCESSING &&
                      "text-blue-500"
                    } 
+
+                       ${
+                         dataOrderPayment?.status === statusPayment.CANCELLED &&
+                         "text-error"
+                       } 
                    font-semibold `}
                     >
                       {dataOrderPayment?.status === statusPayment.PENDING

@@ -26,9 +26,11 @@ module.exports = {
         custom: "105px 14px 14px 105px",
         custom2: "14px 105px 105px 14px",
       },
-      // screens: {
-      //   // custom breakpoints responsive tailwind here
-      // },
+      screens: {
+        sm: { max: "767px" },
+        md: { min: "768px", max: "1023px" },
+        lg: { min: "1024px" },
+      },
     },
   },
   plugins: [],

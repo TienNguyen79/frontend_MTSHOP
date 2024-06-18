@@ -1,10 +1,10 @@
 import "../App.scss";
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import SuspenseFallback from "./components/Commom/SuspenseFallback";
 import { Epath } from "./routes/routerConfig";
 import AuthRoute from "./routes/AuthRoute";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getTokenFromLocalStorage } from "../utils/localStorage";
 import { handleGetCurrentUser } from "../store/user/handleUser";
 
@@ -54,6 +54,14 @@ function App() {
     dispatch(handleGetCurrentUser());
   }, [getTokenFromLocalStorage()]);
 
+  const { dataCurrentUser } = useSelector((state) => state.user);
+
+  const isAuthenticated = !!(
+    dataCurrentUser &&
+    Object.keys(dataCurrentUser).length &&
+    getTokenFromLocalStorage()
+  );
+
   return (
     <Suspense fallback={<SuspenseFallback></SuspenseFallback>}>
       <Routes>
@@ -88,14 +96,18 @@ function App() {
         ></Route>
 
         <Route
-          path={Epath.paymentSuccess}
-          element={<PaymentSuccessPage></PaymentSuccessPage>}
-        ></Route>
+          element={<AuthRoute auth={true} isAuthenticated={isAuthenticated} />}
+        >
+          <Route
+            path={Epath.paymentSuccess}
+            element={<PaymentSuccessPage></PaymentSuccessPage>}
+          ></Route>
 
-        <Route
-          path={Epath.paymentError}
-          element={<PaymentErrorPage></PaymentErrorPage>}
-        ></Route>
+          <Route
+            path={Epath.paymentError}
+            element={<PaymentErrorPage></PaymentErrorPage>}
+          ></Route>
+        </Route>
 
         {/* ----------------Layout Details---------------------------- */}
 
@@ -119,7 +131,11 @@ function App() {
             element={<NewsDetailsPage></NewsDetailsPage>}
           ></Route>
 
-          <Route element={<AuthRoute auth={true} isAuthenticated={true} />}>
+          <Route
+            element={
+              <AuthRoute auth={true} isAuthenticated={isAuthenticated} />
+            }
+          >
             <Route
               path={Epath.checkout}
               element={<CheckOutPage></CheckOutPage>}
@@ -129,7 +145,11 @@ function App() {
 
         {/* LayoutUser */}
         <Route element={<LayoutUser />}>
-          <Route element={<AuthRoute auth={true} isAuthenticated={true} />}>
+          <Route
+            element={
+              <AuthRoute auth={true} isAuthenticated={isAuthenticated} />
+            }
+          >
             <Route
               path={Epath.userDashboard}
               element={<UserDashboard></UserDashboard>}
@@ -146,14 +166,6 @@ function App() {
               path={Epath.settingUser}
               element={<SettingsUserPage></SettingsUserPage>}
             ></Route>
-          </Route>
-        </Route>
-
-        <Route element={<Layout2 />}>
-          <Route path={Epath.testPage} element={<TestPage></TestPage>}></Route>
-
-          <Route element={<AuthRoute auth={true} isAuthenticated={true} />}>
-            <Route path={Epath.testPage2} element={<TestPage2 />} />
           </Route>
         </Route>
       </Routes>
