@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { handleRegister } from "../../../store/auth/handleAuth";
 import { useNavigate } from "react-router-dom";
+import { getTokenFromLocalStorage } from "../../../utils/localStorage";
 
 const registerSchema = yup.object().shape({
   email: yup
@@ -45,6 +46,7 @@ const RegisterPage = () => {
     resolver: yupResolver(registerSchema),
     mode: "onChange",
   });
+  const { dataCurrentUser } = useSelector((state) => state.user);
 
   const [errConfirmPass, setErrorConfirmPass] = useState("");
 
@@ -61,6 +63,18 @@ const RegisterPage = () => {
       );
     }
   };
+
+  useEffect(() => {
+    const isAuthenticated = !!(
+      dataCurrentUser &&
+      Object.keys(dataCurrentUser).length &&
+      getTokenFromLocalStorage()
+    );
+    if (isAuthenticated) {
+      navigate(Epath.homePage);
+    }
+  }, [dataCurrentUser, navigate]);
+
   return (
     <div className="pb-[140px] pt-[180px]  px-[300px] ">
       <div className="bg-white shadow-custom2 rounded-[14px]">

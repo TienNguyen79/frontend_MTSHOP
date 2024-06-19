@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
@@ -8,6 +8,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDispatch, useSelector } from "react-redux";
 import { handleLogin } from "../../../store/auth/handleAuth";
+import { getTokenFromLocalStorage } from "../../../utils/localStorage";
 
 const LoginSchema = yup.object().shape({
   email: yup
@@ -39,6 +40,20 @@ const LoginPage = () => {
       handleLogin({ ...data, callback: () => navigate(Epath.homePage) })
     );
   };
+
+  const { dataCurrentUser } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    const isAuthenticated = !!(
+      dataCurrentUser &&
+      Object.keys(dataCurrentUser).length &&
+      getTokenFromLocalStorage()
+    );
+    if (isAuthenticated) {
+      navigate(Epath.homePage);
+    }
+  }, [dataCurrentUser, navigate]);
+
   return (
     <div className="pb-[140px] pt-[180px]  px-[300px] ">
       <div className="bg-white shadow-custom2 rounded-[14px]">
