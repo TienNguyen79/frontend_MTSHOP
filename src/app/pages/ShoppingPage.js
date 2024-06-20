@@ -261,10 +261,10 @@ const ShoppingPage = () => {
                   style={{
                     fontSize: "18px",
                     color: "#000000",
-                    textTransform: "uppercase",
-                    fontWeight: "400",
+                    textTransform: "capitalize",
+                    fontWeight: "500",
                   }}
-                  className="filterProduct"
+                  className="filterProduct font-body"
                   showIcon
                   defaultExpandAll={params === "all"}
                   defaultSelectedKeys={[parseInt(params)]}

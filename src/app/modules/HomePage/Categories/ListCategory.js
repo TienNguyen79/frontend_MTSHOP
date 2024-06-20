@@ -21,7 +21,7 @@ const ListCategory = () => {
   return (
     <div className="grid grid-cols-5 gap-x-4 ">
       {sortDataAllCategory?.length > 0 &&
-        sortDataAllCategory.map((category) => (
+        sortDataAllCategory.slice(0, 5).map((category) => (
           <Link to={`/shopping/${category.id}`} key={category.id}>
             <CategoryItem data={category}></CategoryItem>
           </Link>
