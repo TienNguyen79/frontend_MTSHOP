@@ -58,6 +58,6 @@ export function requestReviewProduct(data) {
   return axiosClient.post(`/productReviews/${data.idOrder}`, data);
 }
 
-export function requestGetAllSize() {
-  return axiosClient.get(`/product/sizes`);
+export function requestGetAllSize(data) {
+  return axiosClient.get(`/product/variant?type=size`);
 }
