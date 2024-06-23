@@ -207,11 +207,22 @@ const ProductDetails = () => {
 
   return (
     <form onSubmit={handleSubmit(handleAddToCartForm)}>
-      <div className="grid grid-cols-2 gap-x-10">
-        <div className="flex flex-col gap-y-5">
+      <div
+        className={`grid grid-cols-2 gap-x-10 ${
+          data?.deletedAt && "pointer-events-none opacity-60"
+        } `}
+      >
+        <div className="relative flex flex-col gap-y-5">
+          {data.deletedAt && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 z-10 bg-[#FFF] w-full py-4 ">
+              <h1 className="text-error text-center text-[18px] font-semibold">
+                Sản phẩm tạm hết hàng
+              </h1>
+            </div>
+          )}
           <Image
             url={data?.image?.length > 0 && data?.image[imgSelected]?.url}
-            className="w-full max-h-[600px] h-[100%] rounded-md overflow-hidden"
+            className="w-full h-[550px]  rounded-md overflow-hidden"
           ></Image>
 
           {data?.image?.length > 4 ? (
@@ -224,7 +235,7 @@ const ProductDetails = () => {
                         url={img?.url}
                         className={`Imgthumb ${
                           imgSelected === index ? "activeImageThumb" : ""
-                        } w-full h-[100px] px-2 cursor-pointer`}
+                        } !w-[120px] h-[100px] px-2 cursor-pointer`}
                       ></Image>
                     </div>
                   ))}
@@ -237,7 +248,9 @@ const ProductDetails = () => {
                   <div key={img.id} onClick={() => setImgSelected(index)}>
                     <Image
                       url={img?.url}
-                      className="Imgthumb w-full h-[100px] px-2"
+                      className={`Imgthumb ${
+                        imgSelected === index ? "activeImageThumb" : ""
+                      } !w-[120px] h-[100px] px-2 cursor-pointer`}
                     ></Image>
                   </div>
                 ))}
@@ -265,12 +278,17 @@ const ProductDetails = () => {
               className="text-[24px] font-semibold mt-1"
               price={data?.total}
             ></PriceProduct>
-            <PriceRootProduct
-              className="text-[20px]"
-              price={data?.price}
-            ></PriceRootProduct>
 
-            <DiscountProduct discount={data?.discount}></DiscountProduct>
+            {data?.discount > 0 && (
+              <>
+                <PriceRootProduct
+                  className="text-[20px]"
+                  price={data?.price}
+                ></PriceRootProduct>
+
+                <DiscountProduct discount={data?.discount}></DiscountProduct>
+              </>
+            )}
           </div>
 
           <div className="flex flex-col gap-y-4">

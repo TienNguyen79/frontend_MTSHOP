@@ -17,15 +17,25 @@ import { defaultImage2 } from "../../../utils/commom";
 import { saveVariablesLC } from "../../../utils/localStorage";
 
 const ProductItem = ({ data }) => {
+  console.log("🚀 ~ ProductItem ~ data:", data);
   const [openModal, setOpenModal] = useState(false);
 
   return (
     <Fragment>
       <Link
         to={`/product/${data?.id}`}
-        className="hover:scale-110 max-w-[380px]  transition-all hover:border-primary hover:border hover:rounded-lg"
+        className={`${
+          data.deletedAt && "pointer-events-none opacity-60"
+        } relative  hover:scale-110 max-w-[380px]  transition-all hover:border-primary hover:border hover:rounded-lg`}
       >
-        <div className="max-w-[380px] h-[480px] shadow-custom2 py-1 px-2 rounded-lg">
+        {data.deletedAt && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 z-10 bg-[#FFF] w-full py-4 ">
+            <h1 className="text-error text-center text-[18px] font-semibold">
+              Sản phẩm tạm hết hàng
+            </h1>
+          </div>
+        )}
+        <div className="max-w-[380px] h-[480px] shadow-custom2 py-1 px-2 rounded-lg ">
           <div className="flex flex-col gap-y-3 cursor-pointer relative ">
             <div className="overflow-hidden">
               <Image
@@ -54,17 +64,19 @@ const ProductItem = ({ data }) => {
                   className="text-[18px] font-semibold mt-1"
                   price={data?.total}
                 ></PriceProduct>
-                <PriceRootProduct price={data?.price}></PriceRootProduct>
+                {data?.discount > 0 && (
+                  <PriceRootProduct price={data?.price}></PriceRootProduct>
+                )}
               </div>
-              {data?.averageRating > 0 ? (
+              {data?.averageRating > 0 && (
                 <StarProduct averageRating={data?.averageRating}></StarProduct>
-              ) : (
-                <StarProduct averageRating={5}></StarProduct>
               )}
             </div>
-            <div className="absolute top-2 left-0">
-              <DiscountProduct discount={data?.discount}></DiscountProduct>
-            </div>
+            {data?.discount > 0 && (
+              <div className="absolute top-2 left-0">
+                <DiscountProduct discount={data?.discount}></DiscountProduct>
+              </div>
+            )}
           </div>
         </div>
       </Link>

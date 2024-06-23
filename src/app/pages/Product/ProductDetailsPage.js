@@ -14,6 +14,7 @@ import ProductItem from "../../modules/Product/ProductItem";
 import { getVariablesLC, saveVariablesLC } from "../../../utils/localStorage";
 import useLocationChange from "../../../utils/functions";
 import UserCommentItem from "../../modules/User/UserCommentItem";
+import parse from "html-react-parser";
 
 const ProductDetailsPage = () => {
   const dispatch = useDispatch();
@@ -53,7 +54,12 @@ const ProductDetailsPage = () => {
 
       <Gap>
         <>
-          {activeTabs === 1 && <div>{data?.description}</div>}
+          {activeTabs === 1 && (
+            <div className="entry-content">
+              {" "}
+              {parse(data?.description || "")}
+            </div>
+          )}
           {activeTabs === 2 && <PolicyService></PolicyService>}
           {activeTabs === 3 && (
             <div className="flex flex-col gap-y-6">
