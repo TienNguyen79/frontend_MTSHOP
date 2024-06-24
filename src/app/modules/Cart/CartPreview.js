@@ -34,7 +34,7 @@ const CartPreview = ({ openCartPreview, setOpenCartPreview }) => {
     (accumulator, currentValue) =>
       accumulator +
       currentValue.quantity *
-        parseFloat(formatPrice(currentValue.product.total).replace(".", "")),
+        parseFloat(formatPrice(currentValue?.product?.total).replace(".", "")),
     0
   );
 
@@ -44,7 +44,7 @@ const CartPreview = ({ openCartPreview, setOpenCartPreview }) => {
       dataCartAll?.results.map((item) => ({
         idProductDetails: item.productDetails.id,
         quantity: item.quantity,
-        price: item.product.total,
+        price: item?.product?.total,
         name: item.product.name,
         url: item.product.image.url || defaultImage2,
         properties: {

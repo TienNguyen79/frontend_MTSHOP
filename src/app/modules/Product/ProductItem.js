@@ -17,7 +17,6 @@ import { defaultImage2 } from "../../../utils/commom";
 import { saveVariablesLC } from "../../../utils/localStorage";
 
 const ProductItem = ({ data }) => {
-  console.log("🚀 ~ ProductItem ~ data:", data);
   const [openModal, setOpenModal] = useState(false);
 
   return (
