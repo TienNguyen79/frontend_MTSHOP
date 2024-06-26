@@ -17,7 +17,11 @@ import {
   handleGetDetailsProduct,
   handleGetQuantityProduct,
 } from "../../../store/product/handleProduct";
-import { getVariablesLC, saveArrayLS } from "../../../utils/localStorage";
+import {
+  getTokenFromLocalStorage,
+  getVariablesLC,
+  saveArrayLS,
+} from "../../../utils/localStorage";
 import { toast } from "react-toastify";
 import { handleAddtoCart } from "../../../store/cart/handleCart";
 import { Epath } from "../../routes/routerConfig";
@@ -48,6 +52,13 @@ const ProductDetails = () => {
   }, [dispatch, getIdProductModalfromLC, id]);
 
   const data = useSelector((state) => state.product.dataDetailsProduct);
+  const { dataCurrentUser } = useSelector((state) => state.user);
+
+  const isAuthenticated = !!(
+    dataCurrentUser &&
+    Object.keys(dataCurrentUser).length &&
+    getTokenFromLocalStorage()
+  );
 
   const quantityProduct = useSelector(
     (state) => state.product.dataQuantityProduct
@@ -102,6 +113,10 @@ const ProductDetails = () => {
   ]);
 
   const handleAddToCartForm = (results) => {
+    if (!isAuthenticated) {
+      return navidate(Epath.loginPage);
+    }
+
     if (ArrUniqueColorLength > 0 && ArrUniqueSizeLength > 0) {
       if (!sizeSelected) {
         return toast.error("Vui Lòng Chọn Size", { autoClose: 800 });
@@ -134,6 +149,10 @@ const ProductDetails = () => {
   };
 
   const handleBuyProduct = () => {
+    if (!isAuthenticated) {
+      return navidate(Epath.loginPage);
+    }
+
     if (ArrUniqueColorLength > 0 && ArrUniqueSizeLength > 0) {
       if (!sizeSelected) {
         return toast.error("Vui Lòng Chọn Size", { autoClose: 800 });
