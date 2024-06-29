@@ -101,6 +101,12 @@ const ProductDetails = () => {
           })
         );
       }
+    } else if (ArrUniqueColorLength <= 0 && ArrUniqueSizeLength <= 0) {
+      dispatch(
+        handleGetQuantityProduct({
+          id: id || getIdProductModalfromLC,
+        })
+      );
     }
   }, [
     ArrUniqueColorLength,

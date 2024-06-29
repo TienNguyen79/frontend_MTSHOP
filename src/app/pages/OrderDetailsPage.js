@@ -98,7 +98,7 @@ const OrderDetailsPage = () => {
           key: product.id,
           product: {
             url:
-              product?.ProductDetail?.Product?.image[0]?.url || defaultImage2,
+              product?.ProductDetail?.Product?.image?.[0]?.url || defaultImage2,
             name: product?.ProductDetail?.Product?.name,
             size: product?.properties?.size?.description || "",
             color: product?.properties?.color?.description || "",
