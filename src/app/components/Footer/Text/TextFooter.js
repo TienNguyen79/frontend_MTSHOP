@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const TextFooter = ({ className = "", children, url }) => {
+const TextFooter = ({ className = "", url = "", children }) => {
   if (url) {
     return (
       <Link to={url} className={`${className} block text-text1 font-normal`}>

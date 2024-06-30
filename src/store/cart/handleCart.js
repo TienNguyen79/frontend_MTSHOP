@@ -42,7 +42,6 @@ export const handleGetAllCart = createAsyncThunk(
 export const handleUpdateCart = createAsyncThunk(
   "product/handleUpdateCart",
   async (data, thunkAPI) => {
-    console.log("🚀 ~ data:", data);
     try {
       const response = await requestUpdateCart(data);
     } catch (error) {

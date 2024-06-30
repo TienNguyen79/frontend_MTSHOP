@@ -305,7 +305,7 @@ const OrderDetailsPage = () => {
     dispatch(handleReviewProduct(formData));
   };
 
-  // check sau thời gian một phút sẽ không đánh giá được nữa
+  // check sau thời gian  2 ngày sẽ không đánh giá được nữa
 
   useEffect(() => {
     const checkTime = () => {

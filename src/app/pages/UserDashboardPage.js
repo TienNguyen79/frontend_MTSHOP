@@ -146,7 +146,7 @@ const UserDashboardPage = () => {
               <NameUser name={dataCurrentUser?.userName}></NameUser>
               <ContentUser>{dataCurrentUser?.email}</ContentUser>
               <ContentUser className="!text-text1 text-[16px]">
-                {dataCurrentUser?.Addresses?.[0].address ||
+                {dataCurrentUser?.Addresses?.[0]?.address ||
                   " Nguyễn Trãi, Quận Thanh Xuân , Thành Phố Hà Nội"}
               </ContentUser>
               <ContentUser className="!text-text1 text-[16px]">

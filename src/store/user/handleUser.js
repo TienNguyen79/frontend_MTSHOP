@@ -11,7 +11,6 @@ export const handleGetUser = createAsyncThunk(
   "user/handleGetUser",
   async (query, thunkAPI) => {
     const response = await requestGetUser();
-    console.log("response", response);
     return response.data;
   }
 );

@@ -31,7 +31,6 @@ const PaymentErrorPage = () => {
     }
   }, []);
 
-  console.log("parsedSearch.orderCode", parsedSearch.orderCode);
   return (
     <Gap>
       <div className="flex items-center justify-center my-5 h-full">

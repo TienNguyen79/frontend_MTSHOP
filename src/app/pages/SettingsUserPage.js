@@ -62,7 +62,6 @@ const SettingsUserPage = () => {
   const dispatch = useDispatch();
 
   const { dataCurrentUser } = useSelector((state) => state.user);
-  console.log("🚀 ~ SettingsUserPage ~ currentUser:", dataCurrentUser);
 
   const handleSettingUser = (data) => {
     dispatch(handleUpdateInfoUser(data));

@@ -199,38 +199,20 @@ const ShoppingPage = () => {
 
   const { dataAllSize } = useSelector((state) => state.product);
 
-  // const toggleSizeSelection = (id) => {
-  //   setIdSize((prevSelectedSizes) => {
-  //     const newSelectedSizes = prevSelectedSizes.includes(id)
-  //       ? prevSelectedSizes.filter((sizeId) => sizeId !== id)
-  //       : [...prevSelectedSizes, id];
-
-  //     const currentQueryParams = queryString.parse(location.search);
-  //     const newQueryParams = {
-  //       ...currentQueryParams,
-  //       sizes: newSelectedSizes.join(","),
-  //     };
-
-  //     const linkRate = queryString.stringifyUrl({
-  //       url: location.pathname,
-  //       query: newQueryParams,
-  //     });
-  //     navigate(linkRate);
-
-  //     return newSelectedSizes;
-  //   });
-  // };
-
   const toggleSizeSelection = (id) => {
     const newSelectedSizes = sizeFromParams.includes(id)
       ? sizeFromParams.filter((sizeId) => sizeId !== id)
       : [...sizeFromParams, id];
 
     const currentQueryParams = queryString.parse(location.search);
-    const newQueryParams = {
-      ...currentQueryParams,
-      sizes: newSelectedSizes.join(","),
-    };
+
+    let newQueryParams = { ...currentQueryParams };
+
+    if (newSelectedSizes.length > 0) {
+      newQueryParams.sizes = newSelectedSizes.join(",");
+    } else {
+      delete newQueryParams.sizes;
+    }
 
     const linkRate = queryString.stringifyUrl({
       url: location.pathname,

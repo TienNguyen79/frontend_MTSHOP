@@ -42,7 +42,6 @@ const HomePage = () => {
     (state) => state?.product?.dataNewArrivals?.results
   );
 
-  console.log("🚀 ~ HomePage ~ dataNewArrivalProduct:", dataNewArrivalProduct);
   const datTopDiscountProduct = useSelector(
     (state) => state?.product?.dataTopDiscountProduct?.results
   );

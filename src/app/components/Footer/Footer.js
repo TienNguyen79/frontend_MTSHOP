@@ -1,9 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TextFooter from "./Text/TextFooter";
 import TitleFooter from "./Text/TitleFooter";
 import Image from "../Image/Image";
+import { useDispatch, useSelector } from "react-redux";
+import { handleGetAllCategory } from "../../../store/category/handleCategory";
+import { sortByQuantityProduct } from "../../../utils/functions";
 
 const Footer = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(handleGetAllCategory());
+  }, [dispatch]);
+
+  const { dataAllCategory } = useSelector((state) => state.category);
+
+  const sortDataAllCategory = sortByQuantityProduct(
+    Array.isArray(dataAllCategory?.results) ? dataAllCategory.results : [],
+    true
+  );
+
   return (
     <footer className="footer w-full bg-gray-100 pt-16 pb-6 px-[202px]">
       <div className="grid grid-cols-6 gap-x-8">
@@ -28,14 +43,20 @@ const Footer = () => {
         <div className="col-span-4">
           <div className="grid grid-cols-4 gap-x-10">
             <div>
-              <TitleFooter className="font-semibold text-[20px]">
+              <TitleFooter url="setting" className="font-semibold text-[20px]">
                 Tài khoản
               </TitleFooter>
               <div className="flex flex-col gap-y-5 mt-3">
-                <TextFooter className="hover:text-primary cursor-pointer">
+                <TextFooter
+                  url="/setting"
+                  className="hover:text-primary cursor-pointer"
+                >
                   Tài khoản
                 </TextFooter>
-                <TextFooter className="hover:text-primary cursor-pointer">
+                <TextFooter
+                  url="/userDashboard"
+                  className="hover:text-primary cursor-pointer"
+                >
                   Lịch sử đơn hàng
                 </TextFooter>
                 <TextFooter className="hover:text-primary cursor-pointer">
@@ -51,7 +72,10 @@ const Footer = () => {
                 Giúp đỡ
               </TitleFooter>
               <div className="flex flex-col gap-y-5 mt-3">
-                <TextFooter className="hover:text-primary cursor-pointer">
+                <TextFooter
+                  url="/contact"
+                  className="hover:text-primary cursor-pointer"
+                >
                   Liên hệ
                 </TextFooter>
                 <TextFooter className="hover:text-primary cursor-pointer">
@@ -76,10 +100,16 @@ const Footer = () => {
                 <TextFooter className="hover:text-primary cursor-pointer">
                   Cửa hàng
                 </TextFooter>
-                <TextFooter className="hover:text-primary cursor-pointer">
+                <TextFooter
+                  url="/shopping/all"
+                  className="hover:text-primary cursor-pointer"
+                >
                   Sản phẩm
                 </TextFooter>
-                <TextFooter className="hover:text-primary cursor-pointer">
+                <TextFooter
+                  url="/myOrders/1"
+                  className="hover:text-primary cursor-pointer"
+                >
                   Theo dõi đơn hàng
                 </TextFooter>
               </div>
@@ -89,18 +119,16 @@ const Footer = () => {
                 Danh mục
               </TitleFooter>
               <div className="flex flex-col gap-y-5 mt-3">
-                <TextFooter className="hover:text-primary cursor-pointer">
-                  Áo thun
-                </TextFooter>
-                <TextFooter className="hover:text-primary cursor-pointer">
-                  Quần bò
-                </TextFooter>
-                <TextFooter className="hover:text-primary cursor-pointer">
-                  Ví da
-                </TextFooter>
-                <TextFooter className="hover:text-primary cursor-pointer">
-                  Túi Xách
-                </TextFooter>
+                {sortDataAllCategory?.length > 0 &&
+                  sortDataAllCategory?.slice(0, 4)?.map((item) => (
+                    <TextFooter
+                      key={item.id}
+                      url={`/shopping/${item.id}`}
+                      className="hover:text-primary cursor-pointer"
+                    >
+                      {item?.name}
+                    </TextFooter>
+                  ))}
               </div>
             </div>
           </div>

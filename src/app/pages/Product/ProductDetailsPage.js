@@ -71,20 +71,26 @@ const ProductDetailsPage = () => {
           )}
         </>
       </Gap>
-      <div>
-        <div className="flex items-center justify-center mt-10">
-          <Title title="Có Thể Bạn Cũng Thích" width="after:w-[255px]"></Title>
-        </div>
 
-        <Gap>
-          <div className="grid grid-cols-4 gap-x-4">
-            {dataSuggest.length > 0 &&
-              dataSuggest.map((product) => (
-                <ProductItem data={product} key={product?.id}></ProductItem>
-              ))}
+      {dataSuggest.length > 0 && (
+        <div>
+          <div className="flex items-center justify-center mt-10">
+            <Title
+              title="Có Thể Bạn Cũng Thích"
+              width="after:w-[255px]"
+            ></Title>
           </div>
-        </Gap>
-      </div>
+
+          <Gap>
+            <div className="grid grid-cols-4 gap-x-4">
+              {dataSuggest.length > 0 &&
+                dataSuggest.map((product) => (
+                  <ProductItem data={product} key={product?.id}></ProductItem>
+                ))}
+            </div>
+          </Gap>
+        </div>
+      )}
     </div>
   );
 };

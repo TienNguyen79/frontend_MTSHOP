@@ -243,8 +243,6 @@ const CheckOutPage = () => {
         price: product.price,
       }));
 
-    console.log("🚀 ~ handleOrderProductForm ~ dataPro:", dataPro);
-
     if (!addressId) {
       toast.error("Vui lòng thêm địa chỉ của bạn !", { autoClose: 800 });
     }

@@ -10,7 +10,7 @@ const ImgFeature = () => {
       ></Image>
       <Image
         className="rounded-lg overflow-hidden"
-        url="/imgHomePage/img2.webp"
+        url="/imgHomePage/img4.png"
       ></Image>
       <Image
         className="rounded-lg overflow-hidden"

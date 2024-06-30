@@ -36,8 +36,6 @@ const CartPreviewItem = ({ data }) => {
   };
 
   const handleQuantityChange = async (id, newQuantity, callBack) => {
-    // console.log(`ProductDetails ID: ${id}, New Quantity: ${newQuantity}`);
-    // dispatch(handleUpdateCart({ productDetailsId: id, quantity: newQuantity }));
     try {
       const response = await requestUpdateCart({
         productDetailsId: id,
