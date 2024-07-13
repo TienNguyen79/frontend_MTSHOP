@@ -4,7 +4,7 @@ const dataUtil = [
   {
     id: 1,
     url: "/policyFeature/car.png",
-    title: "Miến Phí Vận Chuyển",
+    title: "Miễn Phí Vận Chuyển",
     contentDesc: "Miễn Phí với tất cả đơn hàng",
   },
   {

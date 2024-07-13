@@ -70,6 +70,13 @@ const NewsDetailsPage = () => {
                   url={dataDetailNews?.url}
                   className="min-w-[750px] h-[500px] rounded-lg overflow-hidden object-cover"
                 ></Image>
+
+                <div>
+                  <Title
+                    title={dataDetailNews?.title}
+                    className="text-[26px] font-semibold"
+                  ></Title>
+                </div>
                 <div className="flex items-center gap-x-6 my-2">
                   <DateCreateNews
                     date={dataDetailNews?.createdAt}
@@ -87,7 +94,7 @@ const NewsDetailsPage = () => {
                   }}
                 ></Divider>
 
-                <div className="content">
+                <div className="entry-content">
                   {parse(dataDetailNews?.content || "")}
                 </div>
                 {dataCurrentUser ? (
