@@ -58,6 +58,7 @@ export const handleOrderProduct = createAsyncThunk(
         data?.callBack?.();
       }
     } catch (error) {
+      toast.error(error?.response?.data?.ms, { autoClose: 800 });
       console.log("🚀 ~ error:", error);
     }
   }
