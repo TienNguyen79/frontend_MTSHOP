@@ -223,6 +223,7 @@ const ProductDetails = () => {
       return { ...color, available };
     }
   );
+  console.log("🚀 ~ ProductDetails ~ availableColors:", availableColors);
 
   useEffect(() => {
     setImgSelected(0);
@@ -283,7 +284,7 @@ const ProductDetails = () => {
           )}
         </div>
         <div className="flex flex-col gap-y-5">
-          <TitleProduct className="text-textBold text-[20px] font-medium capitalize">
+          <TitleProduct className="text-textBold multiline-ellipsis text-[20px] font-medium capitalize">
             {data?.name}
           </TitleProduct>
           <div className="flex items-center gap-x-3">

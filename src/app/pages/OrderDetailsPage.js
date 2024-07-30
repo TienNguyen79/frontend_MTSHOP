@@ -36,6 +36,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import { parseISO, addHours, addMinutes, addDays, isAfter } from "date-fns";
+import { formatPrice } from "../../utils/functions";
 const InfoReviewSchema = yup.object().shape({
   description: yup.string().required("Đánh giá không được để trống"),
 });
@@ -103,12 +104,19 @@ const OrderDetailsPage = () => {
             size: product?.properties?.size?.description || "",
             color: product?.properties?.color?.description || "",
           },
-          price: product?.price,
+          price: parseFloat(formatPrice(product?.price).replace(".", "")),
           quantity: product?.quantity,
-          total: product?.total,
+          total:
+            parseFloat(formatPrice(product?.price).replace(".", "")) *
+            product?.quantity,
           proId: product?.ProductDetail?.Product?.id,
         }))
       : [];
+
+  const totalMoneyOrder = dataTableProduct?.reduce(
+    (accumulator, currentValue) => accumulator + currentValue.total,
+    0
+  );
 
   //--- lưu trong hóa đơn
 
@@ -552,7 +560,7 @@ const OrderDetailsPage = () => {
                     title="Tổng Tiền"
                     className="text-[17px] font-normal"
                   ></Title>
-                  <PriceProduct price={dataDetailsOrder?.total}></PriceProduct>
+                  <PriceProduct price={totalMoneyOrder}></PriceProduct>
                 </div>
                 <div className="flex items-center justify-between pt-6  border-b-[3px] border-text2">
                   <Title
@@ -566,7 +574,7 @@ const OrderDetailsPage = () => {
                     title="Tổng Tiền"
                     className="text-[17px] font-normal"
                   ></Title>
-                  <PriceProduct price={dataDetailsOrder?.total}></PriceProduct>
+                  <PriceProduct price={totalMoneyOrder}></PriceProduct>
                 </div>
 
                 {dataOrderPayment?.status === statusPayment.PENDING && (

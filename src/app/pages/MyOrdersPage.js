@@ -7,7 +7,7 @@ import Box from "../components/Commom/Box";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { handleGetAllOrder } from "../../store/order/handleOrder";
-import { convertDateNumeric } from "../../utils/functions";
+import { convertDateNumeric, formatPrice } from "../../utils/functions";
 
 const MyOrdersPage = () => {
   const { statusOrder } = useParams();
@@ -150,7 +150,16 @@ const MyOrdersPage = () => {
           key: order.id,
           orderId: order.id,
           date: convertDateNumeric(order.createdAt),
-          total: { price: order.total, quantityPro: order.OrderDetails.length },
+          total: {
+            price: order?.OrderDetails?.reduce(
+              (accumulator, currentValue) =>
+                accumulator +
+                currentValue.quantity *
+                  parseFloat(formatPrice(currentValue?.price).replace(".", "")),
+              0
+            ),
+            quantityPro: order.OrderDetails.length,
+          },
           status: parseInt(order.orderState),
           action: { title: "Xem Chi Tiết", orderId: order.id },
         }))
