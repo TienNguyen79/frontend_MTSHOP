@@ -123,13 +123,13 @@ const ShoppingPage = () => {
 
   // đổ data tree category
   const treeDataCate =
-    sortDataAllCategory.length > 0
+    sortDataAllCategory?.length > 0
       ? sortDataAllCategory.map((cate, index) => ({
           title: cate.name,
           key: cate.id,
           children:
-            cate.children.length > 0
-              ? cate.children.map((child, index) => ({
+            cate?.children?.length > 0
+              ? cate?.children?.map((child, index) => ({
                   title: child.name,
                   key: child.id,
                   icon: ({ selected }) =>
@@ -355,8 +355,8 @@ const ShoppingPage = () => {
                   </div>
 
                   <div className=" grid grid-cols-3 gap-3">
-                    {dataAllSize.length > 0 &&
-                      dataAllSize.map((item) => (
+                    {dataAllSize?.length > 0 &&
+                      dataAllSize?.map((item) => (
                         <div
                           key={item.id}
                           onClick={() => toggleSizeSelection(item.id)}

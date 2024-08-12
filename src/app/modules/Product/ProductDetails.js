@@ -223,7 +223,6 @@ const ProductDetails = () => {
       return { ...color, available };
     }
   );
-  console.log("🚀 ~ ProductDetails ~ availableColors:", availableColors);
 
   useEffect(() => {
     setImgSelected(0);
